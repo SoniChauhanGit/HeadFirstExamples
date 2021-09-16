@@ -2,16 +2,25 @@ import java.util.*;
 
 public class Jukebox1 {
 
+    // QU: Should this be a List or ArrayList? Have we covered this?
     ArrayList<String> songList = new ArrayList<>();
 
     public static void main(String[] args) {
-        new Jukebox1().go();
+        new Jukebox1().goP533();
     }
 
     public void go() {
         Songs s = new Songs();
         songList = s.getSongs();
         System.out.println(songList);
+    }
+
+    public void goP533() {
+        Songs s = new Songs();
+        songList = s.getSongs();
+        System.out.println(songList);
+        Collections.sort(songList);
+        System.out.println("\n" + songList);
     }
 }
 
