@@ -25,7 +25,8 @@ class SongV3 implements Comparable<SongV3> {
         return bpm;
     }
 
+    @Override
     public String toString() {
-        return title;
+        return "{" + title + ", " + artist + ", " + bpm + '}';
     }
 }
