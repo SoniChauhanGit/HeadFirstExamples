@@ -13,7 +13,7 @@ public class Jukebox5 {
         Collections.sort(songList);
         System.out.println(songList);
         ArtistCompare  artistCompare = new ArtistCompare();
-        Collections.sort(songList, artistCompare);
+        songList.sort(artistCompare);
         System.out.println(songList);
     }
 
