@@ -6,16 +6,13 @@ public class Jukebox5 {
     public static void main(String[] args) {
         new Jukebox5().go();
     }
-    // TODO: why doesn't this use songlist.sort?
+
     public void go() {
         songList = mockFile.getSongsV3();
         System.out.println(songList);
-        TitleCompare  titleCompare = new TitleCompare();
-        ArtistCompare artistCompare = new ArtistCompare();
-
-        Collections.sort(songList, titleCompare);
+        Collections.sort(songList);
         System.out.println(songList);
-
+        ArtistCompare  artistCompare = new ArtistCompare();
         Collections.sort(songList, artistCompare);
         System.out.println(songList);
     }
