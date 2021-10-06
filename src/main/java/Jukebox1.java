@@ -13,6 +13,9 @@ public class Jukebox1 {
         Songs s = new Songs();
         songList = s.getSongs();
         System.out.println(songList);
+        // Next step adds the following
+        Collections.sort(songList);
+        System.out.println(songList);
     }
 }
 
