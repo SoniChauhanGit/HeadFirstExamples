@@ -5,7 +5,7 @@ public class Jukebox5 {
     MockSongV2File mockFile = new MockSongV2File();
 
     public static void main(String[] args) {
-        new Jukebox5Consistent().go();
+        new Jukebox6().go();
     }
 
     public void go() {
