@@ -1,6 +1,6 @@
 import java.util.*;
 public class Jukebox5Consistent {
-    ArrayList<SongV3> songList = new ArrayList<SongV3>();
+    List<SongV3> songList = new ArrayList<SongV3>();
     MockSongV2File mockFile = new MockSongV2File();
 
     public static void main(String[] args) {
