@@ -1,8 +1,9 @@
 import java.util.ArrayList;
+import java.util.List;
 
 class MockSongV3File {
 
-    public ArrayList<SongV3> getSongsV3() {
+    public List<SongV3> getSongsV3() {
         ArrayList<SongV3> mySongs = new ArrayList<>();
         mySongs.add(new SongV3("somersault", "zero 7", "50"));
         mySongs.add(new SongV3("cassidy", "grateful dead", "65"));

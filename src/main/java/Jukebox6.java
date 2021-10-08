@@ -1,7 +1,8 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Jukebox6 {
-  ArrayList<SongV3> songList = new ArrayList<SongV3>();
+  List<SongV3> songList = new ArrayList<SongV3>();
   MockSongV3File mockFile = new MockSongV3File();
 
   public static void main(String[] args) {

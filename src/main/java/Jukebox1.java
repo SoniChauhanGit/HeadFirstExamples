@@ -1,9 +1,11 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Jukebox1 {
 
     // QU: Should this be a List or ArrayList? Have we covered this?
-    ArrayList<String> songList = new ArrayList<>();
+    List<String> songList = new ArrayList<>();
 
     public static void main(String[] args) {
         new Jukebox1().go();
@@ -23,7 +25,7 @@ public class Jukebox1 {
 // I/O code that the other programmer will provide later
 
 class Songs {
-    public ArrayList<String> getSongs() {
+    public List<String> getSongs() {
         ArrayList<String> songDB = new ArrayList<>();
         songDB.add("somersault");
         songDB.add("cassidy");

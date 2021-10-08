@@ -1,5 +1,5 @@
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class Jukebox2 {
 
@@ -9,7 +9,7 @@ public class Jukebox2 {
 
     public void go() {
         Songs s = new Songs();
-        ArrayList<String> songList = s.getSongs();
+        List<String> songList = s.getSongs();
         System.out.println(songList);
         Collections.sort(songList);
         System.out.println("\n" + songList);

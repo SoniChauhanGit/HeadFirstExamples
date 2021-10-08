@@ -1,7 +1,10 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class Jukebox5 {
-    ArrayList<SongV3> songList = new ArrayList<SongV3>();
+    List<SongV3> songList = new ArrayList<SongV3>();
     MockSongV2File mockFile = new MockSongV2File();
 
     public static void main(String[] args) {

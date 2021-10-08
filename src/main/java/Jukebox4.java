@@ -1,9 +1,9 @@
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class Jukebox4 {
 
-    ArrayList<SongV3> mySongs;
+    List<SongV3> mySongs;
     MockSongV2File mockFile = new MockSongV2File();
 
     public static void main(String[] args) {
