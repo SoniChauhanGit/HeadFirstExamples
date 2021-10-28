@@ -1,10 +1,10 @@
 import java.util.*;
 public class Jukebox5Consistent {
     List<SongV3> songList = new ArrayList<SongV3>();
-    MockSongV2File mockFile = new MockSongV2File();
+    MockSongV3File mockFile = new MockSongV3File();
 
     public static void main(String[] args) {
-        new Jukebox6().go();
+        new Jukebox5Consistent().go();
     }
 
     public void go() {
