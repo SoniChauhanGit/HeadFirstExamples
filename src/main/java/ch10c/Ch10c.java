@@ -1,3 +1,5 @@
+package ch10c;
+
 import java.util.Arrays;
 import java.util.List;
 
