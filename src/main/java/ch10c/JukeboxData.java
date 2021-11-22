@@ -2,17 +2,17 @@ package ch10c;
 
 import java.util.List;
 
+// Interesting points: "special" characters á, punctuation marks, multiple cover versions, BPM ranges (and maybe doubled/halved rates?)
 public class JukeboxData {
     class Songs {
 
         public List<Song> getSongs() {
             return List.of(
-                    new Song("somersault", "zero 7", 50),
-                    new Song("cassidy", "grateful dead", 65),
-                    new Song("$10", "hitchhiker", 80),
-                    new Song("havana", "cabello", 60),
-                    new Song("Cassidy", "grateful dead", 65),
-                    new Song("50 ways", "simon", 70),
+                    new Song("Somersault", "Zero 7", 147),
+                    new Song("$10", "Hitchhiker", 140),
+                    new Song("Havana", "Camila Cabello", 105),
+                    new Song("Cassidy", "Grateful Dead", 158),
+                    new Song("50 ways", "Paul Simon", 102),
                     new Song("If There's a Rocket Tie Me to It", "Snow Patrol", 140),
                     new Song("Hurt", "Nine Inch Nails", 79),
                     new Song("Hurt", "Johnny Cash", 91),
