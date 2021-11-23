@@ -3,6 +3,8 @@ package ch10c;
 import java.util.List;
 
 // Interesting points: "special" characters á, punctuation marks, multiple cover versions, BPM ranges (and maybe doubled/halved rates?)
+// TODO: introduce duplicates for number of times played
+// or: add a timesPlayed field.
 public class JukeboxData {
   class Songs {
     public List<Song> getSongs() {
@@ -23,7 +25,6 @@ public class JukeboxData {
               new Song("Come Together", "The Smokin' Mojo Filters", 176),
               new Song("With a Little Help from My Friends", "Joe Cocker", 72),
               new Song("Immigrant Song", "Karen O feat Trent Reznor and Atticus Ross", 120),
-              new Song("Girls Just Want to Have Fun", "Cyndi Lauper", 123),
               new Song("High Hopes", "Panic! at the Disco", 164),
               new Song("Machine", "Imagine Dragons", 81),
               new Song("Breathe", "The Prodigy", 130),
