@@ -9,9 +9,9 @@ public class LimitWithStream {
   public static void main(String[] args) {
     List<String> strings = List.of("I", "am", "a", "list", "of", "Strings");
 
-    Stream<String> stream = strings.stream();
-    Stream<String> limit = stream.limit(4);
-    List<String> result = limit.collect(Collectors.toList());
+    List<String> result = strings.stream()
+                                 .limit(4)
+                                 .collect(Collectors.toList());
     System.out.println("result = " + result);
   }
 
@@ -36,6 +36,15 @@ public class LimitWithStream {
     Stream<String> stream = strings.stream();
     Stream<String> limit = stream.limit(4);
     List<String> result = limit.collect(Collectors.toList());
+    System.out.println("result = " + result);
+  }
+
+  void limitAsStream() {
+    List<String> strings = List.of("I", "am", "a", "list", "of", "Strings");
+
+    List<String> result = strings.stream()
+                                 .limit(4)
+                                 .collect(Collectors.toList());
     System.out.println("result = " + result);
   }
 }
