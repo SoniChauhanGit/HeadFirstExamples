@@ -80,11 +80,13 @@ public class LimitWithStream {
   }
 
   static void codeMagnets() {
-    List<String> coffees = List.of("Cappuccino", "Americano", "Espresso", "Cortado", "Mocha", "Flat White", "Latte");
+    List<String> coffees = List.of("Cappuccino", "Americano", "Espresso",
+            "Cortado", "Mocha", "Cappuccino", "Flat White", "Latte");
 
     List<String> coffeesEndingInO = coffees.stream()
                                            .filter(s -> s.endsWith("o"))
                                            .sorted()
+                                           .distinct()
                                            .collect(Collectors.toList());
     System.out.println(coffeesEndingInO);
   }
