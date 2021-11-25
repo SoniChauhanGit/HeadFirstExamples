@@ -7,12 +7,7 @@ import java.util.stream.Stream;
 public class LimitWithStream {
 
   public static void main(String[] args) {
-    List<String> strings = List.of("I", "am", "a", "list", "of", "Strings");
-
-    List<String> result = strings.stream()
-                                 .filter(s -> s.length() < 4)
-                                 .collect(Collectors.toList());
-    System.out.println("result = " + result);
+    codeMagnets();
   }
 
   void streamExamples() {
@@ -58,10 +53,10 @@ public class LimitWithStream {
     System.out.println("result = " + result);
 
     List<String> result2 = strings.stream()
-                                 .sorted()
-                                 .skip(3)
-                                 .limit(4)
-                                 .collect(Collectors.toList());
+                                  .sorted()
+                                  .skip(3)
+                                  .limit(4)
+                                  .collect(Collectors.toList());
     System.out.println("result = " + result2);
   }
 
@@ -82,6 +77,16 @@ public class LimitWithStream {
                                  .filter(s -> s.length() < 4)
                                  .collect(Collectors.toList());
     System.out.println("result = " + result);
+  }
+
+  static void codeMagnets() {
+    List<String> coffees = List.of("Cappuccino", "Americano", "Espresso", "Cortado", "Mocha", "Flat White", "Latte");
+
+    List<String> coffeesEndingInO = coffees.stream()
+                                           .filter(s -> s.endsWith("o"))
+                                           .sorted()
+                                           .collect(Collectors.toList());
+    System.out.println(coffeesEndingInO);
   }
 }
 
