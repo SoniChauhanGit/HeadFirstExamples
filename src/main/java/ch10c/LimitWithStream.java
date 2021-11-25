@@ -10,9 +10,7 @@ public class LimitWithStream {
     List<String> strings = List.of("I", "am", "a", "list", "of", "Strings");
 
     List<String> result = strings.stream()
-                                 .sorted()
-                                 .skip(3)
-                                 .limit(4)
+                                 .filter(s -> s.length() < 4)
                                  .collect(Collectors.toList());
     System.out.println("result = " + result);
   }
@@ -67,4 +65,23 @@ public class LimitWithStream {
     System.out.println("result = " + result2);
   }
 
+  void sortingCaseInsensitive() {
+    List<String> strings = List.of("I", "am", "a", "list", "of", "Strings");
+
+    List<String> result = strings.stream()
+                                 .sorted((s1, s2) -> s1.compareToIgnoreCase(s2))
+                                 .limit(4)
+                                 .collect(Collectors.toList());
+    System.out.println("result = " + result);
+  }
+
+  void filtering() {
+    List<String> strings = List.of("I", "am", "a", "list", "of", "Strings");
+
+    List<String> result = strings.stream()
+                                 .filter(s -> s.length() < 4)
+                                 .collect(Collectors.toList());
+    System.out.println("result = " + result);
+  }
 }
+
