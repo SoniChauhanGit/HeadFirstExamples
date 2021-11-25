@@ -10,6 +10,8 @@ public class LimitWithStream {
     List<String> strings = List.of("I", "am", "a", "list", "of", "Strings");
 
     List<String> result = strings.stream()
+                                 .sorted()
+                                 .skip(3)
                                  .limit(4)
                                  .collect(Collectors.toList());
     System.out.println("result = " + result);
@@ -47,4 +49,22 @@ public class LimitWithStream {
                                  .collect(Collectors.toList());
     System.out.println("result = " + result);
   }
+
+  void chainedOperations() {
+    List<String> strings = List.of("I", "am", "a", "list", "of", "Strings");
+
+    List<String> result = strings.stream()
+                                 .sorted()
+                                 .limit(4)
+                                 .collect(Collectors.toList());
+    System.out.println("result = " + result);
+
+    List<String> result2 = strings.stream()
+                                 .sorted()
+                                 .skip(3)
+                                 .limit(4)
+                                 .collect(Collectors.toList());
+    System.out.println("result = " + result2);
+  }
+
 }
