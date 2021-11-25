@@ -7,7 +7,6 @@ import java.util.stream.Stream;
 public class LimitWithStream {
 
   public static void main(String[] args) {
-    codeMagnets();
   }
 
   void streamExamples() {
@@ -79,16 +78,5 @@ public class LimitWithStream {
     System.out.println("result = " + result);
   }
 
-  static void codeMagnets() {
-    List<String> coffees = List.of("Cappuccino", "Americano", "Espresso",
-            "Cortado", "Mocha", "Cappuccino", "Flat White", "Latte");
-
-    List<String> coffeesEndingInO = coffees.stream()
-                                           .filter(s -> s.endsWith("o"))
-                                           .sorted()
-                                           .distinct()
-                                           .collect(Collectors.toList());
-    System.out.println(coffeesEndingInO);
-  }
 }
 
