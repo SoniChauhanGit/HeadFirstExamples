@@ -11,13 +11,13 @@ public class Ch10c {
     }
   }
 
-  void forEachExample() {
+  static void forEachExample() {
     List<String> allColors = List.of("Red", "Blue", "Yellow");
     allColors.forEach(color -> System.out.println(color));
   }
 
   public static void main(String[] args) {
-    badFor4();
+    forEachExample();
   }
 
   // 2, 3, 4, 5
