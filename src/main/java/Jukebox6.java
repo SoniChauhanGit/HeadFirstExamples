@@ -17,4 +17,15 @@ public class Jukebox6 {
     songList.sort((one, two) -> one.getArtist().compareTo(two.getArtist()));
     System.out.println(songList);
   }
+
+  public void ch10c() {
+    songList = mockFile.getSongsV3();
+    System.out.println(songList);
+    songList.sort((one, two) -> {
+      return one.getTitle().compareTo(two.getTitle());
+    });
+    System.out.println(songList);
+    songList.sort((one, two) -> one.getArtist().compareTo(two.getArtist()));
+    System.out.println(songList);
+  }
 }
