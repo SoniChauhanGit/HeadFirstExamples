@@ -82,11 +82,9 @@ public class LimitWithStream {
   static void printCollectionAfterChanges() {
     List<String> strings = List.of("I", "am", "a", "list", "of", "Strings");
 
-    Stream<String> limit = strings.stream()
-                                  .limit(4);
-    System.out.println("strings = " + strings);
-
-    List<String> result = limit.collect(Collectors.toList());
+    List<String> result = strings.stream()
+                                 .limit(4)
+                                 .collect(Collectors.toList());
     System.out.println("strings = " + strings);
     System.out.println("result = " + result);
   }
