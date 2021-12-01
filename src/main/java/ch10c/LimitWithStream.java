@@ -7,7 +7,7 @@ import java.util.stream.Stream;
 public class LimitWithStream {
 
   public static void main(String[] args) {
-    printCollectionAfterChanges();
+    noReusing();
   }
 
   void streamExamples() {
@@ -87,6 +87,16 @@ public class LimitWithStream {
                                  .collect(Collectors.toList());
     System.out.println("strings = " + strings);
     System.out.println("result = " + result);
+  }
+
+
+  static void noReusing() {
+    List<String> strings = List.of("I", "am", "a", "list", "of", "Strings");
+
+    Stream<String> limit = strings.stream()
+                                  .limit(4);
+    List<String> result = limit.collect(Collectors.toList());
+    List<String> result2 = limit.collect(Collectors.toList());
   }
 
 }
