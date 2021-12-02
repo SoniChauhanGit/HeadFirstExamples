@@ -2,6 +2,8 @@ package ch10c;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -61,6 +63,12 @@ public class HelloLambda {
     System.out.println("result = " + result);
   }
 
+  static void compare() {
+    List<String> strings = new ArrayList<>(List.of("I", "am", "a", "list", "of", "Strings"));
+    Stream<String> sorted = strings.stream().sorted(
+            (str1, str2) -> str1.compareToIgnoreCase(str2));
+  }
+
   static void noReturn() {
     List<String> strings = new ArrayList<>(List.of("I", "am", "a", "list", "of", "Strings"));
     strings.forEach(
@@ -69,6 +77,11 @@ public class HelloLambda {
               System.out.println(output);
             }
     );
+  }
+
+  static void noArgs() {
+    ExecutorService executorService = Executors.newFixedThreadPool(1);
+    executorService.submit(() -> System.out.println("Hello!"));
   }
 
   static void mandatoryTypes() {
