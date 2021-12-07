@@ -2,8 +2,12 @@ package ch15;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.ByteBuffer;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
 
 public class DailyAdviceServer {
 
@@ -15,14 +19,20 @@ public class DailyAdviceServer {
 
   public void go() {
     try {
-      ServerSocket serverSock = new ServerSocket(4242);
-      while (true) {
-        Socket sock = serverSock.accept();
+      ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
+      InetSocketAddress address = new InetSocketAddress("localhost", 4242);
+      serverSocketChannel.bind(address);
 
-        PrintWriter writer = new PrintWriter(sock.getOutputStream());
+      while (true) {
+        SocketChannel socketChannel = serverSocketChannel.accept();
+
         String advice = getAdvice();
-        writer.println(advice);
-        writer.close();
+        byte[] message = advice.getBytes();
+        ByteBuffer buffer = ByteBuffer.wrap(message);
+
+        socketChannel.write(buffer);
+
+        socketChannel.close();
         System.out.println(advice);
       }
 
