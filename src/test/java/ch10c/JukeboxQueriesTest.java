@@ -151,9 +151,38 @@ class JukeboxQueriesTest {
 
     String songTitle = "With a Little Help from My Friends";
     List<String> result = allSongs.stream()
-                                .filter(song -> song.getTitle().equals(songTitle))
-                                .map(Song::getArtist)
-                                .collect(toList());
+                                  .filter(song -> song.getTitle().equals(songTitle))
+                                  .map(Song::getArtist)
+                                  .collect(toList());
+
+    System.out.println("result = " + result);
+  }
+
+  @Test
+  void shouldComplexExample() {
+    List<Song> allSongs = songs.getSongs();
+
+    String songTitle = "With a Little Help from My Friends";
+//    List<String> result = allSongs.stream()
+//                                  .filter(song -> song.getTitle().equals(songTitle))
+//                                  .sorted(Comparator.comparing(Song::getTimesPlayed))
+//                                  .map(Song::getArtist)
+//                                  .collect(toList());
+//
+//    System.out.println("result = " + result);
+
+    List<Song> toSort = new ArrayList<>();
+    for (Song song : allSongs) {
+      if (song.getTitle().equals(songTitle)) {
+        toSort.add(song);
+      }
+    }
+    toSort.sort(Comparator.comparing(Song::getTimesPlayed));
+    List<String> result = new ArrayList<>();
+    for (Song song : toSort) {
+      String artist = song.getArtist();
+      result.add(artist);
+    }
 
     System.out.println("result = " + result);
   }
