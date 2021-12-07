@@ -1,8 +1,7 @@
 package ch10c;// JukeboxV3 - mock i/o and "played least"
 
-import java.util.*;
-import java.util.stream.*;
-import java.util.function.*;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class JukeboxV3 {
 
@@ -19,16 +18,20 @@ public class JukeboxV3 {
 
     // solution using forEach
 
-    ArrayList<Result> tempList = new ArrayList<>();  
+    ArrayList<Result> tempList = new ArrayList<>();
 
-    for(SongV3 s: songList)
+    for (SongV3 s : songList) {
       tempList.add(new Result(s.id, 0));    // temporary list of songs with count = 0
+    }
 
-    for(Log l: logList)                     // traverse log to get counts
-      for(Result r: tempList)               // i know, add curlies  ;)
-        if(l.id == r.id)
+    for (Log l : logList) {                    // traverse log to get counts
+      for (Result r : tempList) {
+        if (l.id == r.id) {
           ++r.count;
-          
+        }
+      }
+    }
+
     Collections.sort(tempList,
       (s1, s2) -> s1.getCount().compareTo(s2.getCount()));  // sort by count, ascending
     System.out.println("\n\n" + tempList);
@@ -135,9 +138,9 @@ class Log {
   int id;
   String date;
 
-  Log(int i, String d) {
-    id = i;
-    date = d;
+  Log(int id, String date) {
+    this.id = id;
+    this.date = date;
   }
 
   Log() { }
@@ -152,38 +155,38 @@ class Log {
 
   public ArrayList<Log> getLog() {
     ArrayList<Log> myLog = new ArrayList<>();
-    myLog.add(new Log(1, "june 1"));
-    myLog.add(new Log(8, "june 1"));
-    myLog.add(new Log(9, "june 1"));
-    myLog.add(new Log(18, "june 1"));
-    myLog.add(new Log(15, "june 1"));
-    myLog.add(new Log(13, "june 1"));
-    myLog.add(new Log(2, "june 1"));
-    myLog.add(new Log(5, "june 1"));
-    myLog.add(new Log(11, "june 1"));
-    myLog.add(new Log(4, "june 1"));
-    myLog.add(new Log(2, "june 1"));
-    myLog.add(new Log(8, "june 1"));
-    myLog.add(new Log(15, "june 1"));
-    myLog.add(new Log(6, "june 1"));
-    myLog.add(new Log(7, "june 1"));
-    myLog.add(new Log(1, "june 1"));
-    myLog.add(new Log(11, "june 1"));
-    myLog.add(new Log(4, "june 1"));
-    myLog.add(new Log(12, "june 1"));
-    myLog.add(new Log(21, "june 1"));
-    myLog.add(new Log(20, "june 1"));
-    myLog.add(new Log(14, "june 1"));
-    myLog.add(new Log(6, "june 1"));
-    myLog.add(new Log(4, "june 1"));
-    myLog.add(new Log(17, "june 1"));
-    myLog.add(new Log(18, "june 1"));
-    myLog.add(new Log(19, "june 1"));
-    myLog.add(new Log(21, "june 1"));
-    myLog.add(new Log(5, "june 1"));
-    myLog.add(new Log(9, "june 1"));
-    myLog.add(new Log(12, "june 1"));
-    myLog.add(new Log(10, "june 1"));
+    myLog.add(new Log(1, "2021-06-01"));
+    myLog.add(new Log(8, "2021-06-01"));
+    myLog.add(new Log(9, "2021-06-01"));
+    myLog.add(new Log(18, "2021-06-01"));
+    myLog.add(new Log(15, "2021-06-01"));
+    myLog.add(new Log(13, "2021-06-01"));
+    myLog.add(new Log(2, "2021-06-01"));
+    myLog.add(new Log(5, "2021-06-01"));
+    myLog.add(new Log(11, "2021-06-01"));
+    myLog.add(new Log(4, "2021-06-01"));
+    myLog.add(new Log(2, "2021-06-01"));
+    myLog.add(new Log(8, "2021-06-01"));
+    myLog.add(new Log(15, "2021-06-01"));
+    myLog.add(new Log(6, "2021-06-01"));
+    myLog.add(new Log(7, "2021-06-01"));
+    myLog.add(new Log(1, "2021-06-01"));
+    myLog.add(new Log(11, "2021-06-01"));
+    myLog.add(new Log(4, "2021-06-01"));
+    myLog.add(new Log(12, "2021-06-01"));
+    myLog.add(new Log(21, "2021-06-01"));
+    myLog.add(new Log(20, "2021-06-01"));
+    myLog.add(new Log(14, "2021-06-01"));
+    myLog.add(new Log(6, "2021-06-01"));
+    myLog.add(new Log(4, "2021-06-01"));
+    myLog.add(new Log(17, "2021-06-01"));
+    myLog.add(new Log(18, "2021-06-01"));
+    myLog.add(new Log(19, "2021-06-01"));
+    myLog.add(new Log(21, "2021-06-01"));
+    myLog.add(new Log(5, "2021-06-01"));
+    myLog.add(new Log(9, "2021-06-01"));
+    myLog.add(new Log(12, "2021-06-01"));
+    myLog.add(new Log(10, "2021-06-01"));
 
     return myLog;
   }
