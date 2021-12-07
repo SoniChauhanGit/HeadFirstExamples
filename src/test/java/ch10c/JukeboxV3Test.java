@@ -9,19 +9,15 @@ import java.util.stream.Collectors;
 
 class JukeboxV3Test {
   private JukeboxData.Songs songs;
-  private List<Log> log;
 
   @BeforeEach
   void setUp() {
     songs = new JukeboxData.Songs();
-    log = new Log().getLog();
   }
 
   @Test
   void shouldOutputAllSongsPlayed() {
-    List<Song> allSongs = log.stream()
-                             .map(logEntry -> songs.getSongById(logEntry.id))
-                             .collect(Collectors.toList());
+    List<Song> allSongs = songs.getSongs();
 
     System.out.println(allSongs);
   }
