@@ -17,6 +17,18 @@ public class Song {
     this.year = year;
   }
 
+  @Override
+  public String toString() {
+    return "Song{" +
+            "id=" + id +
+            ", title='" + title + '\'' +
+            ", artist='" + artist + '\'' +
+            ", bpm=" + bpm +
+            ", genre='" + genre + '\'' +
+            ", year=" + year +
+            '}';
+  }
+
   public String getTitle() {
     return title;
   }
