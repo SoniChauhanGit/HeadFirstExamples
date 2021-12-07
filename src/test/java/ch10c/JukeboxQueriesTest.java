@@ -21,6 +21,7 @@ class JukeboxQueriesTest {
   @Test
   void shouldOutputAllSongsPlayed() {
     List<Song> allSongs = songs.getSongs();
+    allSongs.forEach(song -> System.out.println(song));
 
     System.out.println(allSongs);
   }
@@ -81,6 +82,7 @@ class JukeboxQueriesTest {
   void shouldQueryForGenre() {
     List<Song> allSongs = songs.getSongs();
     // ORDER MATTERS
+    // CANDIDATE
     // find all genres in played music
     List<String> genres = allSongs.stream()
                                   .map(song -> song.getGenre())
@@ -133,7 +135,7 @@ class JukeboxQueriesTest {
     System.out.println("result = " + genreCount);
   }
 
-  // CANDIDATE
+  // CANDIDATE: exercise 1
   // STRAIGHTFORWARD
   // filter
   // toList
