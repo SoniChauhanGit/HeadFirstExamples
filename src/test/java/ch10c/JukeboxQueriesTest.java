@@ -38,6 +38,29 @@ class JukeboxQueriesTest {
     System.out.println(result);
   }
 
+  // CANDIDATE
+  // REUSE - method references
+  // Comparator/sorting; collect
+  @Test
+  void shouldFindTopFiveSongs() {
+    List<Song> allSongs = songs.getSongs();
+
+    // simple
+    List<Song> result = allSongs.stream()
+                                .sorted((o1, o2) -> o2.getTimesPlayed() - o1.getTimesPlayed())
+                                .limit(5)
+                                .collect(Collectors.toList());
+    System.out.println(result);
+
+    // reuse
+    result = allSongs.stream()
+                     .sorted(Comparator.comparingInt(Song::getTimesPlayed).reversed())
+                     .limit(5)
+                     .collect(Collectors.toList());
+
+    System.out.println(result);
+  }
+
   // REGEX
   @Test
   void shouldFindNonStandardCharacters() {
@@ -78,20 +101,6 @@ class JukeboxQueriesTest {
     System.out.println("genreCount = " + genreCount);
   }
 
-  // PRIMITIVE STREAMS
-  @Test
-  void shouldQueryForYear() {
-    List<Song> allSongs = songs.getSongs();
-
-    // adding distinct changes this
-    IntSummaryStatistics result = allSongs.stream()
-                                          .mapToInt(Song::getYear)
-                                          .sorted()
-                                          .summaryStatistics();
-
-    System.out.println("result = " + result);
-  }
-
   // OPTIONAL
   // max terminal
   // Comparator
@@ -124,6 +133,7 @@ class JukeboxQueriesTest {
     System.out.println("result = " + genreCount);
   }
 
+  // CANDIDATE
   // STRAIGHTFORWARD
   // filter
   // toList
@@ -150,6 +160,7 @@ class JukeboxQueriesTest {
     System.out.println("result = " + result);
   }
 
+  // CANDIDATE
   // STRAIGHTFORWARD
   // min terminal
   // OPTIONAL
@@ -177,8 +188,9 @@ class JukeboxQueriesTest {
     System.out.println("result = " + result);
   }
 
+  // CANDIDATE
   @Test
-  void shouldFilterMapCollect() {
+  void shouldFindAllArtistsForASpecificSong() {
     List<Song> allSongs = songs.getSongs();
 
     String songTitle = "With a Little Help from My Friends";
@@ -190,6 +202,7 @@ class JukeboxQueriesTest {
     System.out.println("result = " + result);
   }
 
+  // CANDIDATE
   @Test
   void shouldComplexExample() {
     List<Song> allSongs = songs.getSongs();
@@ -215,6 +228,21 @@ class JukeboxQueriesTest {
       String artist = song.getArtist();
       result.add(artist);
     }
+
+    System.out.println("result = " + result);
+  }
+
+  // CANDIDATE
+  // PRIMITIVE STREAMS
+  @Test
+  void shouldQueryForYear() {
+    List<Song> allSongs = songs.getSongs();
+
+    // adding distinct changes this
+    IntSummaryStatistics result = allSongs.stream()
+                                          .mapToInt(Song::getYear)
+                                          .sorted()
+                                          .summaryStatistics();
 
     System.out.println("result = " + result);
   }
