@@ -47,9 +47,9 @@ class JukeboxQueriesTest {
     Pattern pattern = Pattern.compile("[^A-Za-z0-9 ]");
 
     List<String> result = allSongs.stream()
-                                .map(Song::getArtist)
-                                .filter(artist -> pattern.matcher(artist).find())
-                                .collect(Collectors.toList());
+                                  .map(Song::getArtist)
+                                  .filter(artist -> pattern.matcher(artist).find())
+                                  .collect(Collectors.toList());
 
     System.out.println("result = " + result);
   }
@@ -80,13 +80,14 @@ class JukeboxQueriesTest {
 
   // PRIMITIVE STREAMS
   @Test
-  void shouldQueryForBpm() {
+  void shouldQueryForYear() {
     List<Song> allSongs = songs.getSongs();
 
+    // adding distinct changes this
     IntSummaryStatistics result = allSongs.stream()
-                                                        .mapToInt(Song::getBpm)
-                                                        .sorted()
-                                                        .summaryStatistics();
+                                          .mapToInt(Song::getYear)
+                                          .sorted()
+                                          .summaryStatistics();
 
     System.out.println("result = " + result);
   }
