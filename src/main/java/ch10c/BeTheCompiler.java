@@ -1,5 +1,6 @@
 package ch10c;
 
+import java.util.Comparator;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -31,6 +32,12 @@ public class BeTheCompiler {
 //❑Function<String, Integer> f = (int i) -> "i = " + i;
 //❑Supplier<String> s = s -> "Some string: " + s;
 //❑Function<String, Integer> f = () -> System.out.println("Some string");
+  }
 
+  void assignToVariable() {
+    Comparator<String> comparator = (s1, s2) -> s1.compareToIgnoreCase(s2);
+    Runnable runnable = () -> System.out.println("Hello!");
+    Consumer<String> consumer = str -> System.out.println(str);
+    Supplier<String> supplier = () -> "Returned from a lambda";
   }
 }
