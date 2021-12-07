@@ -1,23 +1,24 @@
 package ch15;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.Socket;
+import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
+import java.nio.channels.SocketChannel;
 
 public class DailyAdviceClient {
 
   public void go() {
     try {
-      Socket s = new Socket("127.0.0.1", 4242);
+      InetSocketAddress address = new InetSocketAddress("localhost", 4242);
+      SocketChannel socketChannel = SocketChannel.open(address);
 
-      InputStreamReader streamReader = new InputStreamReader(s.getInputStream());
-      BufferedReader reader = new BufferedReader(streamReader);
+      ByteBuffer buffer = ByteBuffer.allocate(256);
+      socketChannel.read(buffer);
+      String result = new String(buffer.array()).trim();
 
-      String advice = reader.readLine();
-      System.out.println("Today you should: " + advice);
+      System.out.println("Today you should: " + result);
 
-      reader.close();
+      socketChannel.close();
     } catch (IOException ex) {
       ex.printStackTrace();
     }
