@@ -69,14 +69,13 @@ class SongV3 {
 
   SongV3() { }
 
-  SongV3(int id, String t, String b, String g, int y, String fm) {
+  SongV3(int id, String title, String band, String genre, int year, String gender) {
     this.id = id;
-    title = t;
-    band = b;
-    genre = g;
-    year = y;
-    gender = fm;
-    
+    this.title = title;
+    this.band = band;
+    this.genre = genre;
+    this.year = year;
+    this.gender = gender;
   }
 
   public ArrayList<SongV3> getSongsV3() {
