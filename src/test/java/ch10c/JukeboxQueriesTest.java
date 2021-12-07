@@ -78,6 +78,19 @@ class JukeboxQueriesTest {
     System.out.println("genreCount = " + genreCount);
   }
 
+  // PRIMITIVE STREAMS
+  @Test
+  void shouldQueryForBpm() {
+    List<Song> allSongs = songs.getSongs();
+
+    IntSummaryStatistics result = allSongs.stream()
+                                                        .mapToInt(Song::getBpm)
+                                                        .sorted()
+                                                        .summaryStatistics();
+
+    System.out.println("result = " + result);
+  }
+
   // OPTIONAL
   // max terminal
   // Comparator
