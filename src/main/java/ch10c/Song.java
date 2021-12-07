@@ -17,6 +17,10 @@ public class Song {
     this.timesPlayed = timesPlayed;
   }
 
+  public int getTimesPlayed() {
+    return timesPlayed;
+  }
+
   public String getTitle() {
     return title;
   }

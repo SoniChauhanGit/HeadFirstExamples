@@ -24,14 +24,14 @@ class JukeboxV3Test {
 
   @Test
   void shouldOrderByLeastPlayed() {
-    // this is impossible!!!!
-    // back to square one
-//    List<Song> result = log.stream()
-//                           .map(logEntry -> songs.getSongById(logEntry.id))
-//            .sorted(Comparator.comparingInt())
-//                           .collect(Collectors.toList());
-//
-//    System.out.println(result);
-//
+    List<Song> allSongs = songs.getSongs();
+
+    List<Song> result = allSongs.stream()
+                                 .sorted(Comparator.comparingInt(Song::getTimesPlayed))
+                                 .collect(Collectors.toList());
+
+    System.out.println(result);
   }
+
+
 }
