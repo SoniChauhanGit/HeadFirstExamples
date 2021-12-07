@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.*;
@@ -24,6 +25,7 @@ class JukeboxQueriesTest {
     System.out.println(allSongs);
   }
 
+  // STRAIGHTFORWARD
   // Sorting, Collect to List
   @Test
   void shouldOrderByLeastPlayed() {
@@ -34,6 +36,22 @@ class JukeboxQueriesTest {
                                 .collect(Collectors.toList());
 
     System.out.println(result);
+  }
+
+  // REGEX
+  @Test
+  void shouldFindNonStandardCharacters() {
+    List<Song> allSongs = songs.getSongs();
+
+    // Includes space!!
+    Pattern pattern = Pattern.compile("[^A-Za-z0-9 ]");
+
+    List<String> result = allSongs.stream()
+                                .map(Song::getArtist)
+                                .filter(artist -> pattern.matcher(artist).find())
+                                .collect(Collectors.toList());
+
+    System.out.println("result = " + result);
   }
 
   @Test
