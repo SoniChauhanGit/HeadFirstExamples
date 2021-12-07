@@ -19,7 +19,7 @@ public class JukeboxData {
         new Song("Cassidy", "Grateful Dead", 158, "Rock", 1972, 123),
         new Song("50 ways", "Paul Simon", 102, "Soft Rock", 1975, 199),
         new Song("Hurt", "Nine Inch Nails", 79, "Industrial Rock", 1995, 257),
-        new Song("Silence", "Delerium", 98, "Trance", 1999, 134),
+        new Song("Silence", "Delerium", 98, "Electronic", 1999, 134),
         new Song("Hurt", "Johnny Cash", 91, "Soft Rock", 2002, 392),
         new Song("Watercolour", "Pendulum", 174, "Electronic", 2010, 155),
         new Song("The Outsider", "A Perfect Circle", 113, "Alternative Rock", 2004, 312),
@@ -34,7 +34,6 @@ public class JukeboxData {
         new Song("Walk Me Home", "P!nk", 88, "Pop", 2019, 459),
         new Song("I am not a woman, I'm a god", "Halsey", 180, "Alternative Rock", 2021, 384),
         new Song("Pasos de cero", "Pablo Alborán", 99, "Latin", 2014, 117),
-        new Song("Nature's Kingdom", "Delerium", 85, "Trance", 2000, 88),
         new Song("Smooth", "Santana", 116, "Latin", 1999, 244),
         new Song("Immigrant song", "Led Zeppelin", 112, "Rock", 1970, 484));
     }
