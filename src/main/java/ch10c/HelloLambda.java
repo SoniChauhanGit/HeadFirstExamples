@@ -1,6 +1,7 @@
 package ch10c;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -11,7 +12,7 @@ import java.util.stream.Stream;
 
 public class HelloLambda {
   public static void main(String[] args) {
-    mandatoryTypes();
+    sortingNaturalOrder();
   }
 
   static void helloLambda() {
@@ -22,6 +23,15 @@ public class HelloLambda {
                                    return s1.compareToIgnoreCase(s2);
                                  })
                                  .limit(4)
+                                 .collect(Collectors.toList());
+    System.out.println("result = " + result);
+  }
+
+  static void sortingNaturalOrder() {
+    List<String> strings = List.of("I", "am", "a", "list", "of", "Strings");
+
+    List<String> result = strings.stream()
+                                 .sorted(Comparator.naturalOrder())
                                  .collect(Collectors.toList());
     System.out.println("result = " + result);
   }

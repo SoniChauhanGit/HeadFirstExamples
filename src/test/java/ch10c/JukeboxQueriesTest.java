@@ -144,7 +144,7 @@ class JukeboxQueriesTest {
     List<Song> allSongs = songs.getSongs();
 
     List<Song> result = allSongs.stream()
-                                .filter(song -> song.getGenre().contains("Rock"))
+                                .filter(song -> song.getGenre().equals("Rock"))
                                 .collect(toList());
 
     System.out.println(result);
@@ -173,6 +173,16 @@ class JukeboxQueriesTest {
                                     .min(Comparator.comparingInt(Song::getYear));
 
     System.out.println("result = " + result.get());
+  }
+
+  @Test
+  void shouldOrderBySongAge() {
+    List<Song> allSongs = songs.getSongs();
+    List<Song> result = allSongs.stream()
+                                .sorted(Comparator.comparingInt(Song::getYear))
+                                .collect(toList());
+
+    System.out.println("result = " + result);
   }
 
   // STRAIGHTFORWARD
