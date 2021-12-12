@@ -11,17 +11,13 @@ public class StreamPuzzle {
 
     songSearch.printTopFiveSongs();
 
-    songSearch.searchForArtist("The Beatles");
-    songSearch.searchForArtist("The Beach Boys");
+    songSearch.search("The Beatles");
+    songSearch.search("The Beach Boys");
   }
 }
 
 class SongSearch {
-  private final List<Song> songs;
-
-  public SongSearch() {
-    songs = new JukeboxData.Songs().getSongs();
-  }
+  private final List<Song> songs = new JukeboxData.Songs().getSongs();
 
   void printTopFiveSongs() {
     List<String> topFive = songs.stream()
@@ -29,10 +25,10 @@ class SongSearch {
                                 .map(song -> song.getTitle())
                                 .limit(5)
                                 .collect(Collectors.toList());
-    System.out.println("Top 5 songs: " + topFive);
+    System.out.println(topFive);
   }
 
-  void searchForArtist(String artist) {
+  void search(String artist) {
     Optional<Song> result = songs.stream()
                                  .filter(song -> song.getArtist().equals(artist))
                                  .findFirst();
