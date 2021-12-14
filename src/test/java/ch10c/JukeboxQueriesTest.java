@@ -150,8 +150,8 @@ class JukeboxQueriesTest {
     List<Song> allSongs = songs.getSongs();
 
     Optional<Song> result = allSongs.stream()
-                                     .filter(song -> song.getYear() == 1995)
-                                     .findFirst();
+                                    .filter(song -> song.getYear() == 1995)
+                                    .findFirst();
 
     System.out.println("result = " + result);
   }
@@ -263,6 +263,7 @@ class JukeboxQueriesTest {
     List<String> result = allSongs.stream()
                                   .filter(song -> song.getTitle().equals(songTitle))
                                   .map(Song::getArtist)
+                                  .filter(artist -> !artist.equals("The Beatles"))
                                   .collect(toList());
 
     System.out.println("result = " + result);
