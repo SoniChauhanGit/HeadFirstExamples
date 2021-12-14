@@ -135,6 +135,39 @@ class JukeboxQueriesTest {
     System.out.println("result = " + genreCount);
   }
 
+  @Test
+  void shouldSeeIfThereAreAnyRAndBSongs() {
+    List<Song> allSongs = songs.getSongs();
+
+    boolean result = allSongs.stream()
+                             .anyMatch(song -> song.getGenre().equals("R&B"));
+
+    System.out.println("result = " + result);
+  }
+
+  @Test
+  void shouldFindASong() {
+    List<Song> allSongs = songs.getSongs();
+
+    Optional<Song> result = allSongs.stream()
+                                     .filter(song -> song.getYear() == 1995)
+                                     .findFirst();
+
+    System.out.println("result = " + result);
+  }
+
+  @Test
+  void shouldFindDistinctArtists() {
+    List<Song> allSongs = songs.getSongs();
+
+    long result = allSongs.stream()
+                          .map(Song::getArtist)
+                          .distinct()
+                          .count();
+
+    System.out.println("result = " + result);
+  }
+
   // CANDIDATE: exercise 1
   // STRAIGHTFORWARD
   // filter
@@ -160,6 +193,27 @@ class JukeboxQueriesTest {
                                        .collect(groupingBy(Function.identity(), counting()));
 
     System.out.println("result = " + result);
+  }
+
+  // GROUPING
+  @Test
+  void shouldFindNumberOfTimesSongTitleAppears2() {
+    List<Song> allSongs = songs.getSongs();
+
+    Map<String, Long> result = allSongs.stream()
+                                       .collect(Collectors.groupingBy(Song::getTitle, Collectors.counting()));
+
+    System.out.println("result = " + result);
+  }
+
+  // GROUPING
+  @Test
+  void shouldOutputCSVOfArtists() {
+    List<Song> songs = this.songs.getSongs();
+
+    System.out.println(songs.stream()
+                            .map(Song::getArtist)
+                            .collect(joining(",")));
   }
 
   // CANDIDATE
