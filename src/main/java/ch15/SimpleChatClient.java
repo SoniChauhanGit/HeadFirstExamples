@@ -4,17 +4,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
+import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
+import java.nio.channels.SocketChannel;
 
 public class SimpleChatClient {
   private JTextArea incoming;
   private JTextField outgoing;
-  private BufferedReader reader;
-  private PrintWriter writer;
+  private SocketChannel socketChannel;
 
   public static void main(String[] args) {
     new SimpleChatClient().go();
@@ -46,10 +44,10 @@ public class SimpleChatClient {
 
   private void setUpNetworking() {
     try {
-      Socket socket = new Socket("127.0.0.1", 5000);
-      InputStreamReader streamReader = new InputStreamReader(socket.getInputStream());
-      reader = new BufferedReader(streamReader);
-      writer = new PrintWriter(socket.getOutputStream());
+      InetSocketAddress address = new InetSocketAddress("localhost", 5000);
+      this.socketChannel = SocketChannel.open(address);
+
+
       System.out.println("networking established");
     } catch (IOException ex) {
       ex.printStackTrace();
@@ -59,8 +57,10 @@ public class SimpleChatClient {
   public class SendButtonListener implements ActionListener {
     public void actionPerformed(ActionEvent ev) {
       try {
-        writer.println(outgoing.getText());
-        writer.flush();
+        String message = outgoing.getText();
+        System.out.println(message);
+        ByteBuffer buffer = ByteBuffer.wrap(message.getBytes());
+        socketChannel.write(buffer);
       } catch (Exception ex) {
         ex.printStackTrace();
       }
@@ -71,15 +71,14 @@ public class SimpleChatClient {
 
   public class IncomingReader implements Runnable {
     public void run() {
-      String message;
+      ByteBuffer buffer = ByteBuffer.allocate(256);
       try {
-        while ((message = reader.readLine()) != null) {
-          System.out.println("read " + message);
-          incoming.append(message + "\n");
-        } // close while
-      } catch (Exception ex) {
-        ex.printStackTrace();
+        socketChannel.read(buffer);
+      } catch (IOException e) {
+        e.printStackTrace();
       }
+      String result = new String(buffer.array()).trim();
+      incoming.append(result);
     } // close run
   } // close inner class
 } // close outer class
