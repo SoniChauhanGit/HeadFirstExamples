@@ -1,29 +1,33 @@
 package ch15;
 
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 import java.util.Iterator;
 
 public class SimpleChatServer {
-  private ArrayList<PrintWriter> clientOutputStreams;
+  private ArrayList<SocketChannel> clients;
 
   public static void main(String[] args) {
     new SimpleChatServer().go();
   }
 
   public void go() {
-    clientOutputStreams = new ArrayList<>();
+    clients = new ArrayList<>();
     try {
-      ServerSocket serverSock = new ServerSocket(5000);
-      while (true) {
-        Socket clientSocket = serverSock.accept();
-        PrintWriter writer = new PrintWriter(clientSocket.getOutputStream());
-        clientOutputStreams.add(writer);
-        Thread t = new Thread(new ClientHandler(clientSocket));
+      ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
+      InetSocketAddress address = new InetSocketAddress("127.0.0.1", 5000);
+      serverSocketChannel.bind(address);
+
+      while (serverSocketChannel.isOpen()) {
+        SocketChannel socketChannel = serverSocketChannel.accept();
+
+        clients.add(socketChannel);
+        Thread t = new Thread(new ClientHandler(socketChannel));
         t.start();
         System.out.println("got a connection");
       }
@@ -33,38 +37,36 @@ public class SimpleChatServer {
   } // close go
 
   public class ClientHandler implements Runnable {
-    BufferedReader reader;
-    Socket sock;
+    SocketChannel socketChannel;
 
-    public ClientHandler(Socket clientSocket) {
-      try {
-        sock = clientSocket;
-        InputStreamReader isReader = new InputStreamReader(sock.getInputStream());
-        reader = new BufferedReader(isReader);
-      } catch (Exception ex) {
-        ex.printStackTrace();
-      }
-    } // close constructor
+    public ClientHandler(SocketChannel socketChannel) {
+      this.socketChannel = socketChannel;
+    }
 
     public void run() {
-      String message;
+      ByteBuffer buffer = ByteBuffer.allocate(1024);
+      buffer.clear();
       try {
-        while ((message = reader.readLine()) != null) {
-          System.out.println("read " + message);
-          tellEveryone(message);
-        } // close while
-      } catch (Exception ex) {
-        ex.printStackTrace();
+        int read = socketChannel.read(buffer);
+        System.out.println(read);
+        ByteBuffer byteBuffer = buffer.flip();
+        tellEveryone(byteBuffer);
+        System.out.println("told");
+      } catch (IOException e) {
+        e.printStackTrace();
       }
+
     } // close run
 
-    public void tellEveryone(String message) {
-      Iterator<PrintWriter> it = clientOutputStreams.iterator();
+    public void tellEveryone(ByteBuffer byteBuffer) {
+      Iterator<SocketChannel> it = clients.iterator();
       while (it.hasNext()) {
         try {
-          PrintWriter writer = it.next();
-          writer.println(message);
-          writer.flush();
+          SocketChannel channel = it.next();
+          while(byteBuffer.hasRemaining()) {
+            channel.write(byteBuffer);
+          }
+
         } catch (Exception ex) {
           ex.printStackTrace();
         }
