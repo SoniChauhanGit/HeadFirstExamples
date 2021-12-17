@@ -1,18 +1,21 @@
 package ch15;
 
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class TestThreads {
-  public static void main(String[] args) {
+  public static void main(String[] args) throws InterruptedException, ExecutionException {
     ExecutorService pool = Executors.newFixedThreadPool(2);
-    pool.execute(() -> {
+    Future<?> future1 = pool.submit(() -> {
       Accum a = Accum.getInstance();
       for (int i = 0; i < 98; i++) {
         a.updateCounter(1000);
       }
     });
-    pool.execute(() -> {
+    System.out.println(future1.isDone());
+    Future<?> future2 = pool.submit(() -> {
       Accum a = Accum.getInstance();
       for (int i = 0; i < 99; i++) {
         a.updateCounter(1);
