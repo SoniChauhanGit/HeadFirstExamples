@@ -1,20 +1,6 @@
 package ch15;
 
-class BankAccount {
-  private int balance = 100;
-
-  public int getBalance() {
-    return balance;
-  }
-
-  public void withdraw(int amount) {
-    balance = balance - amount;
-  }
-}
-
-public class RyanAndMonicaJob implements Runnable {
-  private BankAccount account = new BankAccount();
-
+public class TestRyanAndMonica {
   public static void main(String[] args) {
     RyanAndMonicaJob theJob = new RyanAndMonicaJob();
     Thread one = new Thread(theJob);
@@ -24,6 +10,11 @@ public class RyanAndMonicaJob implements Runnable {
     one.start();
     two.start();
   }
+
+}
+
+class RyanAndMonicaJob implements Runnable {
+  private final BankAccount account = new BankAccount();
 
   public void run() {
     for (int x = 0; x < 10; x++) {
@@ -51,3 +42,16 @@ public class RyanAndMonicaJob implements Runnable {
     }
   }
 }
+
+class BankAccount {
+  private int balance = 100;
+
+  public int getBalance() {
+    return balance;
+  }
+
+  public void withdraw(int amount) {
+    balance = balance - amount;
+  }
+}
+
