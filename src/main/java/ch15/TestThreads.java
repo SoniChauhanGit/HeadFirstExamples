@@ -18,11 +18,12 @@ class Accum {
   private Accum() {
   }
 
+  // singleton
   public static Accum getAccum() {
     return a;
   }
 
-  public void updateCounter(int add) {
+  public synchronized void updateCounter(int add) {
     counter += add;
   }
 
@@ -51,7 +52,7 @@ class ThreadTwo implements Runnable {
   Accum a = Accum.getAccum();
 
   public void run() {
-    for (int x = 0; x < 99; x++) {
+    for (int i = 0; i < 99; i++) {
       a.updateCounter(1);
       try {
         Thread.sleep(50);
