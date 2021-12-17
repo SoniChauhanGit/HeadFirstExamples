@@ -16,7 +16,7 @@ class TestSync implements Runnable {
   public void run() {
     for (int i = 0; i < 50; i++) {
       increment();
-      System.out.println("balance is " + balance);
+      System.out.printf("Balance updated by %s. Balance is %d%n", Thread.currentThread().getName(), balance);
     }
   }
 
