@@ -1,18 +1,19 @@
 package ch15;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class TestThreads {
   public static void main(String[] args) {
-    ThreadOne t1 = new ThreadOne();
-    ThreadTwo t2 = new ThreadTwo();
-    Thread one = new Thread(t1);
-    Thread two = new Thread(t2);
-    one.start();
-    two.start();
+    ExecutorService pool = Executors.newFixedThreadPool(2);
+    pool.execute(new ThreadOne());
+    pool.execute(new ThreadTwo());
+    pool.shutdown();
   }
 }
 
 class Accum {
-  private static Accum a = new Accum();
+  private static final Accum a = new Accum();
   private int counter = 0;
 
   private Accum() {
