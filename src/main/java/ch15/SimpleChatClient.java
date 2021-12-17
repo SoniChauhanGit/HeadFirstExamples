@@ -11,15 +11,13 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 public class SimpleChatClient {
-  JTextArea incoming;
-  JTextField outgoing;
-  BufferedReader reader;
-  PrintWriter writer;
-  Socket sock;
+  private JTextArea incoming;
+  private JTextField outgoing;
+  private BufferedReader reader;
+  private PrintWriter writer;
 
   public static void main(String[] args) {
-    SimpleChatClient client = new SimpleChatClient();
-    client.go();
+    new SimpleChatClient().go();
   }
 
   public void go() {
@@ -48,10 +46,10 @@ public class SimpleChatClient {
 
   private void setUpNetworking() {
     try {
-      sock = new Socket("127.0.0.1", 5000);
-      InputStreamReader streamReader = new InputStreamReader(sock.getInputStream());
+      Socket socket = new Socket("127.0.0.1", 5000);
+      InputStreamReader streamReader = new InputStreamReader(socket.getInputStream());
       reader = new BufferedReader(streamReader);
-      writer = new PrintWriter(sock.getOutputStream());
+      writer = new PrintWriter(socket.getOutputStream());
       System.out.println("networking established");
     } catch (IOException ex) {
       ex.printStackTrace();
