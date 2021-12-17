@@ -9,6 +9,7 @@ public class TestThreads {
     pool.execute(new ThreadOne());
     pool.execute(new ThreadTwo());
     pool.shutdown();
+    System.out.println(Accum.getInstance().getCount());
   }
 }
 
@@ -20,11 +21,11 @@ class Accum {
   }
 
   // singleton
-  public static Accum getAccum() {
+  public static Accum getInstance() {
     return a;
   }
 
-  public synchronized void updateCounter(int add) {
+  public void updateCounter(int add) {
     counter += add;
   }
 
@@ -34,33 +35,21 @@ class Accum {
 }
 
 class ThreadOne implements Runnable {
-  Accum a = Accum.getAccum();
+  Accum a = Accum.getInstance();
 
   public void run() {
     for (int i = 0; i < 98; i++) {
       a.updateCounter(1000);
-      try {
-        Thread.sleep(50);
-      } catch (InterruptedException ex) {
-        System.out.println("ThreadOne was interrupted!");
-      }
     }
-    System.out.println("one " + a.getCount());
   }
 }
 
 class ThreadTwo implements Runnable {
-  Accum a = Accum.getAccum();
+  Accum a = Accum.getInstance();
 
   public void run() {
     for (int i = 0; i < 99; i++) {
       a.updateCounter(1);
-      try {
-        Thread.sleep(50);
-      } catch (InterruptedException ex) {
-        System.out.println("ThreadTwo was interrupted!");
-      }
     }
-    System.out.println("two " + a.getCount());
   }
 }
