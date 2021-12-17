@@ -10,14 +10,13 @@ public class TestRyanAndMonica {
     one.start();
     two.start();
   }
-
 }
 
 class RyanAndMonicaJob implements Runnable {
   private final BankAccount account = new BankAccount();
 
   public void run() {
-    for (int x = 0; x < 10; x++) {
+    for (int i = 0; i < 10; i++) {
       makeWithdrawal(10);
       if (account.getBalance() < 0) {
         System.out.println("Overdrawn!");
