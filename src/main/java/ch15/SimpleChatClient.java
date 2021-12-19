@@ -12,7 +12,7 @@ import java.net.Socket;
 
 public class SimpleChatClient {
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException {
     Socket socket = setUpNetworking();
 
     ClientUI clientUI = new ClientUI();
@@ -23,47 +23,12 @@ public class SimpleChatClient {
     readerThread.start();
   }
 
-
-  private static Socket setUpNetworking() {
-    try {
-      Socket sock = new Socket("127.0.0.1", 5000);
-      System.out.println("networking established");
-      return sock;
-    } catch (IOException ex) {
-      throw new RuntimeException(ex);
-    }
-  } // close setUpNetworking
-
-  public static class IncomingReader implements Runnable {
-    private final BufferedReader reader;
-    private final JTextArea incomingMessageArea;
-
-    public IncomingReader(JTextArea incomingMessageArea, Socket socket) {
-      this.incomingMessageArea = incomingMessageArea;
-      try {
-        reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
-    }
-
-    public void run() {
-      processMessages();
-    }
-
-    private void processMessages() {
-      String message;
-      try {
-        while ((message = reader.readLine()) != null) {
-          System.out.println("read " + message);
-          incomingMessageArea.append(message + "\n");
-        } // close while
-      } catch (Exception ex) {
-        ex.printStackTrace();
-      }
-    }
-  } // close inner class
-} // close outer class
+  private static Socket setUpNetworking() throws IOException {
+    Socket socket = new Socket("127.0.0.1", 5000);
+    System.out.println("networking established");
+    return socket;
+  }
+}
 
 class ClientUI {
   private JTextArea incoming;
@@ -87,7 +52,7 @@ class ClientUI {
     frame.getContentPane().add(BorderLayout.CENTER, mainPanel);
     frame.setSize(800, 500);
     frame.setVisible(true);
-  } // close go
+  }
 
   public JTextArea getIncoming() {
     return incoming;
@@ -118,3 +83,29 @@ class ClientUI {
     }
   }
 }
+
+class IncomingReader implements Runnable {
+  private final BufferedReader reader;
+  private final JTextArea incomingMessageArea;
+
+  public IncomingReader(JTextArea incomingMessageArea, Socket socket) throws IOException {
+    this.incomingMessageArea = incomingMessageArea;
+    reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+  }
+
+  public void run() {
+    processMessages();
+  }
+
+  private void processMessages() {
+    String message;
+    try {
+      while ((message = reader.readLine()) != null) {
+        System.out.println("read " + message);
+        incomingMessageArea.append(message + "\n");
+      } // close while
+    } catch (Exception ex) {
+      ex.printStackTrace();
+    }
+  }
+} // close inner class
