@@ -12,6 +12,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class SimpleChatServer {
+  private final ExecutorService executorService = Executors.newCachedThreadPool();
 
   public static void main(String[] args) {
     new SimpleChatServer().go();
@@ -24,30 +25,24 @@ public class SimpleChatServer {
       while (!serverSock.isClosed()) {
         Socket clientSocket = serverSock.accept();
         broadcaster.addClient(clientSocket);
-        ClientHandler clientHandler = new ClientHandler(clientSocket, broadcaster);
-        ExecutorService executorService = Executors.newSingleThreadExecutor();
-        executorService.execute(clientHandler);
+        executorService.execute(new ClientHandler(clientSocket, broadcaster));
         System.out.println("got a connection");
-        executorService.shutdown();
       }
+      executorService.shutdown();
     } catch (Exception ex) {
       ex.printStackTrace();
     }
-  } // close go
-} // close class
+  }
+}
 
 class ClientHandler implements Runnable {
-  private BufferedReader reader;
+  private final BufferedReader reader;
   private final Broadcaster broadcaster;
 
-  public ClientHandler(Socket clientSocket, Broadcaster broadcaster) {
+  public ClientHandler(Socket clientSocket, Broadcaster broadcaster) throws IOException {
     this.broadcaster = broadcaster;
-    try {
       InputStreamReader isReader = new InputStreamReader(clientSocket.getInputStream());
       reader = new BufferedReader(isReader);
-    } catch (Exception ex) {
-      ex.printStackTrace();
-    }
   } // close constructor
 
   public void run() {
@@ -60,16 +55,14 @@ class ClientHandler implements Runnable {
     } catch (Exception ex) {
       ex.printStackTrace();
     }
-  } // close run
-
+  }
 }
 
 class Broadcaster {
   private final ArrayList<PrintWriter> clientOutputStreams = new ArrayList<>();
 
   void addClient(Socket clientSocket) throws IOException {
-    PrintWriter writer = new PrintWriter(clientSocket.getOutputStream());
-    clientOutputStreams.add(writer);
+    clientOutputStreams.add(new PrintWriter(clientSocket.getOutputStream()));
   }
 
   public void tellEveryone(String message) {
@@ -82,6 +75,6 @@ class Broadcaster {
       } catch (Exception ex) {
         ex.printStackTrace();
       }
-    } // end while
-  } // close tellEveryone
+    }
+  }
 }
