@@ -4,18 +4,17 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
+import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
+import java.nio.channels.SocketChannel;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class SimpleChatClient {
 
   public static void main(String[] args) throws IOException {
-    Socket socket = setUpNetworking();
+    SocketChannel socket = setUpNetworking();
 
     ClientUI clientUI = new ClientUI();
     clientUI.go(socket);
@@ -26,17 +25,17 @@ public class SimpleChatClient {
     threadExecutor.shutdown();
   }
 
-  private static Socket setUpNetworking() throws IOException {
-    Socket socket = new Socket("127.0.0.1", 5000);
-    System.out.println("Networking established. Local port: " + socket.getLocalPort());
-    return socket;
+  private static SocketChannel setUpNetworking() throws IOException {
+    SocketChannel socketChannel = SocketChannel.open(new InetSocketAddress("localhost", 5000));
+    System.out.println("Networking established. Local address: " + socketChannel.getLocalAddress());
+    return socketChannel;
   }
 }
 
 class ClientUI {
   private JTextArea incoming;
 
-  public void go(Socket socket) {
+  public void go(SocketChannel socket) {
     JFrame frame = new JFrame("Ludicrously Simple Chat Client");
     JPanel mainPanel = new JPanel();
     incoming = new JTextArea(15, 50);
@@ -63,21 +62,18 @@ class ClientUI {
 
   public static class SendButtonListener implements ActionListener {
     private final JTextField outgoing;
-    private final PrintWriter writer;
+    private final SocketChannel channel;
 
-    public SendButtonListener(JTextField outgoingMessage, Socket socket) {
-      try {
-        writer = new PrintWriter(socket.getOutputStream());
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
+    public SendButtonListener(JTextField outgoingMessage, SocketChannel channel) {
       outgoing = outgoingMessage;
+      this.channel = channel;
     }
 
     public void actionPerformed(ActionEvent ev) {
+      byte[] message = outgoing.getText().getBytes();
+      ByteBuffer buffer = ByteBuffer.wrap(message);
       try {
-        writer.println(outgoing.getText());
-        writer.flush();
+        channel.write(buffer);
       } catch (Exception ex) {
         ex.printStackTrace();
       }
@@ -88,12 +84,12 @@ class ClientUI {
 }
 
 class IncomingReader implements Runnable {
-  private final BufferedReader reader;
+  private final SocketChannel channel;
   private final JTextArea incomingMessageArea;
 
-  public IncomingReader(JTextArea incomingMessageArea, Socket socket) throws IOException {
+  public IncomingReader(JTextArea incomingMessageArea, SocketChannel channel) {
     this.incomingMessageArea = incomingMessageArea;
-    reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+    this.channel = channel;
   }
 
   public void run() {
@@ -101,12 +97,16 @@ class IncomingReader implements Runnable {
   }
 
   private void processMessages() {
-    String message;
+    ByteBuffer buffer = ByteBuffer.allocate(256);
+
     try {
-      while ((message = reader.readLine()) != null) {
+      while (channel.isOpen()) {
+        channel.read(buffer);
+        String message = new String(buffer.array()).trim();
         System.out.println("read " + message);
         incomingMessageArea.append(message + "\n");
-      } // close while
+        buffer.clear();
+      }
     } catch (Exception ex) {
       ex.printStackTrace();
     }
