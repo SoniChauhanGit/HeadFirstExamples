@@ -28,7 +28,7 @@ public class SimpleChatClient {
 
   private static Socket setUpNetworking() throws IOException {
     Socket socket = new Socket("127.0.0.1", 5000);
-    System.out.println("networking established");
+    System.out.println("Networking established. Local port: " + socket.getLocalPort());
     return socket;
   }
 }
