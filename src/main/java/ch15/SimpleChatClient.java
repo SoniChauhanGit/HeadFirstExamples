@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class SimpleChatClient {
 
@@ -19,8 +21,9 @@ public class SimpleChatClient {
     clientUI.go(socket);
 
     IncomingReader incomingReader = new IncomingReader(clientUI.getIncoming(), socket);
-    Thread readerThread = new Thread(incomingReader);
-    readerThread.start();
+    ExecutorService threadExecutor = Executors.newSingleThreadExecutor();
+    threadExecutor.execute(incomingReader);
+    threadExecutor.shutdown();
   }
 
   private static Socket setUpNetworking() throws IOException {
