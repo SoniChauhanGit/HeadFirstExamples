@@ -5,7 +5,6 @@ import java.nio.ByteBuffer;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -47,14 +46,10 @@ class ClientHandler implements Runnable {
 
   public void run() {
     ByteBuffer buffer = ByteBuffer.allocate(32);
-    buffer.clear();
-    System.out.println("running");
     try {
       while (clientSocket.isOpen()) {
-        System.out.println("clientSocket = " + clientSocket.isOpen());
         clientSocket.read(buffer);
         String message = new String(buffer.array()).trim();
-
         System.out.println("read " + message);
 
         buffer.flip();
@@ -76,12 +71,9 @@ class Broadcaster {
   }
 
   public void tellEveryone(ByteBuffer message) {
-    Iterator<SocketChannel> it = clientOutputStreams.iterator();
-    while (it.hasNext()) {
-      SocketChannel next = it.next();
-      System.out.println("Telling: " + next);
+    for (SocketChannel channel : clientOutputStreams) {
       try {
-        next.write(message);
+        channel.write(message);
         message.rewind();
       } catch (Exception ex) {
         ex.printStackTrace();
