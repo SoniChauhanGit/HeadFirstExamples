@@ -56,7 +56,9 @@ class ClientHandler implements Runnable {
         String message = new String(buffer.array()).trim();
 
         System.out.println("read " + message);
-        broadcaster.tellEveryone(message);
+
+        buffer.flip();
+        broadcaster.tellEveryone(buffer);
         buffer.clear();
       }
       clientSocket.close();
@@ -73,17 +75,14 @@ class Broadcaster {
     clientOutputStreams.add(clientSocket);
   }
 
-  public void tellEveryone(String message) {
-    System.out.println("message = " + message);
-    byte[] byteArray = message.getBytes();
-    ByteBuffer buffer = ByteBuffer.wrap(byteArray);
-
+  public void tellEveryone(ByteBuffer message) {
     Iterator<SocketChannel> it = clientOutputStreams.iterator();
     while (it.hasNext()) {
       SocketChannel next = it.next();
       System.out.println("Telling: " + next);
       try {
-        next.write(buffer);
+        next.write(message);
+        message.rewind();
       } catch (Exception ex) {
         ex.printStackTrace();
       }
