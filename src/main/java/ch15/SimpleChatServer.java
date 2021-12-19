@@ -1,12 +1,15 @@
 package ch15;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class SimpleChatServer {
 
@@ -18,14 +21,14 @@ public class SimpleChatServer {
     try {
       ServerSocket serverSock = new ServerSocket(5000);
       Broadcaster broadcaster = new Broadcaster();
-      while (true) {
+      while (!serverSock.isClosed()) {
         Socket clientSocket = serverSock.accept();
-        PrintWriter writer = new PrintWriter(clientSocket.getOutputStream());
-        broadcaster.addClient(writer);
+        broadcaster.addClient(clientSocket);
         ClientHandler clientHandler = new ClientHandler(clientSocket, broadcaster);
-        Thread t = new Thread(clientHandler);
-        t.start();
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        executorService.execute(clientHandler);
         System.out.println("got a connection");
+        executorService.shutdown();
       }
     } catch (Exception ex) {
       ex.printStackTrace();
@@ -35,14 +38,12 @@ public class SimpleChatServer {
 
 class ClientHandler implements Runnable {
   private BufferedReader reader;
-  private Socket sock;
   private final Broadcaster broadcaster;
 
   public ClientHandler(Socket clientSocket, Broadcaster broadcaster) {
     this.broadcaster = broadcaster;
     try {
-      sock = clientSocket;
-      InputStreamReader isReader = new InputStreamReader(sock.getInputStream());
+      InputStreamReader isReader = new InputStreamReader(clientSocket.getInputStream());
       reader = new BufferedReader(isReader);
     } catch (Exception ex) {
       ex.printStackTrace();
@@ -66,8 +67,9 @@ class ClientHandler implements Runnable {
 class Broadcaster {
   private final ArrayList<PrintWriter> clientOutputStreams = new ArrayList<>();
 
-  void addClient(PrintWriter clientOutputStream) {
-    clientOutputStreams.add(clientOutputStream);
+  void addClient(Socket clientSocket) throws IOException {
+    PrintWriter writer = new PrintWriter(clientSocket.getOutputStream());
+    clientOutputStreams.add(writer);
   }
 
   public void tellEveryone(String message) {
