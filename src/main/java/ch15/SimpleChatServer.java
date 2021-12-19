@@ -9,48 +9,21 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class SimpleChatServer {
-  ArrayList<PrintWriter> clientOutputStreams;
-
-  public class ClientHandler implements Runnable {
-    BufferedReader reader;
-    Socket sock;
-
-    public ClientHandler(Socket clientSocket) {
-      try {
-        sock = clientSocket;
-        InputStreamReader isReader = new InputStreamReader(sock.getInputStream());
-        reader = new BufferedReader(isReader);
-      } catch (Exception ex) {
-        ex.printStackTrace();
-      }
-    } // close constructor
-
-    public void run() {
-      String message;
-      try {
-        while ((message = reader.readLine()) != null) {
-          System.out.println("read " + message);
-          tellEveryone(message);
-        } // close while
-      } catch (Exception ex) {
-        ex.printStackTrace();
-      }
-    } // close run
-  } // close inner class
 
   public static void main(String[] args) {
     new SimpleChatServer().go();
   }
 
   public void go() {
-    clientOutputStreams = new ArrayList<>();
     try {
       ServerSocket serverSock = new ServerSocket(5000);
+      Broadcaster broadcaster = new Broadcaster();
       while (true) {
         Socket clientSocket = serverSock.accept();
         PrintWriter writer = new PrintWriter(clientSocket.getOutputStream());
-        clientOutputStreams.add(writer);
-        Thread t = new Thread(new ClientHandler(clientSocket));
+        broadcaster.addClient(writer);
+        ClientHandler clientHandler = new ClientHandler(clientSocket, broadcaster);
+        Thread t = new Thread(clientHandler);
         t.start();
         System.out.println("got a connection");
       }
@@ -58,6 +31,44 @@ public class SimpleChatServer {
       ex.printStackTrace();
     }
   } // close go
+} // close class
+
+class ClientHandler implements Runnable {
+  private BufferedReader reader;
+  private Socket sock;
+  private final Broadcaster broadcaster;
+
+  public ClientHandler(Socket clientSocket, Broadcaster broadcaster) {
+    this.broadcaster = broadcaster;
+    try {
+      sock = clientSocket;
+      InputStreamReader isReader = new InputStreamReader(sock.getInputStream());
+      reader = new BufferedReader(isReader);
+    } catch (Exception ex) {
+      ex.printStackTrace();
+    }
+  } // close constructor
+
+  public void run() {
+    String message;
+    try {
+      while ((message = reader.readLine()) != null) {
+        System.out.println("read " + message);
+        broadcaster.tellEveryone(message);
+      } // close while
+    } catch (Exception ex) {
+      ex.printStackTrace();
+    }
+  } // close run
+
+}
+
+class Broadcaster {
+  private final ArrayList<PrintWriter> clientOutputStreams = new ArrayList<>();
+
+  void addClient(PrintWriter clientOutputStream) {
+    clientOutputStreams.add(clientOutputStream);
+  }
 
   public void tellEveryone(String message) {
     Iterator<PrintWriter> it = clientOutputStreams.iterator();
@@ -71,4 +82,4 @@ public class SimpleChatServer {
       }
     } // end while
   } // close tellEveryone
-} // close class
+}
