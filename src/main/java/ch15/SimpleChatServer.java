@@ -1,5 +1,6 @@
 package ch15;
 
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.ServerSocketChannel;
@@ -29,7 +30,7 @@ public class SimpleChatServer {
       }
       serverSocketChannel.close();
       executorService.shutdown();
-    } catch (Exception ex) {
+    } catch (IOException ex) {
       ex.printStackTrace();
     }
   }
@@ -49,9 +50,7 @@ class ClientHandler implements Runnable {
     try {
       while (clientSocket.isOpen()) {
         clientSocket.read(buffer);
-        String message = new String(buffer.array()).trim();
-        System.out.println("read " + message);
-
+        System.out.println("received: " + new String(buffer.array()).trim());
         buffer.flip();
         broadcaster.tellEveryone(buffer);
         buffer.clear();
@@ -79,5 +78,6 @@ class Broadcaster {
         ex.printStackTrace();
       }
     }
+    message.flip();
   }
 }

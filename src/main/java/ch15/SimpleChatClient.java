@@ -70,10 +70,12 @@ class ClientUI {
     }
 
     public void actionPerformed(ActionEvent ev) {
+      // pretty sure this is doing what I think it's doing
       byte[] message = outgoing.getText().getBytes();
       ByteBuffer buffer = ByteBuffer.wrap(message);
       try {
         channel.write(buffer);
+        buffer.clear();
       } catch (Exception ex) {
         ex.printStackTrace();
       }
@@ -101,11 +103,11 @@ class IncomingReader implements Runnable {
 
     try {
       while (channel.isOpen()) {
+        buffer.clear();
         channel.read(buffer);
         String message = new String(buffer.array()).trim();
         System.out.println("read " + message);
         incomingMessageArea.append(message + "\n");
-        buffer.clear();
       }
     } catch (Exception ex) {
       ex.printStackTrace();

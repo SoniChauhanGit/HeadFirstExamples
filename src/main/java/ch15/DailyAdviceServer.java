@@ -23,7 +23,7 @@ public class DailyAdviceServer {
       InetSocketAddress address = new InetSocketAddress("localhost", 4242);
       serverSocketChannel.bind(address);
 
-      while (true) {
+      while (serverSocketChannel.isOpen()) {
         SocketChannel socketChannel = serverSocketChannel.accept();
 
         String advice = getAdvice();
