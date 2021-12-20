@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ExecutorService;
@@ -104,10 +105,7 @@ class IncomingReader implements Runnable {
     try {
       while (channel.read(buffer) != -1) {
         buffer.flip();
-        byte[] bytes = new byte[buffer.remaining()];
-        buffer.get(bytes);
-        String message = new String(bytes, StandardCharsets.UTF_8);
-
+        CharBuffer message = StandardCharsets.UTF_8.decode(buffer);
         System.out.println("read " + message);
         incomingMessageArea.append(message + "\n");
         buffer.clear();
