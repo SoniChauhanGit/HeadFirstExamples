@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -75,7 +76,6 @@ class ClientUI {
       ByteBuffer buffer = ByteBuffer.wrap(message);
       try {
         channel.write(buffer);
-        buffer.clear();
       } catch (Exception ex) {
         ex.printStackTrace();
       }
@@ -99,16 +99,21 @@ class IncomingReader implements Runnable {
   }
 
   private void processMessages() {
-    ByteBuffer buffer = ByteBuffer.allocate(256);
+    ByteBuffer buffer = ByteBuffer.allocate(80);
 
     try {
-      while (channel.isOpen()) {
-        buffer.clear();
-        channel.read(buffer);
-        String message = new String(buffer.array()).trim();
+      while (channel.read(buffer) != -1) {
+        buffer.flip();
+        byte[] bytes = new byte[buffer.remaining()];
+        buffer.get(bytes);
+        String message = new String(bytes, StandardCharsets.UTF_8);
+
         System.out.println("read " + message);
         incomingMessageArea.append(message + "\n");
+        buffer.clear();
       }
+      channel.close();
+      System.out.println("Connection closed");
     } catch (Exception ex) {
       ex.printStackTrace();
     }

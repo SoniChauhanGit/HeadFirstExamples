@@ -46,16 +46,24 @@ class ClientHandler implements Runnable {
   }
 
   public void run() {
-    ByteBuffer buffer = ByteBuffer.allocate(32);
+    ByteBuffer buffer = ByteBuffer.allocate(80);
+    System.out.println("ClientHandler.run");
     try {
-      while (clientSocket.isOpen()) {
-        clientSocket.read(buffer);
-        System.out.println("received: " + new String(buffer.array()).trim());
+      int length;
+      while ((length = clientSocket.read(buffer)) != -1) {
+        System.out.println(length);
+        System.out.println("buffer = " + buffer);
+//        System.out.println("received: " + new String(buffer.array()).trim());
         buffer.flip();
-        broadcaster.tellEveryone(buffer);
-        buffer.clear();
+        System.out.println("buffer = " + buffer);
+        while (buffer.hasRemaining()) {
+          clientSocket.write(buffer);
+        }
+        buffer.compact();
       }
       clientSocket.close();
+      System.out.println("Closed: " + clientSocket);
+      broadcaster.remove(clientSocket);
     } catch (Exception ex) {
       ex.printStackTrace();
     }
@@ -79,5 +87,9 @@ class Broadcaster {
       }
     }
     message.flip();
+  }
+
+  public void remove(SocketChannel clientSocket) {
+    clientOutputStreams.remove(clientSocket);
   }
 }
