@@ -1,11 +1,13 @@
 package ch15;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -18,75 +20,61 @@ public class SimpleChatServer {
 
   public void go() {
     try {
-      ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
-      serverSocketChannel.bind(new InetSocketAddress("localhost", 5000));
-
+      ServerSocket serverSock = new ServerSocket(5000);
       Broadcaster broadcaster = new Broadcaster();
-      while (serverSocketChannel.isOpen()) {
-        SocketChannel clientSocket = serverSocketChannel.accept();
+      while (!serverSock.isClosed()) {
+        Socket clientSocket = serverSock.accept();
         broadcaster.addClient(clientSocket);
         executorService.execute(new ClientHandler(clientSocket, broadcaster));
         System.out.println("got a connection");
       }
-      serverSocketChannel.close();
       executorService.shutdown();
-    } catch (IOException ex) {
+    } catch (Exception ex) {
       ex.printStackTrace();
     }
   }
 }
 
 class ClientHandler implements Runnable {
-  private final SocketChannel clientSocket;
+  private final BufferedReader reader;
   private final Broadcaster broadcaster;
 
-  public ClientHandler(SocketChannel clientSocket, Broadcaster broadcaster) {
-    this.clientSocket = clientSocket;
+  public ClientHandler(Socket clientSocket, Broadcaster broadcaster) throws IOException {
     this.broadcaster = broadcaster;
-  }
+    InputStreamReader isReader = new InputStreamReader(clientSocket.getInputStream());
+    reader = new BufferedReader(isReader);
+  } // close constructor
 
   public void run() {
-    ByteBuffer buffer = ByteBuffer.allocate(80);
+    String message;
     try {
-      while (clientSocket.read(buffer) != -1) {
-        buffer.flip();
-        broadcaster.tellEveryone(buffer);
-        buffer.clear();
-      }
-      disconnectClient();
+      while ((message = reader.readLine()) != null) {
+        System.out.println("read " + message);
+        broadcaster.tellEveryone(message);
+      } // close while
     } catch (Exception ex) {
       ex.printStackTrace();
     }
   }
-
-  private void disconnectClient() throws IOException {
-    clientSocket.close();
-    System.out.println("Closed: " + clientSocket);
-    broadcaster.remove(clientSocket);
-  }
 }
 
 class Broadcaster {
-  private final ArrayList<SocketChannel> clientOutputStreams = new ArrayList<>();
+  private final ArrayList<PrintWriter> clientOutputStreams = new ArrayList<>();
 
-  void addClient(SocketChannel clientSocket) {
-    clientOutputStreams.add(clientSocket);
+  void addClient(Socket clientSocket) throws IOException {
+    clientOutputStreams.add(new PrintWriter(clientSocket.getOutputStream()));
   }
 
-  public void tellEveryone(ByteBuffer buffer) {
-    for (SocketChannel channel : clientOutputStreams) {
+  public void tellEveryone(String message) {
+    Iterator<PrintWriter> it = clientOutputStreams.iterator();
+    while (it.hasNext()) {
       try {
-        while (buffer.hasRemaining()) {
-          channel.write(buffer);
-        }
-        buffer.rewind();
+        PrintWriter writer = it.next();
+        writer.println(message);
+        writer.flush();
       } catch (Exception ex) {
         ex.printStackTrace();
       }
     }
-  }
-
-  public void remove(SocketChannel clientSocket) {
-    clientOutputStreams.remove(clientSocket);
   }
 }
