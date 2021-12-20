@@ -47,26 +47,22 @@ class ClientHandler implements Runnable {
 
   public void run() {
     ByteBuffer buffer = ByteBuffer.allocate(80);
-    System.out.println("ClientHandler.run");
     try {
-      int length;
-      while ((length = clientSocket.read(buffer)) != -1) {
-        System.out.println(length);
-        System.out.println("buffer = " + buffer);
-//        System.out.println("received: " + new String(buffer.array()).trim());
+      while (clientSocket.read(buffer) != -1) {
         buffer.flip();
-        System.out.println("buffer = " + buffer);
-        while (buffer.hasRemaining()) {
-          clientSocket.write(buffer);
-        }
-        buffer.compact();
+        broadcaster.tellEveryone(buffer);
+        buffer.clear();
       }
-      clientSocket.close();
-      System.out.println("Closed: " + clientSocket);
-      broadcaster.remove(clientSocket);
+      disconnectClient();
     } catch (Exception ex) {
       ex.printStackTrace();
     }
+  }
+
+  private void disconnectClient() throws IOException {
+    clientSocket.close();
+    System.out.println("Closed: " + clientSocket);
+    broadcaster.remove(clientSocket);
   }
 }
 
@@ -77,16 +73,17 @@ class Broadcaster {
     clientOutputStreams.add(clientSocket);
   }
 
-  public void tellEveryone(ByteBuffer message) {
+  public void tellEveryone(ByteBuffer buffer) {
     for (SocketChannel channel : clientOutputStreams) {
       try {
-        channel.write(message);
-        message.rewind();
+        while (buffer.hasRemaining()) {
+          channel.write(buffer);
+        }
+        buffer.rewind();
       } catch (Exception ex) {
         ex.printStackTrace();
       }
     }
-    message.flip();
   }
 
   public void remove(SocketChannel clientSocket) {
