@@ -4,14 +4,19 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Random;
 
 public class DailyAdviceServer {
-
-  String[] adviceList = {"Take smaller bites",
+  final private String[] adviceList = {"Take smaller bites",
           "Go for the tight jeans. No they do NOT make you look fat.",
           "One word: inappropriate",
           "Just for today, be honest. Tell your boss what you *really* think",
           "You might want to rethink that haircut."};
+
+  public static void main(String[] args) {
+    DailyAdviceServer server = new DailyAdviceServer();
+    server.go();
+  }
 
   public void go() {
     try {
@@ -32,12 +37,7 @@ public class DailyAdviceServer {
   }
 
   private String getAdvice() {
-    int random = (int) (Math.random() * adviceList.length);
-    return adviceList[random];
-  }
-
-  public static void main(String[] args) {
-    DailyAdviceServer server = new DailyAdviceServer();
-    server.go();
+    Random randomGenerator = new Random();
+    return adviceList[randomGenerator.nextInt(adviceList.length)];
   }
 }
