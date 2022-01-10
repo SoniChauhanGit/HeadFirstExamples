@@ -9,34 +9,18 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class SimpleChatClient {
-
-  public static void main(String[] args) throws IOException {
-    Socket socket = setUpNetworking();
-
-    ClientUI clientUI = new ClientUI();
-    clientUI.go(socket);
-
-    IncomingReader incomingReader = new IncomingReader(clientUI.getIncoming(), socket);
-    ExecutorService threadExecutor = Executors.newSingleThreadExecutor();
-    threadExecutor.execute(incomingReader);
-    threadExecutor.shutdown();
-  }
-
-  private static Socket setUpNetworking() throws IOException {
-    Socket socket = new Socket("127.0.0.1", 5000);
-    System.out.println("networking established");
-    return socket;
-  }
-}
-
-class ClientUI {
   private JTextArea incoming;
+  private JTextField outgoing;
+  private BufferedReader reader;
+  private PrintWriter writer;
 
-  public void go(Socket socket) {
+  public static void main(String[] args) {
+    new SimpleChatClient().go();
+  }
+
+  public void go() {
     JFrame frame = new JFrame("Ludicrously Simple Chat Client");
     JPanel mainPanel = new JPanel();
     incoming = new JTextArea(15, 50);
@@ -46,34 +30,33 @@ class ClientUI {
     JScrollPane qScroller = new JScrollPane(incoming);
     qScroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
     qScroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-    JTextField outgoing = new JTextField(20);
+    outgoing = new JTextField(20);
     JButton sendButton = new JButton("Send");
-    sendButton.addActionListener(new SendButtonListener(outgoing, socket));
+    sendButton.addActionListener(new SendButtonListener());
     mainPanel.add(qScroller);
     mainPanel.add(outgoing);
     mainPanel.add(sendButton);
+    setUpNetworking();
+    Thread readerThread = new Thread(new IncomingReader());
+    readerThread.start();
     frame.getContentPane().add(BorderLayout.CENTER, mainPanel);
     frame.setSize(800, 500);
     frame.setVisible(true);
-  }
+  } // close go
 
-  public JTextArea getIncoming() {
-    return incoming;
-  }
-
-  public static class SendButtonListener implements ActionListener {
-    private final JTextField outgoing;
-    private final PrintWriter writer;
-
-    public SendButtonListener(JTextField outgoingMessage, Socket socket) {
-      try {
-        writer = new PrintWriter(socket.getOutputStream());
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
-      outgoing = outgoingMessage;
+  private void setUpNetworking() {
+    try {
+      Socket socket = new Socket("127.0.0.1", 5000);
+      InputStreamReader streamReader = new InputStreamReader(socket.getInputStream());
+      reader = new BufferedReader(streamReader);
+      writer = new PrintWriter(socket.getOutputStream());
+      System.out.println("networking established");
+    } catch (IOException ex) {
+      ex.printStackTrace();
     }
+  } // close setUpNetworking
 
+  public class SendButtonListener implements ActionListener {
     public void actionPerformed(ActionEvent ev) {
       try {
         writer.println(outgoing.getText());
@@ -84,31 +67,19 @@ class ClientUI {
       outgoing.setText("");
       outgoing.requestFocus();
     }
-  }
-}
+  } // close inner class
 
-class IncomingReader implements Runnable {
-  private final BufferedReader reader;
-  private final JTextArea incomingMessageArea;
-
-  public IncomingReader(JTextArea incomingMessageArea, Socket socket) throws IOException {
-    this.incomingMessageArea = incomingMessageArea;
-    reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-  }
-
-  public void run() {
-    processMessages();
-  }
-
-  private void processMessages() {
-    String message;
-    try {
-      while ((message = reader.readLine()) != null) {
-        System.out.println("read " + message);
-        incomingMessageArea.append(message + "\n");
-      } // close while
-    } catch (Exception ex) {
-      ex.printStackTrace();
-    }
-  }
-} // close inner class
+  public class IncomingReader implements Runnable {
+    public void run() {
+      String message;
+      try {
+        while ((message = reader.readLine()) != null) {
+          System.out.println("read " + message);
+          incoming.append(message + "\n");
+        } // close while
+      } catch (Exception ex) {
+        ex.printStackTrace();
+      }
+    } // close run
+  } // close inner class
+} // close outer class
