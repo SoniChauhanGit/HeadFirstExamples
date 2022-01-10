@@ -1,10 +1,9 @@
 package ch15;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
+import java.io.PrintWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
 
 public class DailyAdviceServer {
 
@@ -16,20 +15,14 @@ public class DailyAdviceServer {
 
   public void go() {
     try {
-      ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
-      InetSocketAddress address = new InetSocketAddress("localhost", 4242);
-      serverSocketChannel.bind(address);
+      ServerSocket serverSock = new ServerSocket(4242);
+      while (true) {
+        Socket sock = serverSock.accept();
 
-      while (serverSocketChannel.isOpen()) {
-        SocketChannel socketChannel = serverSocketChannel.accept();
-
+        PrintWriter writer = new PrintWriter(sock.getOutputStream());
         String advice = getAdvice();
-        byte[] message = advice.getBytes();
-        ByteBuffer buffer = ByteBuffer.wrap(message);
-
-        socketChannel.write(buffer);
-
-        socketChannel.close();
+        writer.println(advice);
+        writer.close();
         System.out.println(advice);
       }
 
@@ -39,7 +32,8 @@ public class DailyAdviceServer {
   }
 
   private String getAdvice() {
-    return adviceList[(int) (Math.random() * adviceList.length)];
+    int random = (int) (Math.random() * adviceList.length);
+    return adviceList[random];
   }
 
   public static void main(String[] args) {
