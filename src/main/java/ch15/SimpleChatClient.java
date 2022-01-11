@@ -1,7 +1,7 @@
 package ch15;
 
 import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -21,8 +21,6 @@ public class SimpleChatClient {
   }
 
   public void go() {
-    JFrame frame = new JFrame("Ludicrously Simple Chat Client");
-    JPanel mainPanel = new JPanel();
     incoming = new JTextArea(15, 50);
     incoming.setLineWrap(true);
     incoming.setWrapStyleWord(true);
@@ -30,19 +28,27 @@ public class SimpleChatClient {
     JScrollPane qScroller = new JScrollPane(incoming);
     qScroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
     qScroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
     outgoing = new JTextField(20);
+
     JButton sendButton = new JButton("Send");
     sendButton.addActionListener(new SendButtonListener());
+
+    JPanel mainPanel = new JPanel();
     mainPanel.add(qScroller);
     mainPanel.add(outgoing);
     mainPanel.add(sendButton);
+
     setUpNetworking();
+
     Thread readerThread = new Thread(new IncomingReader());
     readerThread.start();
+
+    JFrame frame = new JFrame("Ludicrously Simple Chat Client");
     frame.getContentPane().add(BorderLayout.CENTER, mainPanel);
     frame.setSize(800, 500);
     frame.setVisible(true);
-  } // close go
+  }
 
   private void setUpNetworking() {
     try {
@@ -54,7 +60,7 @@ public class SimpleChatClient {
     } catch (IOException ex) {
       ex.printStackTrace();
     }
-  } // close setUpNetworking
+  }
 
   public class SendButtonListener implements ActionListener {
     public void actionPerformed(ActionEvent ev) {
@@ -67,7 +73,7 @@ public class SimpleChatClient {
       outgoing.setText("");
       outgoing.requestFocus();
     }
-  } // close inner class
+  }
 
   public class IncomingReader implements Runnable {
     public void run() {
@@ -76,10 +82,10 @@ public class SimpleChatClient {
         while ((message = reader.readLine()) != null) {
           System.out.println("read " + message);
           incoming.append(message + "\n");
-        } // close while
+        }
       } catch (Exception ex) {
         ex.printStackTrace();
       }
-    } // close run
-  } // close inner class
-} // close outer class
+    }
+  }
+}
