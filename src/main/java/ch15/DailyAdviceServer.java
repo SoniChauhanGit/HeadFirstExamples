@@ -2,8 +2,12 @@ package ch15;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.channels.Channels;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
 import java.util.Random;
 
 public class DailyAdviceServer {
@@ -22,11 +26,13 @@ public class DailyAdviceServer {
 
   public void go() {
     try {
-      ServerSocket serverSock = new ServerSocket(4242);
-      while (true) {
-        Socket sock = serverSock.accept();
+      ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
+      serverSocketChannel.bind(new InetSocketAddress("localhost", 4242));
 
-        PrintWriter writer = new PrintWriter(sock.getOutputStream());
+      while (true) {
+        SocketChannel sock = serverSocketChannel.accept();
+
+        PrintWriter writer = new PrintWriter(Channels.newOutputStream(sock));
         String advice = getAdvice();
         writer.println(advice);
         writer.close();
