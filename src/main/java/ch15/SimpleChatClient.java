@@ -11,6 +11,8 @@ import java.net.InetSocketAddress;
 import java.nio.channels.Channels;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class SimpleChatClient {
   private JTextArea incoming;
@@ -43,8 +45,8 @@ public class SimpleChatClient {
 
     setUpNetworking();
 
-    Thread readerThread = new Thread(new IncomingReader());
-    readerThread.start();
+    ExecutorService executor = Executors.newSingleThreadExecutor();
+    executor.execute(new IncomingReader());
 
     JFrame frame = new JFrame("Ludicrously Simple Chat Client");
     frame.getContentPane().add(BorderLayout.CENTER, mainPanel);
@@ -59,7 +61,7 @@ public class SimpleChatClient {
       reader = new BufferedReader(Channels.newReader(socketChannel, StandardCharsets.UTF_8));
       writer = new PrintWriter(Channels.newWriter(socketChannel, StandardCharsets.UTF_8));
 
-      System.out.println("networking established");
+      System.out.println("Networking established. Client running at: " + socketChannel.getLocalAddress());
     } catch (IOException ex) {
       ex.printStackTrace();
     }
