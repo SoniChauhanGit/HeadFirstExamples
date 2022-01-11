@@ -99,7 +99,9 @@ public class BeatBoxFinal {
 
     Box nameBox = new Box(BoxLayout.Y_AXIS);
     for (int i = 0; i < 16; i++) {
-      nameBox.add(new Label(instrumentNames[i]));
+      JLabel instrumentName = new JLabel(instrumentNames[i]);
+      instrumentName.setBorder(BorderFactory.createEmptyBorder(4, 1, 4, 1));
+      nameBox.add(instrumentName);
     }
 
     background.add(BorderLayout.EAST, buttonBox);
@@ -112,7 +114,7 @@ public class BeatBoxFinal {
     JPanel mainPanel = new JPanel(grid);
     background.add(BorderLayout.CENTER, mainPanel);
 
-    for (int i = 0; i < 256; i++) {
+    for (int i = 0; i < (16*16); i++) {
       JCheckBox c = new JCheckBox();
       c.setSelected(false);
       checkboxList.add(c);
