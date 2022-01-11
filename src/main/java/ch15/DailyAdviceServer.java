@@ -3,8 +3,6 @@ package ch15;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.InetSocketAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.nio.channels.Channels;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
@@ -26,13 +24,13 @@ public class DailyAdviceServer {
 
   public void go() {
     try {
-      ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
-      serverSocketChannel.bind(new InetSocketAddress("localhost", 4242));
+      ServerSocketChannel serverChannel = ServerSocketChannel.open();
+      serverChannel.bind(new InetSocketAddress("localhost", 4242));
 
-      while (true) {
-        SocketChannel sock = serverSocketChannel.accept();
+      while (serverChannel.isOpen()) {
+        SocketChannel clientChannel = serverChannel.accept();
 
-        PrintWriter writer = new PrintWriter(Channels.newOutputStream(sock));
+        PrintWriter writer = new PrintWriter(Channels.newOutputStream(clientChannel));
         String advice = getAdvice();
         writer.println(advice);
         writer.close();
