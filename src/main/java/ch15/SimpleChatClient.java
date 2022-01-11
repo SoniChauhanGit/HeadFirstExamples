@@ -4,7 +4,9 @@ import javax.swing.*;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.nio.channels.Channels;
 import java.nio.channels.SocketChannel;
@@ -65,12 +67,8 @@ public class SimpleChatClient {
 
   public class SendButtonListener implements ActionListener {
     public void actionPerformed(ActionEvent ev) {
-      try {
-        writer.println(outgoing.getText());
-        writer.flush();
-      } catch (Exception ex) {
-        ex.printStackTrace();
-      }
+      writer.println(outgoing.getText());
+      writer.flush();
       outgoing.setText("");
       outgoing.requestFocus();
     }
