@@ -23,13 +23,11 @@ public class DailyAdviceServer {
   }
 
   public void go() {
-    try {
-      ServerSocketChannel serverChannel = ServerSocketChannel.open();
+    try (ServerSocketChannel serverChannel = ServerSocketChannel.open()) {
       serverChannel.bind(new InetSocketAddress("localhost", 4242));
 
       while (serverChannel.isOpen()) {
         SocketChannel clientChannel = serverChannel.accept();
-
         PrintWriter writer = new PrintWriter(Channels.newOutputStream(clientChannel));
         String advice = getAdvice();
         writer.println(advice);
