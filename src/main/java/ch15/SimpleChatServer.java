@@ -8,6 +8,8 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class SimpleChatServer {
   ArrayList<Writer> clientOutputStreams;
@@ -18,16 +20,16 @@ public class SimpleChatServer {
 
   public void go() {
     clientOutputStreams = new ArrayList<>();
+    ExecutorService threadPool = Executors.newFixedThreadPool(5);
     try {
       ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
-      serverSocketChannel.bind(new InetSocketAddress("localhost", 5000));
+      serverSocketChannel.bind(new InetSocketAddress(5000));
 
-      while (true) {
+      while (serverSocketChannel.isOpen()) {
         SocketChannel clientSocket = serverSocketChannel.accept();
         Writer writer = Channels.newWriter(clientSocket, StandardCharsets.UTF_8);
         clientOutputStreams.add(writer);
-        Thread t = new Thread(new ClientHandler(clientSocket));
-        t.start();
+        threadPool.submit(new ClientHandler(clientSocket));
         System.out.println("got a connection");
       }
     } catch (Exception ex) {

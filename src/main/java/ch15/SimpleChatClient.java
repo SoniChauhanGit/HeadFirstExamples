@@ -20,10 +20,6 @@ public class SimpleChatClient {
   private BufferedReader reader;
   private PrintWriter writer;
 
-  public static void main(String[] args) {
-    new SimpleChatClient().go();
-  }
-
   public void go() {
     incoming = new JTextArea(15, 50);
     incoming.setLineWrap(true);
@@ -88,5 +84,9 @@ public class SimpleChatClient {
         ex.printStackTrace();
       }
     }
+  }
+
+  public static void main(String[] args) {
+    new SimpleChatClient().go();
   }
 }
