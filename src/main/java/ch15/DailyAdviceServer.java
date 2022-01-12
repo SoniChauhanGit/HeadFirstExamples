@@ -1,11 +1,8 @@
 package ch15;
 
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.InetSocketAddress;
-import java.nio.channels.Channels;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
+import java.nio.channels.*;
 import java.util.Random;
 
 public class DailyAdviceServer {
@@ -17,14 +14,9 @@ public class DailyAdviceServer {
           "You might want to rethink that haircut."};
   private final Random randomGenerator = new Random();
 
-  public static void main(String[] args) {
-    DailyAdviceServer server = new DailyAdviceServer();
-    server.go();
-  }
-
   public void go() {
     try (ServerSocketChannel serverChannel = ServerSocketChannel.open()) {
-      serverChannel.bind(new InetSocketAddress("localhost", 4242));
+      serverChannel.bind(new InetSocketAddress(4242));
 
       while (serverChannel.isOpen()) {
         SocketChannel clientChannel = serverChannel.accept();
@@ -42,5 +34,9 @@ public class DailyAdviceServer {
 
   private String getAdvice() {
     return adviceList[randomGenerator.nextInt(adviceList.length)];
+  }
+
+  public static void main(String[] args) {
+    new DailyAdviceServer().go();
   }
 }
