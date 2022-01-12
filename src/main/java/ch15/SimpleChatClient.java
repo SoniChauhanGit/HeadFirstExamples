@@ -21,7 +21,7 @@ public class SimpleChatClient {
   private PrintWriter writer;
 
   public void go() {
-    incoming = new JTextArea(15, 50);
+    incoming = new JTextArea(15, 30);
     incoming.setLineWrap(true);
     incoming.setWrapStyleWord(true);
     incoming.setEditable(false);
@@ -46,7 +46,7 @@ public class SimpleChatClient {
 
     JFrame frame = new JFrame("Ludicrously Simple Chat Client");
     frame.getContentPane().add(BorderLayout.CENTER, mainPanel);
-    frame.setSize(800, 500);
+    frame.setSize(400, 350);
     frame.setVisible(true);
   }
 
