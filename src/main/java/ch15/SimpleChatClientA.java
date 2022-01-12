@@ -1,41 +1,45 @@
 package ch15;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.Socket;
+import java.awt.BorderLayout;
+import java.awt.event.*;
+import java.io.*;
+import java.net.InetSocketAddress;
+import java.nio.channels.*;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class SimpleChatClientA {
-  JTextField outgoing;
-  PrintWriter writer;
-  Socket sock;
+  private JTextField outgoing;
+  private PrintWriter writer;
 
   public void go() {
-    JFrame frame = new JFrame("Ludicrously Simple Chat Client");
-    JPanel mainPanel = new JPanel();
+    setUpNetworking();
+
     outgoing = new JTextField(20);
+
     JButton sendButton = new JButton("Send");
     sendButton.addActionListener(new SendButtonListener());
+
+    JPanel mainPanel = new JPanel();
     mainPanel.add(outgoing);
     mainPanel.add(sendButton);
+
+    JFrame frame = new JFrame("Ludicrously Simple Chat Client");
     frame.getContentPane().add(BorderLayout.CENTER, mainPanel);
-    setUpNetworking();
-    frame.setSize(400, 500);
+    frame.setSize(400, 100);
     frame.setVisible(true);
-  } // close go
+  }
 
   private void setUpNetworking() {
-    try {
-      sock = new Socket("127.0.0.1", 5000);
-      writer = new PrintWriter(sock.getOutputStream());
-      System.out.println("networking established");
+    InetSocketAddress serverAddress = new InetSocketAddress("127.0.0.1", 5000);
+    try (SocketChannel socketChannel = SocketChannel.open(serverAddress)) {
+      writer = new PrintWriter(Channels.newWriter(socketChannel, UTF_8));
+      System.out.println("Networking established. Client running at: " + socketChannel.getLocalAddress());
     } catch (IOException ex) {
       ex.printStackTrace();
     }
-  } // close setUpNetworking
+  }
 
   public class SendButtonListener implements ActionListener {
     public void actionPerformed(ActionEvent ev) {
@@ -48,9 +52,9 @@ public class SimpleChatClientA {
       outgoing.setText("");
       outgoing.requestFocus();
     }
-  } // close SendButtonListener inner class
+  }
 
   public static void main(String[] args) {
     new SimpleChatClientA().go();
   }
-} // close outer class
+}
