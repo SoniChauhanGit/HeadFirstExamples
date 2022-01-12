@@ -34,6 +34,18 @@ class ConceptsTest {
   }
 
   @Test
+  void testChannelPortNumbers() throws IOException {
+    SocketAddress serverAddress = new InetSocketAddress("127.0.0.1", 3601);
+    ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
+    serverSocketChannel.bind(serverAddress);
+
+    SocketChannel client1 = SocketChannel.open(serverAddress);
+    System.out.println("client1.getRemoteAddress() = " + client1.getRemoteAddress());
+    SocketChannel client2 = SocketChannel.open(serverAddress);
+    System.out.println("client2.getRemoteAddress() = " + client2.getRemoteAddress());
+  }
+
+  @Test
   void testBlockingVsNonBlocking() throws IOException {
     int serverPort = 3600;
     ServerSocketChannel server = ServerSocketChannel.open();
