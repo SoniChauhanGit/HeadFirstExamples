@@ -14,6 +14,8 @@ import java.net.Socket;
 import java.util.*;
 
 public class BeatBoxFinal {
+  private final List<BeatInstrument> instruments;
+
   private JList<String> incomingList;
   private JTextField userMessage;
   private ArrayList<JCheckBox> checkboxList;
@@ -28,14 +30,28 @@ public class BeatBoxFinal {
   private Sequence sequence;
   private Track track;
 
-  String[] instrumentNames = {"Bass Drum", "Closed Hi-Hat", "Open Hi-Hat", "Acoustic Snare", "Crash Cymbal",
-          "Hand Clap", "High Tom", "Hi Bongo", "Maracas", "Whistle", "Low Conga", "Cowbell", "Vibraslap", "Low-mid Tom",
-          "High Agogo", "Open Hi Conga"};
-
-  int[] instruments = {35, 42, 46, 38, 49, 39, 50, 60, 70, 72, 64, 56, 58, 47, 67, 63};
-
   public static void main(String[] args) {
     new BeatBoxFinal().startUp(args[0]);  // args[0] is your user ID/screen name
+  }
+
+  public BeatBoxFinal() {
+    instruments = List.of(
+            new BeatInstrument("Bass Drum", 35),
+            new BeatInstrument("Closed Hi-Hat", 42),
+            new BeatInstrument("Open Hi-Hat", 46),
+            new BeatInstrument("Acoustic Snare", 38),
+            new BeatInstrument("Crash Cymbal", 49),
+            new BeatInstrument("Hand Clap", 39),
+            new BeatInstrument("High Tom", 50),
+            new BeatInstrument("Hi Bongo", 60),
+            new BeatInstrument("Maracas", 70),
+            new BeatInstrument("Whistle", 72),
+            new BeatInstrument("Low Conga", 64),
+            new BeatInstrument("Cowbell", 56),
+            new BeatInstrument("Vibraslap", 58),
+            new BeatInstrument("Low-mid Tom", 47),
+            new BeatInstrument("High Agogo", 67),
+            new BeatInstrument("Open Hi Conga", 63));
   }
 
   public void startUp(String name) {
@@ -96,7 +112,7 @@ public class BeatBoxFinal {
 
     Box nameBox = new Box(BoxLayout.Y_AXIS);
     for (int i = 0; i < 16; i++) {
-      JLabel instrumentName = new JLabel(instrumentNames[i]);
+      JLabel instrumentName = new JLabel(instruments.get(i).getInstrumentName());
       instrumentName.setBorder(BorderFactory.createEmptyBorder(4, 1, 4, 1));
       nameBox.add(instrumentName);
     }
@@ -111,7 +127,7 @@ public class BeatBoxFinal {
     JPanel mainPanel = new JPanel(grid);
     background.add(BorderLayout.CENTER, mainPanel);
 
-    for (int i = 0; i < (16*16); i++) {
+    for (int i = 0; i < (16 * 16); i++) {
       JCheckBox c = new JCheckBox();
       c.setSelected(false);
       checkboxList.add(c);
@@ -146,7 +162,7 @@ public class BeatBoxFinal {
       for (int j = 0; j < 16; j++) {
         JCheckBox jc = checkboxList.get(j + (16 * i));
         if (jc.isSelected()) {
-          int key = instruments[i];
+          int key = instruments.get(i).getMidiValue();
           trackList.add(key);
         } else {
           trackList.add(null);  // because this slot should be empty in the track
@@ -275,6 +291,23 @@ public class BeatBoxFinal {
     return event;
   }
 
+  private class BeatInstrument {
+    private final String instrumentName;
+    private final int midiValue;
+
+    BeatInstrument(String instrumentName, int midiValue) {
+      this.instrumentName = instrumentName;
+      this.midiValue = midiValue;
+    }
+
+    public String getInstrumentName() {
+      return instrumentName;
+    }
+
+    public int getMidiValue() {
+      return midiValue;
+    }
+  }
 }
 
 
