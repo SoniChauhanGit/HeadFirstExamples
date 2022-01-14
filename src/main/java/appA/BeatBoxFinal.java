@@ -4,16 +4,14 @@ import javax.sound.midi.*;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Vector;
+import java.util.*;
 
 public class BeatBoxFinal {
   private JList<String> incomingList;
@@ -28,7 +26,6 @@ public class BeatBoxFinal {
 
   private Sequencer sequencer;
   private Sequence sequence;
-  private final Sequence mySequence = null;
   private Track track;
 
   String[] instrumentNames = {"Bass Drum", "Closed Hi-Hat", "Open Hi-Hat", "Acoustic Snare", "Crash Cymbal",
@@ -139,7 +136,7 @@ public class BeatBoxFinal {
   }
 
   public void buildTrackAndStart() {
-    ArrayList<Integer> trackList; // this will hold the instruments for each
+    List<Integer> trackList; // this will hold the instruments for each
     sequence.deleteTrack(track);
     track = sequence.createTrack();
 
@@ -250,14 +247,6 @@ public class BeatBoxFinal {
     }
   }
 
-  public class MyPlayMineListener implements ActionListener {
-    public void actionPerformed(ActionEvent a) {
-      if (mySequence != null) {
-        sequence = mySequence;
-      }
-    }
-  }
-
   public void changeSequence(boolean[] checkboxState) {
     for (int i = 0; i < 256; i++) {
       JCheckBox check = checkboxList.get(i);
@@ -265,24 +254,23 @@ public class BeatBoxFinal {
     }
   }
 
-  public void makeTracks(ArrayList<Integer> list) {
+  public void makeTracks(List<Integer> list) {
     Iterator<Integer> it = list.iterator();
     for (int i = 0; i < 16; i++) {
       Integer num = it.next();
       if (num != null) {
-        track.add(makeEvent(144, 9, num, 100, i));
-        track.add(makeEvent(128, 9, num, 100, i + 1));
+        track.add(makeEvent(ShortMessage.NOTE_ON, 9, num, 100, i));
+        track.add(makeEvent(ShortMessage.NOTE_OFF, 9, num, 100, i + 1));
       }
     }
   }
 
-  public MidiEvent makeEvent(int comd, int chan, int one, int two, int tick) {
+  public MidiEvent makeEvent(int command, int channel, int one, int two, int tick) {
     MidiEvent event = null;
     try {
-      ShortMessage a = new ShortMessage();
-      a.setMessage(comd, chan, one, two);
-      event = new MidiEvent(a, tick);
-    } catch (Exception ignored) {
+      ShortMessage midiMessage = new ShortMessage(command, channel, one, two);
+      event = new MidiEvent(midiMessage, tick);
+    } catch (InvalidMidiDataException ignored) {
     }
     return event;
   }
