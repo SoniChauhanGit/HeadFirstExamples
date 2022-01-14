@@ -17,10 +17,10 @@ import java.util.*;
 public class BeatBoxFinal {
   public static final int NUMBER_OF_BEATS = 16;
   private final List<BeatInstrument> instruments;
+  private final Map<BeatInstrument, List<JCheckBox>> instrumentCheckboxes = new HashMap<>();
 
   private JList<String> messages;
   private JTextField userMessage;
-  private ArrayList<JCheckBox> checkboxList;
   private int nextNum;
   private final Vector<String> incomingMessages = new Vector<>();
   private String userName;
@@ -78,8 +78,6 @@ public class BeatBoxFinal {
     JPanel background = new JPanel(layout);
     background.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-    checkboxList = new ArrayList<>();
-
     Box buttonBox = new Box(BoxLayout.Y_AXIS);
     JButton start = new JButton("Start");
     start.addActionListener(new MyStartListener());
@@ -112,28 +110,29 @@ public class BeatBoxFinal {
     messages.setListData(incomingMessages); // no data to start with
 
     Box nameBox = new Box(BoxLayout.Y_AXIS);
+    GridLayout grid = new GridLayout(instruments.size(), NUMBER_OF_BEATS, 2, 1);
+    JPanel mainPanel = new JPanel(grid);
+
     for (BeatInstrument instrument : instruments) {
       JLabel instrumentName = new JLabel(instrument.getInstrumentName());
       instrumentName.setBorder(BorderFactory.createEmptyBorder(4, 1, 4, 1));
       nameBox.add(instrumentName);
+
+      List<JCheckBox> checkboxList = new ArrayList<>();
+      for (int i = 0; i < NUMBER_OF_BEATS; i++) {
+        JCheckBox c = new JCheckBox();
+        c.setSelected(false);
+        checkboxList.add(c);
+        mainPanel.add(c);
+      }
+      instrumentCheckboxes.put(instrument, checkboxList);
     }
 
     background.add(BorderLayout.EAST, buttonBox);
     background.add(BorderLayout.WEST, nameBox);
-
-    theFrame.getContentPane().add(background);
-    int numberOfInstruments = instruments.size();
-    GridLayout grid = new GridLayout(numberOfInstruments, NUMBER_OF_BEATS, 2, 1);
-    JPanel mainPanel = new JPanel(grid);
     background.add(BorderLayout.CENTER, mainPanel);
 
-    for (int i = 0; i < (numberOfInstruments * NUMBER_OF_BEATS); i++) {
-      JCheckBox c = new JCheckBox();
-      c.setSelected(false);
-      checkboxList.add(c);
-      mainPanel.add(c);
-    }
-
+    theFrame.getContentPane().add(background);
     theFrame.setBounds(50, 50, 300, 300);
     theFrame.pack();
     theFrame.setVisible(true);
@@ -156,17 +155,17 @@ public class BeatBoxFinal {
     sequence.deleteTrack(track);
     track = sequence.createTrack();
 
-    int numberOfInstruments = instruments.size();
-    for (int i = 0; i < numberOfInstruments; i++) {
+    for (BeatInstrument instrument : instruments) {
       beatsForInstrument = new ArrayList<>();
 
-      for (int j = 0; j < NUMBER_OF_BEATS; j++) {
-        JCheckBox jc = checkboxList.get(j + (NUMBER_OF_BEATS * i));
-        if (jc.isSelected()) {
-          beatsForInstrument.add(j);
+      List<JCheckBox> checkboxes = instrumentCheckboxes.get(instrument);
+      for (int i = 0; i < checkboxes.size(); i++) {
+        JCheckBox checkbox = checkboxes.get(i);
+        if (checkbox.isSelected()) {
+          beatsForInstrument.add(i);
         }
       }
-      makeTracks(instruments.get(i), beatsForInstrument);
+      makeTracks(instrument, beatsForInstrument);
     }
     track.add(makeEvent(ShortMessage.PROGRAM_CHANGE, 9, 1, 0, 15)); // - so we always go to full 16 beats
     try {
@@ -207,12 +206,13 @@ public class BeatBoxFinal {
 
   public class MySendListener implements ActionListener {
     public void actionPerformed(ActionEvent a) {
-      // make an arraylist of just the STATE of the checkboxes
+      // make an array of just the STATE of the checkboxes
       boolean[] checkboxState = new boolean[256];
-      for (int i = 0; i < 256; i++) {
-        JCheckBox check = checkboxList.get(i);
-        if (check.isSelected()) {
-          checkboxState[i] = true;
+
+      int i = 0;
+      for (List<JCheckBox> instrumentCheckboxes : instrumentCheckboxes.values()) {
+        for (JCheckBox instrumentCheckbox : instrumentCheckboxes) {
+          checkboxState[i++] = instrumentCheckbox.isSelected();
         }
       }
       try {
@@ -220,6 +220,7 @@ public class BeatBoxFinal {
         out.writeObject(checkboxState);
       } catch (IOException ex) {
         System.out.println("Sorry dude. Could not send it to the server.");
+        ex.printStackTrace();
       }
       userMessage.setText("");
     }
@@ -261,17 +262,19 @@ public class BeatBoxFinal {
     }
   }
 
-  public void changeSequence(boolean[] checkboxState) {
-    for (int i = 0; i < instruments.size() * NUMBER_OF_BEATS; i++) {
-      JCheckBox check = checkboxList.get(i);
-      check.setSelected(checkboxState[i]);
+  public void changeSequence(boolean[] newCheckboxStates) {
+    int i = 0;
+    for (List<JCheckBox> checkboxesForInstrument : instrumentCheckboxes.values()) {
+      for (JCheckBox checkbox : checkboxesForInstrument) {
+        checkbox.setSelected(newCheckboxStates[i++]);
+      }
     }
   }
 
   public void makeTracks(BeatInstrument instrument, List<Integer> beatsForInstrument) {
     for (Integer beatNumber : beatsForInstrument) {
-        track.add(makeEvent(ShortMessage.NOTE_ON, 9, instrument.getMidiValue(), 100, beatNumber));
-        track.add(makeEvent(ShortMessage.NOTE_OFF, 9, instrument.getMidiValue(), 100, beatNumber + 1));
+      track.add(makeEvent(ShortMessage.NOTE_ON, 9, instrument.getMidiValue(), 100, beatNumber));
+      track.add(makeEvent(ShortMessage.NOTE_OFF, 9, instrument.getMidiValue(), 100, beatNumber + 1));
     }
   }
 
