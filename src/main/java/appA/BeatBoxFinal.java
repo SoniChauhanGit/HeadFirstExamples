@@ -123,9 +123,7 @@ public class BeatBoxFinal {
 
     theFrame.getContentPane().add(background);
     int numberOfInstruments = instruments.size();
-    GridLayout grid = new GridLayout(numberOfInstruments, NUMBER_OF_BEATS);
-    grid.setVgap(1);
-    grid.setHgap(2);
+    GridLayout grid = new GridLayout(numberOfInstruments, NUMBER_OF_BEATS, 2, 1);
     JPanel mainPanel = new JPanel(grid);
     background.add(BorderLayout.CENTER, mainPanel);
 
@@ -154,26 +152,25 @@ public class BeatBoxFinal {
   }
 
   public void buildTrackAndStart() {
-    List<Integer> trackList; // this will hold the instruments for each beat
+    List<Integer> beatsForInstrument; // this will hold all the beats, on or off, for this instrument
     sequence.deleteTrack(track);
     track = sequence.createTrack();
 
     int numberOfInstruments = instruments.size();
     for (int i = 0; i < numberOfInstruments; i++) {
-      trackList = new ArrayList<>();
+      beatsForInstrument = new ArrayList<>();
 
       for (int j = 0; j < NUMBER_OF_BEATS; j++) {
         JCheckBox jc = checkboxList.get(j + (NUMBER_OF_BEATS * i));
         if (jc.isSelected()) {
-          int key = instruments.get(i).getMidiValue();
-          trackList.add(key);
+          beatsForInstrument.add(instruments.get(i).getMidiValue());
         } else {
-          trackList.add(null);  // because this slot should be empty in the track
+          beatsForInstrument.add(null);  // because this slot should be empty in the track
         }
-      } // close inner loop
-      makeTracks(trackList);
-    } // close outer loop
-    track.add(makeEvent(192, 9, 1, 0, 15)); // - so we always go to full 16 beats
+      }
+      makeTracks(beatsForInstrument);
+    }
+    track.add(makeEvent(ShortMessage.PROGRAM_CHANGE, 9, 1, 0, 15)); // - so we always go to full 16 beats
     try {
       sequencer.setSequence(sequence);
       sequencer.setLoopCount(sequencer.LOOP_CONTINUOUSLY);
@@ -273,8 +270,8 @@ public class BeatBoxFinal {
     }
   }
 
-  public void makeTracks(List<Integer> list) {
-    Iterator<Integer> it = list.iterator();
+  public void makeTracks(List<Integer> instrumentsForBeat) {
+    Iterator<Integer> it = instrumentsForBeat.iterator();
     for (int i = 0; i < NUMBER_OF_BEATS; i++) {
       Integer num = it.next();
       if (num != null) {
