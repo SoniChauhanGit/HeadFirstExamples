@@ -14,6 +14,7 @@ import java.net.Socket;
 import java.util.*;
 
 public class BeatBoxFinal {
+  public static final int NUMBER_OF_BEATS = 16;
   private final List<BeatInstrument> instruments;
 
   private JList<String> incomingList;
@@ -111,8 +112,8 @@ public class BeatBoxFinal {
     incomingList.setListData(listVector); // no data to start with
 
     Box nameBox = new Box(BoxLayout.Y_AXIS);
-    for (int i = 0; i < 16; i++) {
-      JLabel instrumentName = new JLabel(instruments.get(i).getInstrumentName());
+    for (BeatInstrument instrument : instruments) {
+      JLabel instrumentName = new JLabel(instrument.getInstrumentName());
       instrumentName.setBorder(BorderFactory.createEmptyBorder(4, 1, 4, 1));
       nameBox.add(instrumentName);
     }
@@ -121,13 +122,14 @@ public class BeatBoxFinal {
     background.add(BorderLayout.WEST, nameBox);
 
     theFrame.getContentPane().add(background);
-    GridLayout grid = new GridLayout(16, 16);
+    int numberOfInstruments = instruments.size();
+    GridLayout grid = new GridLayout(numberOfInstruments, NUMBER_OF_BEATS);
     grid.setVgap(1);
     grid.setHgap(2);
     JPanel mainPanel = new JPanel(grid);
     background.add(BorderLayout.CENTER, mainPanel);
 
-    for (int i = 0; i < (16 * 16); i++) {
+    for (int i = 0; i < (numberOfInstruments * NUMBER_OF_BEATS); i++) {
       JCheckBox c = new JCheckBox();
       c.setSelected(false);
       checkboxList.add(c);
@@ -152,15 +154,16 @@ public class BeatBoxFinal {
   }
 
   public void buildTrackAndStart() {
-    List<Integer> trackList; // this will hold the instruments for each
+    List<Integer> trackList; // this will hold the instruments for each beat
     sequence.deleteTrack(track);
     track = sequence.createTrack();
 
-    for (int i = 0; i < 16; i++) {
+    int numberOfInstruments = instruments.size();
+    for (int i = 0; i < numberOfInstruments; i++) {
       trackList = new ArrayList<>();
 
-      for (int j = 0; j < 16; j++) {
-        JCheckBox jc = checkboxList.get(j + (16 * i));
+      for (int j = 0; j < NUMBER_OF_BEATS; j++) {
+        JCheckBox jc = checkboxList.get(j + (NUMBER_OF_BEATS * i));
         if (jc.isSelected()) {
           int key = instruments.get(i).getMidiValue();
           trackList.add(key);
@@ -272,7 +275,7 @@ public class BeatBoxFinal {
 
   public void makeTracks(List<Integer> list) {
     Iterator<Integer> it = list.iterator();
-    for (int i = 0; i < 16; i++) {
+    for (int i = 0; i < NUMBER_OF_BEATS; i++) {
       Integer num = it.next();
       if (num != null) {
         track.add(makeEvent(ShortMessage.NOTE_ON, 9, num, 100, i));
@@ -291,7 +294,7 @@ public class BeatBoxFinal {
     return event;
   }
 
-  private class BeatInstrument {
+  private static class BeatInstrument {
     private final String instrumentName;
     private final int midiValue;
 
