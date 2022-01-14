@@ -18,11 +18,11 @@ public class BeatBoxFinal {
   public static final int NUMBER_OF_BEATS = 16;
   private final List<BeatInstrument> instruments;
 
-  private JList<String> incomingList;
+  private JList<String> messages;
   private JTextField userMessage;
   private ArrayList<JCheckBox> checkboxList;
   private int nextNum;
-  private final Vector<String> listVector = new Vector<>();
+  private final Vector<String> incomingMessages = new Vector<>();
   private String userName;
   private ObjectOutputStream out;
   private ObjectInputStream in;
@@ -105,12 +105,11 @@ public class BeatBoxFinal {
 
     buttonBox.add(userMessage);
 
-    incomingList = new JList<>();
-    incomingList.addListSelectionListener(new MyListSelectionListener());
-    incomingList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-    JScrollPane theList = new JScrollPane(incomingList);
-    buttonBox.add(theList);
-    incomingList.setListData(listVector); // no data to start with
+    messages = new JList<>();
+    messages.addListSelectionListener(new MyListSelectionListener());
+    messages.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    buttonBox.add(new JScrollPane(messages));
+    messages.setListData(incomingMessages); // no data to start with
 
     Box nameBox = new Box(BoxLayout.Y_AXIS);
     for (BeatInstrument instrument : instruments) {
@@ -229,7 +228,7 @@ public class BeatBoxFinal {
   public class MyListSelectionListener implements ListSelectionListener {
     public void valueChanged(ListSelectionEvent le) {
       if (!le.getValueIsAdjusting()) {
-        String selected = incomingList.getSelectedValue();
+        String selected = messages.getSelectedValue();
         if (selected != null) {
           // now go to the map, and change the sequence
           boolean[] selectedState = otherSeqsMap.get(selected);
@@ -253,8 +252,8 @@ public class BeatBoxFinal {
           String nameToShow = (String) obj;
           checkboxState = (boolean[]) in.readObject();
           otherSeqsMap.put(nameToShow, checkboxState);
-          listVector.add(nameToShow);
-          incomingList.setListData(listVector);
+          incomingMessages.add(nameToShow);
+          messages.setListData(incomingMessages);
         }
       } catch (IOException | ClassNotFoundException ex) {
         ex.printStackTrace();
