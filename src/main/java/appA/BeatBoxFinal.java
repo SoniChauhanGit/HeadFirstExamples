@@ -163,12 +163,10 @@ public class BeatBoxFinal {
       for (int j = 0; j < NUMBER_OF_BEATS; j++) {
         JCheckBox jc = checkboxList.get(j + (NUMBER_OF_BEATS * i));
         if (jc.isSelected()) {
-          beatsForInstrument.add(instruments.get(i).getMidiValue());
-        } else {
-          beatsForInstrument.add(null);  // because this slot should be empty in the track
+          beatsForInstrument.add(j);
         }
       }
-      makeTracks(beatsForInstrument);
+      makeTracks(instruments.get(i), beatsForInstrument);
     }
     track.add(makeEvent(ShortMessage.PROGRAM_CHANGE, 9, 1, 0, 15)); // - so we always go to full 16 beats
     try {
@@ -270,14 +268,10 @@ public class BeatBoxFinal {
     }
   }
 
-  public void makeTracks(List<Integer> instrumentsForBeat) {
-    Iterator<Integer> it = instrumentsForBeat.iterator();
-    for (int i = 0; i < NUMBER_OF_BEATS; i++) {
-      Integer num = it.next();
-      if (num != null) {
-        track.add(makeEvent(ShortMessage.NOTE_ON, 9, num, 100, i));
-        track.add(makeEvent(ShortMessage.NOTE_OFF, 9, num, 100, i + 1));
-      }
+  public void makeTracks(BeatInstrument instrument, List<Integer> beatsForInstrument) {
+    for (Integer beatNumber : beatsForInstrument) {
+        track.add(makeEvent(ShortMessage.NOTE_ON, 9, instrument.getMidiValue(), 100, beatNumber));
+        track.add(makeEvent(ShortMessage.NOTE_OFF, 9, instrument.getMidiValue(), 100, beatNumber + 1));
     }
   }
 
