@@ -8,6 +8,7 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -64,7 +65,7 @@ public class BeatBoxFinal {
       in = new ObjectInputStream(sock.getInputStream());
       Thread remote = new Thread(new RemoteReader());
       remote.start();
-    } catch (Exception ex) {
+    } catch (IOException ex) {
       System.out.println("Couldn't connect-you'll have to play alone.");
     }
     setUpMidi();
@@ -146,7 +147,7 @@ public class BeatBoxFinal {
       sequence = new Sequence(Sequence.PPQ, 4);
       track = sequence.createTrack();
       sequencer.setTempoInBPM(120);
-    } catch (Exception e) {
+    } catch (InvalidMidiDataException | MidiUnavailableException e) {
       e.printStackTrace();
     }
   }
@@ -174,7 +175,7 @@ public class BeatBoxFinal {
       sequencer.setLoopCount(sequencer.LOOP_CONTINUOUSLY);
       sequencer.start();
       sequencer.setTempoInBPM(120);
-    } catch (Exception e) {
+    } catch (InvalidMidiDataException e) {
       e.printStackTrace();
     }
   }
@@ -218,7 +219,7 @@ public class BeatBoxFinal {
       try {
         out.writeObject(userName + nextNum++ + ": " + userMessage.getText());
         out.writeObject(checkboxState);
-      } catch (Exception ex) {
+      } catch (IOException ex) {
         System.out.println("Sorry dude. Could not send it to the server.");
       }
       userMessage.setText("");
@@ -255,14 +256,14 @@ public class BeatBoxFinal {
           listVector.add(nameToShow);
           incomingList.setListData(listVector);
         }
-      } catch (Exception ex) {
+      } catch (IOException | ClassNotFoundException ex) {
         ex.printStackTrace();
       }
     }
   }
 
   public void changeSequence(boolean[] checkboxState) {
-    for (int i = 0; i < 256; i++) {
+    for (int i = 0; i < instruments.size() * NUMBER_OF_BEATS; i++) {
       JCheckBox check = checkboxList.get(i);
       check.setSelected(checkboxState[i]);
     }
