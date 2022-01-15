@@ -11,9 +11,20 @@ public class MyRunnable implements Runnable {
    }
 
    public void doMore() {
-      System.out.println(Thread.currentThread().getName() + ": top o’ the stack \n" + StackUtils.getCurrentStack());
+      System.out.println(Thread.currentThread().getName() + ": top o’ the stack");
+      Thread.dumpStack();
    }
 
+}
+
+class RunTester {
+   public static void main(String[] args) {
+      MyRunnable runnable = new MyRunnable();
+      runnable.run();
+
+      System.out.println(Thread.currentThread().getName() + ": back in main");
+      Thread.dumpStack();
+   }
 }
 
 class ThreadTester {
@@ -23,7 +34,8 @@ class ThreadTester {
 
       myThread.start();
 
-      System.out.println(Thread.currentThread().getName() + ": back in main \n" + StackUtils.getCurrentStack());
+      System.out.println(Thread.currentThread().getName() + ": back in main");
+      Thread.dumpStack();
    }
 }
 
