@@ -13,17 +13,20 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class BeatBoxFinal {
-  public static final int NUMBER_OF_BEATS = 16;
+  private static final int NUMBER_OF_BEATS = 16;
   private final List<BeatInstrument> instruments;
-  private final Map<BeatInstrument, List<JCheckBox>> instrumentCheckboxes = new TreeMap<>();
 
+  private final Map<BeatInstrument, List<JCheckBox>> instrumentCheckboxes = new TreeMap<>();
   private JList<String> messages;
   private JTextField userMessage;
+
   private int nextNum;
-  private final Vector<String> incomingMessages = new Vector<>();
   private String userName;
+  private final Vector<String> incomingMessages = new Vector<>();
   private ObjectOutputStream out;
   private ObjectInputStream in;
   private final HashMap<String, boolean[]> otherSeqsMap = new HashMap<>();
@@ -58,13 +61,12 @@ public class BeatBoxFinal {
 
   public void startUp(String name) {
     userName = name;
-    // open connection to the server
     try {
       Socket sock = new Socket("127.0.0.1", 4242);
       out = new ObjectOutputStream(sock.getOutputStream());
       in = new ObjectInputStream(sock.getInputStream());
-      Thread remote = new Thread(new RemoteReader());
-      remote.start();
+      ExecutorService executor = Executors.newSingleThreadExecutor();
+      executor.submit(new RemoteReader());
     } catch (IOException ex) {
       System.out.println("Couldn't connect-you'll have to play alone.");
     }
