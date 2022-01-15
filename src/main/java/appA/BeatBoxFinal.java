@@ -17,7 +17,7 @@ import java.util.*;
 public class BeatBoxFinal {
   public static final int NUMBER_OF_BEATS = 16;
   private final List<BeatInstrument> instruments;
-  private final Map<BeatInstrument, List<JCheckBox>> instrumentCheckboxes = new HashMap<>();
+  private final Map<BeatInstrument, List<JCheckBox>> instrumentCheckboxes = new TreeMap<>();
 
   private JList<String> messages;
   private JTextField userMessage;
@@ -288,7 +288,7 @@ public class BeatBoxFinal {
     return event;
   }
 
-  private static class BeatInstrument {
+  private static class BeatInstrument implements Comparable<BeatInstrument>{
     private final String instrumentName;
     private final int midiValue;
 
@@ -303,6 +303,11 @@ public class BeatBoxFinal {
 
     public int getMidiValue() {
       return midiValue;
+    }
+
+    @Override
+    public int compareTo(BeatInstrument other) {
+      return instrumentName.compareTo(other.instrumentName);
     }
   }
 }
