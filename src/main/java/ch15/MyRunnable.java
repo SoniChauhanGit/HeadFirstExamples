@@ -1,5 +1,9 @@
 package ch15;
 
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class MyRunnable implements Runnable {
 
    public void run() {
@@ -36,6 +40,18 @@ class ThreadTester {
 
       System.out.println(Thread.currentThread().getName() + ": back in main");
       Thread.dumpStack();
+   }
+}
+
+class ExecutorTester {
+   public static void main (String[] args) {
+      Runnable threadJob = new MyRunnable();
+      ExecutorService executor = Executors.newSingleThreadExecutor();
+      executor.execute(threadJob);
+
+      System.out.println(Thread.currentThread().getName() + ": back in main");
+      Thread.dumpStack();
+      executor.shutdown();
    }
 }
 
