@@ -82,19 +82,19 @@ public class BeatBoxFinal {
 
     Box buttonBox = new Box(BoxLayout.Y_AXIS);
     JButton start = new JButton("Start");
-    start.addActionListener(new MyStartListener());
+    start.addActionListener(e -> buildTrackAndStart());
     buttonBox.add(start);
 
     JButton stop = new JButton("Stop");
-    stop.addActionListener(new MyStopListener());
+    stop.addActionListener(e -> sequencer.stop());
     buttonBox.add(stop);
 
     JButton upTempo = new JButton("Tempo Up");
-    upTempo.addActionListener(new MyUpTempoListener());
+    upTempo.addActionListener(e -> changeTempo(1.03));
     buttonBox.add(upTempo);
 
     JButton downTempo = new JButton("Tempo Down");
-    downTempo.addActionListener(new MyDownTempoListener());
+    downTempo.addActionListener(e -> changeTempo(0.97));
     buttonBox.add(downTempo);
 
     JButton sendIt = new JButton("sendIt");
@@ -169,7 +169,7 @@ public class BeatBoxFinal {
       }
       makeTracks(instrument, beatsForInstrument);
     }
-    track.add(makeEvent(ShortMessage.PROGRAM_CHANGE, 9, 1, 0, 15)); // - so we always go to full 16 beats
+    track.add(makeEvent(ShortMessage.PROGRAM_CHANGE, 1, 0, 15)); // - so we always go to full 16 beats
     try {
       sequencer.setSequence(sequence);
       sequencer.setLoopCount(sequencer.LOOP_CONTINUOUSLY);
@@ -177,32 +177,6 @@ public class BeatBoxFinal {
       sequencer.setTempoInBPM(120);
     } catch (InvalidMidiDataException e) {
       e.printStackTrace();
-    }
-  }
-
-  public class MyStartListener implements ActionListener {
-    public void actionPerformed(ActionEvent a) {
-      buildTrackAndStart();
-    }
-  }
-
-  public class MyStopListener implements ActionListener {
-    public void actionPerformed(ActionEvent a) {
-      sequencer.stop();
-    }
-  }
-
-  public class MyUpTempoListener implements ActionListener {
-    public void actionPerformed(ActionEvent a) {
-      float tempoFactor = sequencer.getTempoFactor();
-      sequencer.setTempoFactor((float) (tempoFactor * 1.03));
-    }
-  }
-
-  public class MyDownTempoListener implements ActionListener {
-    public void actionPerformed(ActionEvent a) {
-      float tempoFactor = sequencer.getTempoFactor();
-      sequencer.setTempoFactor((float) (tempoFactor * .97));
     }
   }
 
@@ -221,7 +195,7 @@ public class BeatBoxFinal {
         out.writeObject(userName + nextNum++ + ": " + userMessage.getText());
         out.writeObject(checkboxState);
       } catch (IOException ex) {
-        System.out.println("Sorry dude. Could not send it to the server.");
+        System.out.println("Terribly sorry. Could not send it to the server.");
         ex.printStackTrace();
       }
       userMessage.setText("");
@@ -264,7 +238,7 @@ public class BeatBoxFinal {
     }
   }
 
-  public void changeSequence(boolean[] newCheckboxStates) {
+  private void changeSequence(boolean[] newCheckboxStates) {
     int i = 0;
     for (List<JCheckBox> checkboxesForInstrument : instrumentCheckboxes.values()) {
       for (JCheckBox checkbox : checkboxesForInstrument) {
@@ -273,24 +247,28 @@ public class BeatBoxFinal {
     }
   }
 
-  public void makeTracks(BeatInstrument instrument, List<Integer> beatsForInstrument) {
+  private void makeTracks(BeatInstrument instrument, List<Integer> beatsForInstrument) {
     for (Integer beatNumber : beatsForInstrument) {
-      track.add(makeEvent(ShortMessage.NOTE_ON, 9, instrument.getMidiValue(), 100, beatNumber));
-      track.add(makeEvent(ShortMessage.NOTE_OFF, 9, instrument.getMidiValue(), 100, beatNumber + 1));
+      track.add(makeEvent(ShortMessage.NOTE_ON, instrument.getMidiValue(), 100, beatNumber));
+      track.add(makeEvent(ShortMessage.NOTE_OFF, instrument.getMidiValue(), 100, beatNumber + 1));
     }
   }
 
-  public MidiEvent makeEvent(int command, int channel, int one, int two, int tick) {
-    MidiEvent event = null;
+  private MidiEvent makeEvent(int command, int one, int two, int tick) {
     try {
-      ShortMessage midiMessage = new ShortMessage(command, channel, one, two);
-      event = new MidiEvent(midiMessage, tick);
+      ShortMessage midiMessage = new ShortMessage(command, 9, one, two);
+      return new MidiEvent(midiMessage, tick);
     } catch (InvalidMidiDataException ignored) {
+      return null;
     }
-    return event;
   }
 
-  private static class BeatInstrument implements Comparable<BeatInstrument>{
+  private void changeTempo(double tempoMultiplier) {
+    float tempoFactor = sequencer.getTempoFactor();
+    sequencer.setTempoFactor((float) (tempoFactor * tempoMultiplier));
+  }
+
+  private static class BeatInstrument implements Comparable<BeatInstrument> {
     private final String instrumentName;
     private final int midiValue;
 
