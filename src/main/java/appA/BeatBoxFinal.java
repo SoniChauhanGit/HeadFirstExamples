@@ -153,21 +153,18 @@ public class BeatBoxFinal {
   }
 
   public void buildTrackAndStart() {
-    List<Integer> beatsForInstrument; // this will hold all the beats, on or off, for this instrument
     sequence.deleteTrack(track);
     track = sequence.createTrack();
 
-    for (BeatInstrument instrument : instruments) {
-      beatsForInstrument = new ArrayList<>();
-
-      List<JCheckBox> checkboxes = instrumentCheckboxes.get(instrument);
+    for (Map.Entry<BeatInstrument, List<JCheckBox>> instrumentsToBeats : instrumentCheckboxes.entrySet()) {
+      List<JCheckBox> checkboxes = instrumentsToBeats.getValue();
       for (int i = 0; i < checkboxes.size(); i++) {
-        JCheckBox checkbox = checkboxes.get(i);
-        if (checkbox.isSelected()) {
-          beatsForInstrument.add(i);
+        if (checkboxes.get(i).isSelected()) {
+          BeatInstrument instrument = instrumentsToBeats.getKey();
+          track.add(makeEvent(ShortMessage.NOTE_ON, instrument.getMidiValue(), 100, i));
+          track.add(makeEvent(ShortMessage.NOTE_OFF, instrument.getMidiValue(), 100, i + 1));
         }
       }
-      makeTracks(instrument, beatsForInstrument);
     }
     track.add(makeEvent(ShortMessage.PROGRAM_CHANGE, 1, 0, 15)); // - so we always go to full 16 beats
     try {
@@ -225,7 +222,6 @@ public class BeatBoxFinal {
       try {
         while ((obj = in.readObject()) != null) {
           System.out.println("got an object from server");
-          System.out.println(obj.getClass());
           String nameToShow = (String) obj;
           checkboxState = (boolean[]) in.readObject();
           otherSeqsMap.put(nameToShow, checkboxState);
@@ -244,13 +240,6 @@ public class BeatBoxFinal {
       for (JCheckBox checkbox : checkboxesForInstrument) {
         checkbox.setSelected(newCheckboxStates[i++]);
       }
-    }
-  }
-
-  private void makeTracks(BeatInstrument instrument, List<Integer> beatsForInstrument) {
-    for (Integer beatNumber : beatsForInstrument) {
-      track.add(makeEvent(ShortMessage.NOTE_ON, instrument.getMidiValue(), 100, beatNumber));
-      track.add(makeEvent(ShortMessage.NOTE_OFF, instrument.getMidiValue(), 100, beatNumber + 1));
     }
   }
 
