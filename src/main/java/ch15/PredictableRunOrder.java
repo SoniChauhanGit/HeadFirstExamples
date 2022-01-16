@@ -20,7 +20,7 @@ class PredictableSleep {
 
   private static void sleepThenPrint() {
     try {
-      Thread.sleep(120000);
+      Thread.sleep(2000);
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
@@ -38,7 +38,7 @@ class SleepWithTimeUnit {
 
   private static void sleepThenPrint() {
     try {
-      TimeUnit.MINUTES.sleep(2);
+      TimeUnit.SECONDS.sleep(2);
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
