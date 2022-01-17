@@ -3,11 +3,12 @@ package ch15;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class LostUpdate {
   public static void main(String[] args) throws InterruptedException {
     ExecutorService pool = Executors.newFixedThreadPool(30);
-    Balance balance = new Balance();
+    AtomicBalance balance = new AtomicBalance();
     for (int i = 0; i < 1000; i++) {
       pool.execute(() -> balance.increment());
     }
@@ -22,8 +23,17 @@ public class LostUpdate {
 class Balance {
   int balance = 0;
 
+  // add synchronized here to see it work properly
   public void increment() {
     balance++;
+  }
+}
+
+class AtomicBalance {
+  AtomicInteger balance = new AtomicInteger(0);
+
+  public void increment() {
+    balance.incrementAndGet();
   }
 }
 
