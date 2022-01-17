@@ -3,18 +3,6 @@ package ch15;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-class BankAccount {
-  private int balance = 100;
-
-  public int getBalance() {
-    return balance;
-  }
-
-  public void withdraw(int amount) {
-    balance = balance - amount;
-  }
-}
-
 public class RyanAndMonicaTest {
   public static void main(String[] args) {
     BankAccount account = new BankAccount();
@@ -38,26 +26,39 @@ class RyanAndMonicaJob implements Runnable {
 
   public void run() {
     for (int i = 0; i < 10; i++) {
-      makeWithdrawal(10);
+      account.makeWithdrawal(10, name);
       if (account.getBalance() < 0) {
         System.out.println("Overdrawn!");
       }
     }
   }
+}
 
-  private void makeWithdrawal(int amount) {
-    if (account.getBalance() >= amount) {
+class BankAccount {
+  private int balance = 100;
+
+  public int getBalance() {
+    return balance;
+  }
+
+  private void withdraw(int amount) {
+    balance = balance - amount;
+  }
+
+  public void makeWithdrawal(int amount, String name) {
+    if (balance >= amount) {
       System.out.println(name + " is about to withdraw");
       try {
         System.out.println(name + " is going to sleep");
         Thread.sleep(500);
       } catch (InterruptedException ex) {ex.printStackTrace();}
       System.out.println(name + " woke up.");
-      account.withdraw(amount);
+      withdraw(amount);
       System.out.println(name + " completes the withdrawal");
     } else {
       System.out.println("Sorry, not enough for " + name);
     }
   }
 }
+
 
