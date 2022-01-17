@@ -7,8 +7,18 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 
 public class ClosingTime {
-  public static void main(String[] args) throws InterruptedException {
-    fullShutdown();
+  public static void main(String[] args) {
+    ExecutorService threadPool = Executors.newFixedThreadPool(2);
+    threadPool.execute(new LongJob("Long Job 1"));
+    threadPool.execute(new ShortJob("Short Job"));
+    threadPool.shutdown();
+
+    try {
+      System.out.println("Finished? " + threadPool.awaitTermination(4, TimeUnit.SECONDS));
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+    threadPool.shutdownNow();
   }
 
   static void fullShutdown() throws InterruptedException {
