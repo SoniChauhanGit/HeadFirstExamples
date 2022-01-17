@@ -6,19 +6,20 @@ import java.util.concurrent.TimeUnit;
 
 public class TestSyncTest {
   public static void main(String[] args) throws InterruptedException {
-    ExecutorService pool = Executors.newFixedThreadPool(2);
+    ExecutorService pool = Executors.newFixedThreadPool(6);
     Balance balance = new Balance();
-    pool.execute(() -> incrementBalance50Times(balance));
-    pool.execute(() -> incrementBalance50Times(balance));
+    for (int i = 0; i < 1000; i++) {
+      pool.execute(() -> incrementBalance(balance));
+    }
     pool.shutdown();
-    pool.awaitTermination(10, TimeUnit.SECONDS);
+    // make sure the pool has finished running all the updates before printing the output
+    if (pool.awaitTermination(1, TimeUnit.MINUTES)) {
+      System.out.println("balance.balance = " + balance.balance);
+    }
   }
 
-  private static void incrementBalance50Times(Balance balance) {
-    for (int i = 0; i < 50; i++) {
+  private static void incrementBalance(Balance balance) {
       balance.increment();
-      System.out.printf("Balance updated by %s. Balance is %d%n", Thread.currentThread().getName(), balance.balance);
-    }
   }
 }
 
@@ -27,11 +28,6 @@ class Balance {
 
   public void increment() {
     int i = balance;
-    try {
-      Thread.sleep(1);
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
     balance = i + 1;
   }
 }
