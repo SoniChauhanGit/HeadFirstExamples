@@ -28,6 +28,31 @@ public class ClosingTime {
     System.out.println("threadPool.isTerminated() = " + threadPool.isTerminated());
 
     try {
+      System.out.println("Finished? " + threadPool.awaitTermination(100, TimeUnit.SECONDS));
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+    System.out.println("threadPool.isShutdown() = " + threadPool.isShutdown());
+    System.out.println("threadPool.isTerminated() = " + threadPool.isTerminated());
+  }
+
+  static void shutdownGracefullyWorkstealing() {
+    ExecutorService threadPool = Executors.newWorkStealingPool(2);
+    threadPool.execute(new LongJob("Long Job 1"));
+    threadPool.execute(new ShortJob("Short Job"));
+    threadPool.execute(new LongJob("Long Job 2"));
+    threadPool.execute(new ShortJob("Queued job"));
+    threadPool.shutdown();
+    ShortJob tooLateJob = new ShortJob("Too late job");
+    try {
+      threadPool.execute(tooLateJob);
+    } catch (RejectedExecutionException e) {
+      System.out.println("Too late to start another job!! " + tooLateJob);
+    }
+    System.out.println("threadPool.isShutdown() = " + threadPool.isShutdown());
+    System.out.println("threadPool.isTerminated() = " + threadPool.isTerminated());
+
+    try {
       System.out.println("Finished? " + threadPool.awaitTermination(4, TimeUnit.SECONDS));
     } catch (InterruptedException e) {
       e.printStackTrace();
