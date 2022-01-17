@@ -1,5 +1,6 @@
 package ch15;
 
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -18,6 +19,7 @@ public class TestRyanAndMonica {
 class RyanAndMonicaJob implements Runnable {
   private final String name;
   private final BankAccount account;
+  private final Random randomGenerator = new Random();
 
   RyanAndMonicaJob(String name, BankAccount account) {
     this.name = name;
@@ -25,7 +27,7 @@ class RyanAndMonicaJob implements Runnable {
   }
 
   public void run() {
-    for (int i = 0; i < 10; i++) {
+    while (account.getBalance() > 0) {
       makeWithdrawal(10);
       if (account.getBalance() < 0) {
         System.out.println("Overdrawn!");
@@ -35,19 +37,23 @@ class RyanAndMonicaJob implements Runnable {
 
   private void makeWithdrawal(int amount) {
     if (account.getBalance() >= amount) {
-      System.out.println(name + " is about to withdraw $10. Current balance: " + account.getBalance());
+      System.out.printf("%s is about to withdraw $%d. Current balance: $%d%n", name, amount, account.getBalance());
       try {
         System.out.println(name + " is going to sleep");
-        Thread.sleep(500);
+        sleepForRandomTime();
       } catch (InterruptedException ex) {
         ex.printStackTrace();
       }
       System.out.println(name + " woke up.");
       account.withdraw(amount);
-      System.out.println(name + " completes the withdrawal. New balance: " + account.getBalance());
+      System.out.printf("%s completes the withdrawal of $%d. New balance: $%d%n", name, amount, account.getBalance());
     } else {
       System.out.println("Sorry, not enough for " + name);
     }
+  }
+
+  private void sleepForRandomTime() throws InterruptedException {
+    Thread.sleep(randomGenerator.nextInt(500));
   }
 }
 
