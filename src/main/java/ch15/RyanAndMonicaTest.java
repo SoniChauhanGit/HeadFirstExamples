@@ -36,13 +36,8 @@ class RyanAndMonicaJob implements Runnable {
 
 class BankAccount {
   private int balance = 100;
-
   public int getBalance() {
     return balance;
-  }
-
-  private void withdraw(int amount) {
-    balance = balance - amount;
   }
 
   public void makeWithdrawal(int amount, String name) {
@@ -53,7 +48,7 @@ class BankAccount {
         Thread.sleep(500);
       } catch (InterruptedException ex) {ex.printStackTrace();}
       System.out.println(name + " woke up.");
-      withdraw(amount);
+      balance = balance - amount;
       System.out.println(name + " completes the withdrawal");
     } else {
       System.out.println("Sorry, not enough for " + name);
