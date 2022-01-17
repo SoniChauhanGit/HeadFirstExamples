@@ -7,8 +7,34 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 
 public class ClosingTime {
-  public static void main(String[] args) {
-    shutdownGracefully();
+  public static void main(String[] args) throws InterruptedException {
+    fullShutdown();
+  }
+
+  static void fullShutdown() throws InterruptedException {
+    ExecutorService threadPool = Executors.newFixedThreadPool(2);
+    threadPool.execute(new LongJob("Long Job 1"));
+    threadPool.execute(new ShortJob("Short Job"));
+    threadPool.execute(new LongJob("Long Job 2"));
+    threadPool.execute(new LongJob("Long Job 3"));
+    threadPool.execute(new LongJob("Long Job 4"));
+    threadPool.execute(new ShortJob("Shouldn't start job"));
+    threadPool.shutdown();
+    ShortJob tooLateJob = new ShortJob("Too late job");
+    try {
+      threadPool.execute(tooLateJob);
+    } catch (RejectedExecutionException e) {
+      System.out.println("Too late to start another job!! " + tooLateJob);
+    }
+    threadPool.awaitTermination(4, TimeUnit.SECONDS);
+
+    List<Runnable> unfinished = threadPool.shutdownNow();
+
+    System.out.println("unfinished.size() = " + unfinished.size());
+    for (Runnable runnable : unfinished) {
+      System.out.println(runnable);
+    }
+
   }
 
   static void shutdownGracefully() {
