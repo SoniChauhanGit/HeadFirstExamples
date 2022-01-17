@@ -14,7 +14,7 @@ public class TestSyncTest {
     pool.shutdown();
     // make sure the pool has finished running all the updates before printing the output
     if (pool.awaitTermination(1, TimeUnit.MINUTES)) {
-      System.out.println("balance.balance = " + balance.balance);
+      System.out.println("balance = " + balance.balance);
     }
   }
 
@@ -27,8 +27,7 @@ class Balance {
   int balance = 0;
 
   public void increment() {
-    int i = balance;
-    balance = i + 1;
+    balance++;
   }
 }
 
