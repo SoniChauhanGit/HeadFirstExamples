@@ -7,14 +7,15 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 
 public class ClosingTime {
-  public static void main(String[] args) {
+  public static void main(String[] args) throws InterruptedException {
     ExecutorService threadPool = Executors.newFixedThreadPool(2);
-    threadPool.execute(new LongJob("Long Job 1"));
+    threadPool.execute(new LongJob("Long Job"));
     threadPool.execute(new ShortJob("Short Job"));
     threadPool.shutdown();
 
     try {
-      System.out.println("Finished? " + threadPool.awaitTermination(4, TimeUnit.SECONDS));
+      boolean finished = threadPool.awaitTermination(4, TimeUnit.SECONDS);
+      System.out.println("Finished? " + finished);
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
@@ -64,7 +65,8 @@ public class ClosingTime {
     System.out.println("threadPool.isTerminated() = " + threadPool.isTerminated());
 
     try {
-      System.out.println("Finished? " + threadPool.awaitTermination(100, TimeUnit.SECONDS));
+      boolean poolFinished = threadPool.awaitTermination(100, TimeUnit.SECONDS);
+      System.out.println("Finished? " + poolFinished);
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
