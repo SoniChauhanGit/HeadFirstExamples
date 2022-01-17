@@ -3,25 +3,37 @@ package ch15;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 
 public class ClosingTime {
   public static void main(String[] args) {
-    forceShutdown();
+    shutdownGracefully();
   }
 
   static void shutdownGracefully() {
     ExecutorService threadPool = Executors.newFixedThreadPool(2);
     threadPool.execute(new LongJob("Long Job 1"));
     threadPool.execute(new ShortJob("Short Job"));
-    threadPool.execute(new ShortJob("Long Job 2"));
-    threadPool.execute(new ShortJob("Shouldn't start job"));
+    threadPool.execute(new LongJob("Long Job 2"));
+    threadPool.execute(new ShortJob("Queued job"));
     threadPool.shutdown();
+    ShortJob tooLateJob = new ShortJob("Too late job");
     try {
-      System.out.println("Finished? " + threadPool.awaitTermination(1, TimeUnit.SECONDS));
+      threadPool.execute(tooLateJob);
+    } catch (RejectedExecutionException e) {
+      System.out.println("Too late to start another job!! " + tooLateJob);
+    }
+    System.out.println("threadPool.isShutdown() = " + threadPool.isShutdown());
+    System.out.println("threadPool.isTerminated() = " + threadPool.isTerminated());
+
+    try {
+      System.out.println("Finished? " + threadPool.awaitTermination(4, TimeUnit.SECONDS));
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
+    System.out.println("threadPool.isShutdown() = " + threadPool.isShutdown());
+    System.out.println("threadPool.isTerminated() = " + threadPool.isTerminated());
   }
 
   static void forceShutdown() {
@@ -31,9 +43,29 @@ public class ClosingTime {
     threadPool.execute(new LongJob("Long Job 2"));
     threadPool.execute(new ShortJob("Shouldn't start job"));
     List<Runnable> unfinished = threadPool.shutdownNow();
+
     System.out.println("unfinished.size() = " + unfinished.size());
     for (Runnable runnable : unfinished) {
-      System.out.println(((NamedJob) runnable).getJobName());
+      System.out.println(runnable);
+    }
+  }
+
+  static void forceShutdownWorkStealing() {
+    ExecutorService threadPool = Executors.newWorkStealingPool(2);
+    threadPool.execute(new LongJob("Long Job 1"));
+    threadPool.execute(new ShortJob("Short Job"));
+    threadPool.execute(new LongJob("Long Job 2"));
+    threadPool.execute(new ShortJob("Shouldn't start job"));
+    List<Runnable> unfinished = threadPool.shutdownNow();
+    try {
+      System.out.println("Finished? " + threadPool.awaitTermination(1, TimeUnit.SECONDS));
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+
+    System.out.println("unfinished.size() = " + unfinished.size());
+    for (Runnable runnable : unfinished) {
+      System.out.println(runnable);
     }
   }
 
@@ -46,11 +78,13 @@ abstract class NamedJob implements Runnable {
     this.jobName = jobName;
   }
 
-  public String getJobName() {
-    return jobName;
+  @Override
+  public String toString() {
+    return "NamedJob{" +
+            "jobName='" + jobName + '\'' +
+            '}';
   }
 }
-
 
 class ShortJob extends NamedJob {
   ShortJob(String jobName) {
