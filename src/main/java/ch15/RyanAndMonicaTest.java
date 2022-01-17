@@ -4,7 +4,7 @@ import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class TestRyanAndMonica {
+public class RyanAndMonicaTest {
   public static void main(String[] args) {
     BankAccount account = new BankAccount();
     RyanAndMonicaJob ryan = new RyanAndMonicaJob("Ryan", account);
