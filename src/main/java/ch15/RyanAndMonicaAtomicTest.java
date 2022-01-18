@@ -56,12 +56,11 @@ class BankAccountWithAtomic {
         Thread.sleep(500);
       } catch (InterruptedException ex) {ex.printStackTrace();}
       System.out.println(name + " woke up.");
-
       boolean success = balance.compareAndSet(initialBalance, initialBalance - amount);
-      if (!success) {
-        System.out.println("Sorry " + name + ", try again");
-      } else {
+      if (success) {
         System.out.println(name + " completes the withdrawal.");
+      } else {
+        System.out.println("Sorry " + name + ", try again");
       }
     } else {
       System.out.println("Sorry, not enough for " + name);
