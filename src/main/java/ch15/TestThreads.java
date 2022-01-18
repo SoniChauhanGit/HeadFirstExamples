@@ -1,28 +1,13 @@
 package ch15;
 
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-
 public class TestThreads {
-  public static void main(String[] args) throws InterruptedException, ExecutionException {
-    ExecutorService pool = Executors.newFixedThreadPool(2);
-    Future<?> future1 = pool.submit(() -> {
-      Accum a = Accum.getInstance();
-      for (int i = 0; i < 98; i++) {
-        a.updateCounter(1000);
-      }
-    });
-    System.out.println(future1.isDone());
-    Future<?> future2 = pool.submit(() -> {
-      Accum a = Accum.getInstance();
-      for (int i = 0; i < 99; i++) {
-        a.updateCounter(1);
-      }
-    });
-    pool.shutdown();
-    System.out.println(Accum.getInstance().getCount());
+  public static void main(String[] args) {
+    ThreadOne t1 = new ThreadOne();
+    ThreadTwo t2 = new ThreadTwo();
+    Thread one = new Thread(t1);
+    Thread two = new Thread(t2);
+    one.start();
+    two.start();
   }
 }
 
@@ -33,16 +18,44 @@ class Accum {
   private Accum() {
   }
 
-  // singleton
-  public static Accum getInstance() {
+  public static Accum getAccum() {
     return a;
   }
 
-  public void updateCounter(int add) {
+  public synchronized void updateCounter(int add) {
     counter += add;
   }
 
   public int getCount() {
     return counter;
+  }
+}
+
+class ThreadOne implements Runnable {
+  Accum a = Accum.getAccum();
+  public void run() {
+    for (int x = 0; x < 98; x++) {
+      a.updateCounter(1000);
+      try {
+        Thread.sleep(50);
+      } catch (InterruptedException ignored) {
+      }
+    }
+    System.out.println("one " + a.getCount());
+  }
+}
+
+class ThreadTwo implements Runnable {
+  Accum a = Accum.getAccum();
+
+  public void run() {
+    for (int x = 0; x < 99; x++) {
+      a.updateCounter(1);
+      try {
+        Thread.sleep(50);
+      } catch (InterruptedException ignored) {
+      }
+    }
+    System.out.println("two " + a.getCount());
   }
 }
