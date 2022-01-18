@@ -1,25 +1,20 @@
 package ch15;
 
-import java.io.BufferedReader;
-import java.io.Writer;
+import java.io.*;
 import java.net.InetSocketAddress;
-import java.nio.channels.Channels;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
+import java.nio.channels.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 
 public class SimpleChatServer {
-  ArrayList<Writer> clientOutputStreams;
+  private final ArrayList<PrintWriter> clientWriters = new ArrayList<>();
 
   public static void main(String[] args) {
     new SimpleChatServer().go();
   }
 
   public void go() {
-    clientOutputStreams = new ArrayList<>();
     ExecutorService threadPool = Executors.newFixedThreadPool(5);
     try {
       ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
@@ -27,39 +22,35 @@ public class SimpleChatServer {
 
       while (serverSocketChannel.isOpen()) {
         SocketChannel clientSocket = serverSocketChannel.accept();
-        Writer writer = Channels.newWriter(clientSocket, StandardCharsets.UTF_8);
-        clientOutputStreams.add(writer);
+        PrintWriter writer = new PrintWriter(Channels.newWriter(clientSocket, StandardCharsets.UTF_8));
+        clientWriters.add(writer);
         threadPool.submit(new ClientHandler(clientSocket));
         System.out.println("got a connection");
       }
-    } catch (Exception ex) {
+    } catch (IOException ex) {
       ex.printStackTrace();
     }
-  } // close go
+  }
 
   public void tellEveryone(String message) {
-    for (Writer writer : clientOutputStreams) {
+    for (Writer writer : clientWriters) {
       try {
         writer.append(message).write("\n");
         writer.flush();
-      } catch (Exception ex) {
+      } catch (IOException ex) {
         ex.printStackTrace();
       }
-    } // end while
-  } // close tellEveryone
+    }
+  }
 
   public class ClientHandler implements Runnable {
     BufferedReader reader;
     SocketChannel socket;
 
     public ClientHandler(SocketChannel clientSocket) {
-      try {
-        socket = clientSocket;
-        reader = new BufferedReader(Channels.newReader(socket, StandardCharsets.UTF_8));
-      } catch (Exception ex) {
-        ex.printStackTrace();
-      }
-    } // close constructor
+      socket = clientSocket;
+      reader = new BufferedReader(Channels.newReader(socket, StandardCharsets.UTF_8));
+    }
 
     public void run() {
       String message;
@@ -67,10 +58,10 @@ public class SimpleChatServer {
         while ((message = reader.readLine()) != null) {
           System.out.println("read " + message);
           tellEveryone(message);
-        } // close while
-      } catch (Exception ex) {
+        }
+      } catch (IOException ex) {
         ex.printStackTrace();
       }
-    } // close run
-  } // close inner class
-} // close class
+    }
+  }
+}
