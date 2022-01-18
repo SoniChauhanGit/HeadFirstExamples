@@ -7,8 +7,7 @@ import java.io.*;
 import java.net.InetSocketAddress;
 import java.nio.channels.*;
 import java.nio.charset.StandardCharsets;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 
 public class SimpleChatClient {
   private JTextArea incoming;
@@ -49,7 +48,6 @@ public class SimpleChatClient {
   private void setUpNetworking() {
     InetSocketAddress serverAddress = new InetSocketAddress("127.0.0.1", 5000);
     try (SocketChannel socketChannel = SocketChannel.open(serverAddress)) {
-
       reader = new BufferedReader(Channels.newReader(socketChannel, StandardCharsets.UTF_8));
       writer = new PrintWriter(Channels.newWriter(socketChannel, StandardCharsets.UTF_8));
 
@@ -76,7 +74,7 @@ public class SimpleChatClient {
           System.out.println("read " + message);
           incoming.append(message + "\n");
         }
-      } catch (Exception ex) {
+      } catch (IOException ex) {
         ex.printStackTrace();
       }
     }

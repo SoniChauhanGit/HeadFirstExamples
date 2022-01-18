@@ -43,12 +43,9 @@ public class SimpleChatClientA {
 
   public class SendButtonListener implements ActionListener {
     public void actionPerformed(ActionEvent ev) {
-      try {
-        writer.println(outgoing.getText());
-        writer.flush();
-      } catch (Exception ex) {
-        ex.printStackTrace();
-      }
+      System.out.println("Sending: "+outgoing.getText());
+      writer.println(outgoing.getText());
+      writer.flush();
       outgoing.setText("");
       outgoing.requestFocus();
     }
