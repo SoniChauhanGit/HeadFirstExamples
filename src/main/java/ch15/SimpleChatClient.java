@@ -46,8 +46,9 @@ public class SimpleChatClient {
   }
 
   private void setUpNetworking() {
-    InetSocketAddress serverAddress = new InetSocketAddress("127.0.0.1", 5000);
-    try (SocketChannel socketChannel = SocketChannel.open(serverAddress)) {
+    try {
+      SocketChannel socketChannel = SocketChannel.open(new InetSocketAddress("127.0.0.1", 5000));
+
       reader = new BufferedReader(Channels.newReader(socketChannel, StandardCharsets.UTF_8));
       writer = new PrintWriter(Channels.newWriter(socketChannel, StandardCharsets.UTF_8));
 
