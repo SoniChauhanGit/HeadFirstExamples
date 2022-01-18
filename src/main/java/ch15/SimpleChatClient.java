@@ -6,8 +6,8 @@ import java.awt.event.*;
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.nio.channels.*;
-import java.nio.charset.StandardCharsets;
 import java.util.concurrent.*;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class SimpleChatClient {
   private JTextArea incoming;
@@ -48,10 +48,11 @@ public class SimpleChatClient {
 
   private void setUpNetworking() {
     try {
-      SocketChannel socketChannel = SocketChannel.open(new InetSocketAddress("127.0.0.1", 5000));
+      InetSocketAddress serverAddress = new InetSocketAddress("127.0.0.1", 5000);
+      SocketChannel socketChannel = SocketChannel.open(serverAddress);
 
-      reader = new BufferedReader(Channels.newReader(socketChannel, StandardCharsets.UTF_8));
-      writer = new PrintWriter(Channels.newWriter(socketChannel, StandardCharsets.UTF_8));
+      reader = new BufferedReader(Channels.newReader(socketChannel, UTF_8));
+      writer = new PrintWriter(Channels.newWriter(socketChannel, UTF_8));
 
       System.out.println("Networking established. Client running at: " + socketChannel.getLocalAddress());
     } catch (IOException ex) {

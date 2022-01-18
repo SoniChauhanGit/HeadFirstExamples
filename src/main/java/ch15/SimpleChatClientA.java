@@ -34,7 +34,8 @@ public class SimpleChatClientA {
 
   private void setUpNetworking() {
     try {
-      SocketChannel socketChannel = SocketChannel.open(new InetSocketAddress("127.0.0.1", 5000));
+      InetSocketAddress serverAddress = new InetSocketAddress("127.0.0.1", 5000);
+      SocketChannel socketChannel = SocketChannel.open(serverAddress);
       writer = new PrintWriter(Channels.newWriter(socketChannel, UTF_8));
       System.out.println("Networking established. Client running at: " + socketChannel.getLocalAddress());
     } catch (IOException ex) {
