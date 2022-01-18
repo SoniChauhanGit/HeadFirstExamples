@@ -31,7 +31,7 @@ class RyanAndMonicaAtomicJob implements Runnable {
   }
 
   public void run() {
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 15; i++) {
       account.makeWithdrawal(10, name);
       if (account.getBalance() < 0) {
         System.out.println("Overdrawn!");
@@ -42,6 +42,7 @@ class RyanAndMonicaAtomicJob implements Runnable {
 
 class BankAccountWithAtomic {
   private final AtomicInteger balance = new AtomicInteger(100);
+
   public int getBalance() {
     return balance.get();
   }
@@ -56,9 +57,12 @@ class BankAccountWithAtomic {
       } catch (InterruptedException ex) {ex.printStackTrace();}
       System.out.println(name + " woke up.");
 
-      balance.addAndGet(-amount);
-
-      System.out.println(name + " completes the withdrawal");
+      boolean success = balance.compareAndSet(initialBalance, initialBalance - amount);
+      if (!success) {
+        System.out.println("Sorry " + name + ", try again");
+      } else {
+        System.out.println(name + " completes the withdrawal.");
+      }
     } else {
       System.out.println("Sorry, not enough for " + name);
     }
