@@ -2,14 +2,10 @@ package ch15;
 
 import javax.swing.*;
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.awt.event.*;
+import java.io.*;
 import java.net.InetSocketAddress;
-import java.nio.channels.Channels;
-import java.nio.channels.SocketChannel;
+import java.nio.channels.*;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -21,6 +17,8 @@ public class SimpleChatClient {
   private PrintWriter writer;
 
   public void go() {
+    setUpNetworking();
+
     incoming = new JTextArea(15, 30);
     incoming.setLineWrap(true);
     incoming.setWrapStyleWord(true);
@@ -39,8 +37,6 @@ public class SimpleChatClient {
     mainPanel.add(outgoing);
     mainPanel.add(sendButton);
 
-    setUpNetworking();
-
     ExecutorService executor = Executors.newSingleThreadExecutor();
     executor.execute(new IncomingReader());
 
@@ -51,8 +47,8 @@ public class SimpleChatClient {
   }
 
   private void setUpNetworking() {
-    try {
-      SocketChannel socketChannel = SocketChannel.open(new InetSocketAddress("127.0.0.1", 5000));
+    InetSocketAddress serverAddress = new InetSocketAddress("127.0.0.1", 5000);
+    try (SocketChannel socketChannel = SocketChannel.open(serverAddress)) {
 
       reader = new BufferedReader(Channels.newReader(socketChannel, StandardCharsets.UTF_8));
       writer = new PrintWriter(Channels.newWriter(socketChannel, StandardCharsets.UTF_8));
