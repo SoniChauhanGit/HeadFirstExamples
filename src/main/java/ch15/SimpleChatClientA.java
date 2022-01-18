@@ -29,11 +29,12 @@ public class SimpleChatClientA {
     frame.getContentPane().add(BorderLayout.CENTER, mainPanel);
     frame.setSize(400, 100);
     frame.setVisible(true);
+    frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
   }
 
   private void setUpNetworking() {
-    InetSocketAddress serverAddress = new InetSocketAddress("127.0.0.1", 5000);
-    try (SocketChannel socketChannel = SocketChannel.open(serverAddress)) {
+    try {
+      SocketChannel socketChannel = SocketChannel.open(new InetSocketAddress("127.0.0.1", 5000));
       writer = new PrintWriter(Channels.newWriter(socketChannel, UTF_8));
       System.out.println("Networking established. Client running at: " + socketChannel.getLocalAddress());
     } catch (IOException ex) {
@@ -43,7 +44,6 @@ public class SimpleChatClientA {
 
   public class SendButtonListener implements ActionListener {
     public void actionPerformed(ActionEvent ev) {
-      System.out.println("Sending: "+outgoing.getText());
       writer.println(outgoing.getText());
       writer.flush();
       outgoing.setText("");

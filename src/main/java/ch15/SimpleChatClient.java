@@ -43,6 +43,7 @@ public class SimpleChatClient {
     frame.getContentPane().add(BorderLayout.CENTER, mainPanel);
     frame.setSize(400, 350);
     frame.setVisible(true);
+    frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
   }
 
   private void setUpNetworking() {
