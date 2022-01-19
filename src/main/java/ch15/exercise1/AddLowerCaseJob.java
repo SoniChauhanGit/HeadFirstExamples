@@ -17,7 +17,7 @@ class AddLowerCaseJob implements Runnable {
       }
     }
     System.out.println(Thread.currentThread().getName() + data.getLetters());
-    System.out.println(Thread.currentThread().getName() + "getLetters().size() = " + data.getLetters().size());
+    System.out.println(Thread.currentThread().getName() + " getLetters().size() = " + data.getLetters().size());
   }
 
 }
