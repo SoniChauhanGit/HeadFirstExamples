@@ -16,6 +16,7 @@ class AddLowerCaseJob implements Runnable {
       } catch (InterruptedException ignored) {
       }
     }
+    // this can throw a ConcurrentModificationException
     System.out.println(Thread.currentThread().getName() + data.getLetters());
     System.out.println(Thread.currentThread().getName() + " getLetters().size() = " + data.getLetters().size());
   }
