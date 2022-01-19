@@ -1,15 +1,16 @@
-package ch15;
+package ch15.ryanmonica;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
-public class RyanAndMonicaSynchronizedTest {
+public class RyanAndMonicaAtomicTest {
   public static void main(String[] args) throws InterruptedException {
     long start = System.currentTimeMillis();
-    BankAccountSynchronized account = new BankAccountSynchronized();
-    RyanAndMonicaSynchronizedJob ryan = new RyanAndMonicaSynchronizedJob("Ryan", account);
-    RyanAndMonicaSynchronizedJob monica = new RyanAndMonicaSynchronizedJob("Monica", account);
+    BankAccountWithAtomic account = new BankAccountWithAtomic();
+    RyanAndMonicaAtomicJob ryan = new RyanAndMonicaAtomicJob("Ryan", account);
+    RyanAndMonicaAtomicJob monica = new RyanAndMonicaAtomicJob("Monica", account);
     ExecutorService executor = Executors.newFixedThreadPool(2);
     executor.execute(ryan);
     executor.execute(monica);
@@ -20,17 +21,17 @@ public class RyanAndMonicaSynchronizedTest {
   }
 }
 
-class RyanAndMonicaSynchronizedJob implements Runnable {
+class RyanAndMonicaAtomicJob implements Runnable {
   private final String name;
-  private final BankAccountSynchronized account;
+  private final BankAccountWithAtomic account;
 
-  RyanAndMonicaSynchronizedJob(String name, BankAccountSynchronized account) {
+  RyanAndMonicaAtomicJob(String name, BankAccountWithAtomic account) {
     this.name = name;
     this.account = account;
   }
 
   public void run() {
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 15; i++) {
       account.makeWithdrawal(10, name);
       if (account.getBalance() < 0) {
         System.out.println("Overdrawn!");
@@ -39,29 +40,32 @@ class RyanAndMonicaSynchronizedJob implements Runnable {
   }
 }
 
-class BankAccountSynchronized {
-  private int balance = 100;
+class BankAccountWithAtomic {
+  private final AtomicInteger balance = new AtomicInteger(100);
 
   public int getBalance() {
-    return balance;
+    return balance.get();
   }
 
-  private void withdraw(int amount) {
-    balance = balance - amount;
-  }
-
-  public synchronized void makeWithdrawal(int amount, String name) {
-    if (balance >= amount) {
+  public void makeWithdrawal(int amount, String name) {
+    int initialBalance = balance.get();
+    if (initialBalance >= amount) {
       System.out.println(name + " is about to withdraw");
       try {
         System.out.println(name + " is going to sleep");
         Thread.sleep(500);
       } catch (InterruptedException ex) {ex.printStackTrace();}
       System.out.println(name + " woke up.");
-      withdraw(amount);
-      System.out.println(name + " completes the withdrawal");
+      boolean success = balance.compareAndSet(initialBalance, initialBalance - amount);
+      if (success) {
+        System.out.println(name + " completes the withdrawal.");
+      } else {
+        System.out.println("Sorry " + name + ", try again");
+      }
     } else {
       System.out.println("Sorry, not enough for " + name);
     }
   }
 }
+
+

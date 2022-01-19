@@ -1,15 +1,15 @@
-package ch15;
+package ch15.ryanmonica;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-public class RyanAndMonicaTest {
+public class RyanAndMonicaSynchronizedTest {
   public static void main(String[] args) throws InterruptedException {
     long start = System.currentTimeMillis();
-    BankAccount account = new BankAccount();
-    RyanAndMonicaJob ryan = new RyanAndMonicaJob("Ryan", account);
-    RyanAndMonicaJob monica = new RyanAndMonicaJob("Monica", account);
+    BankAccountSynchronized account = new BankAccountSynchronized();
+    RyanAndMonicaSynchronizedJob ryan = new RyanAndMonicaSynchronizedJob("Ryan", account);
+    RyanAndMonicaSynchronizedJob monica = new RyanAndMonicaSynchronizedJob("Monica", account);
     ExecutorService executor = Executors.newFixedThreadPool(2);
     executor.execute(ryan);
     executor.execute(monica);
@@ -20,11 +20,11 @@ public class RyanAndMonicaTest {
   }
 }
 
-class RyanAndMonicaJob implements Runnable {
+class RyanAndMonicaSynchronizedJob implements Runnable {
   private final String name;
-  private final BankAccount account;
+  private final BankAccountSynchronized account;
 
-  RyanAndMonicaJob(String name, BankAccount account) {
+  RyanAndMonicaSynchronizedJob(String name, BankAccountSynchronized account) {
     this.name = name;
     this.account = account;
   }
@@ -39,13 +39,18 @@ class RyanAndMonicaJob implements Runnable {
   }
 }
 
-class BankAccount {
+class BankAccountSynchronized {
   private int balance = 100;
+
   public int getBalance() {
     return balance;
   }
 
-  public void makeWithdrawal(int amount, String name) {
+  private void withdraw(int amount) {
+    balance = balance - amount;
+  }
+
+  public synchronized void makeWithdrawal(int amount, String name) {
     if (balance >= amount) {
       System.out.println(name + " is about to withdraw");
       try {
@@ -53,12 +58,10 @@ class BankAccount {
         Thread.sleep(500);
       } catch (InterruptedException ex) {ex.printStackTrace();}
       System.out.println(name + " woke up.");
-      balance = balance - amount;
+      withdraw(amount);
       System.out.println(name + " completes the withdrawal");
     } else {
       System.out.println("Sorry, not enough for " + name);
     }
   }
 }
-
-
