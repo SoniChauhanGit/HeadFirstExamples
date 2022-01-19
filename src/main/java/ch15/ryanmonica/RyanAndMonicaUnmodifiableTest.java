@@ -1,11 +1,14 @@
 package ch15.ryanmonica;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+// This does not do what you think it does
+// the original problem is, of course, that the check for balance is separate from the write. That's still true
+// here, even with an immutable data structure. What you want is a withdrawal method that lets you atomically read
+// the balance from the map and update it.
 public class RyanAndMonicaUnmodifiableTest {
   public static void main(String[] args) throws InterruptedException {
     long start = System.currentTimeMillis();
@@ -45,7 +48,8 @@ class RyanAndMonicaAccountsJob implements Runnable {
 
 
 class BankAccountCollection {
-  Map<String, Integer> accountBalances = new HashMap<>();
+  ConcurrentHashMap<String, Integer> accountBalances = new ConcurrentHashMap<>();
+
   {
     accountBalances.put("checking", 100);
     accountBalances.put("savings", 500);
@@ -60,10 +64,10 @@ class BankAccountCollection {
     accountBalances.computeIfPresent(accountName, (s, integer) -> integer - amount);
   }
 
-  public void makeWithdrawal(int amount, String accountName, String withdrawnBy) {
+  public synchronized void makeWithdrawal(int amount, String accountName, String withdrawnBy) {
     final Integer balance = accountBalances.get(accountName);
     if (balance >= amount) {
-      System.out.println(withdrawnBy + " is about to withdraw. balance: "+balance);
+      System.out.println(withdrawnBy + " is about to withdraw. balance: " + balance);
       try {
         System.out.println(withdrawnBy + " is going to sleep");
         Thread.sleep(500);
