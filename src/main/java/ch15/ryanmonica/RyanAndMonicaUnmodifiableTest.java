@@ -56,8 +56,12 @@ class BankAccountCollection {
     return accountBalances.get(accountName);
   }
 
+  private void withdraw(int amount, String accountName) {
+    accountBalances.computeIfPresent(accountName, (s, integer) -> integer - amount);
+  }
+
   public void makeWithdrawal(int amount, String accountName, String withdrawnBy) {
-    Integer balance = accountBalances.get(accountName);
+    final Integer balance = accountBalances.get(accountName);
     if (balance >= amount) {
       System.out.println(withdrawnBy + " is about to withdraw. balance: "+balance);
       try {
@@ -67,7 +71,7 @@ class BankAccountCollection {
         ex.printStackTrace();
       }
       System.out.println(withdrawnBy + " woke up.");
-      accountBalances.replace(accountName, balance, balance - amount);
+      withdraw(amount, accountName);
       System.out.println(withdrawnBy + " completes the withdrawal");
     } else {
       System.out.println("Sorry, not enough for " + withdrawnBy);
