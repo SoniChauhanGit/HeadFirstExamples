@@ -1,4 +1,4 @@
-package ch15;
+package ch15.exercise1;
 
 public class TestThreads {
   public static void main(String[] args) {
