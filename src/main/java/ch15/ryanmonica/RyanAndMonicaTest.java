@@ -30,21 +30,16 @@ class RyanAndMonicaJob implements Runnable {
   }
 
   public void run() {
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 5; i++) {
       goShopping();
     }
   }
 
   private void goShopping() {
     if (account.getBalance() >= 10) {
-      System.out.println(name + " is about to withdraw");
-      try {
-        System.out.println(name + " is going to sleep");
-        Thread.sleep(500);
-      } catch (InterruptedException ex) {ex.printStackTrace();}
-      System.out.println(name + " woke up.");
-      account.withdraw(10);
-      System.out.println(name + " completes the withdrawal");
+      System.out.println(name + " is about to spend");
+      account.spend(10);
+      System.out.println(name + " finishes spending");
     } else {
       System.out.println("Sorry, not enough for " + name);
     }
@@ -52,12 +47,12 @@ class RyanAndMonicaJob implements Runnable {
 }
 
 class BankAccount {
-  private int balance = 100;
+  private int balance = 50;
   public int getBalance() {
     return balance;
   }
 
-  public void withdraw(int amount) {
+  public void spend(int amount) {
     balance = balance - amount;
     if (balance < 0) {
       System.out.println("Overdrawn!");
