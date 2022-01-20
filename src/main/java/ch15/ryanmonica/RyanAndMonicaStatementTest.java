@@ -1,7 +1,7 @@
 package ch15.ryanmonica;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -49,12 +49,14 @@ class Accountant implements Runnable {
 
   @Override
   public void run() {
+    for (int i = 0; i < 10; i++) {
       System.out.println(account.getStatement());
+    }
   }
 }
 
 class BankAccountStatement {
-  private final List<Withdrawal> statement = new ArrayList<>();
+  private final List<Withdrawal> statement = new CopyOnWriteArrayList<>();
 
   public BankAccountStatement() {
     statement.add(new Withdrawal("Initial Balance", 0, 100));
@@ -68,7 +70,6 @@ class BankAccountStatement {
   public void makeWithdrawal(int amount, String name) {
     if (getBalance() >= amount) {
       System.out.println(name + " is about to withdraw");
-      System.out.println(name + " woke up.");
       withdraw(name, amount);
       System.out.println(name + " completes the withdrawal");
     } else {
