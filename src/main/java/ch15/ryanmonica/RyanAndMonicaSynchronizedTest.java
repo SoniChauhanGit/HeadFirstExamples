@@ -2,16 +2,21 @@ package ch15.ryanmonica;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class RyanAndMonicaSynchronizedTest {
   public static void main(String[] args) throws InterruptedException {
-    BankAccountSynchronized account = new BankAccountSynchronized();
-    RyanAndMonicaSynchronizedJob ryan = new RyanAndMonicaSynchronizedJob("Ryan", account, 50);
-    RyanAndMonicaSynchronizedJob monica = new RyanAndMonicaSynchronizedJob("Monica", account, 100);
-    ExecutorService executor = Executors.newFixedThreadPool(2);
-    executor.execute(ryan);
-    executor.execute(monica);
-    executor.shutdown();
+    for (int i = 0; i < 10; i++) {
+      BankAccountSynchronized account = new BankAccountSynchronized();
+      RyanAndMonicaSynchronizedJob ryan = new RyanAndMonicaSynchronizedJob("Ryan", account, 50);
+      RyanAndMonicaSynchronizedJob monica = new RyanAndMonicaSynchronizedJob("Monica", account, 100);
+      ExecutorService executor = Executors.newFixedThreadPool(2);
+      executor.execute(ryan);
+      executor.execute(monica);
+      executor.shutdown();
+      executor.awaitTermination(1, TimeUnit.MINUTES);
+      System.out.println("---");
+    }
   }
 }
 
