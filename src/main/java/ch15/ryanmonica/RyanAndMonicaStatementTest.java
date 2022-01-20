@@ -11,9 +11,11 @@ public class RyanAndMonicaStatementTest {
     BankAccountStatement account = new BankAccountStatement();
     RyanAndMonicaStatementJob ryan = new RyanAndMonicaStatementJob("Ryan", account);
     RyanAndMonicaStatementJob monica = new RyanAndMonicaStatementJob("Monica", account);
-    ExecutorService executor = Executors.newFixedThreadPool(2);
+    ExecutorService executor = Executors.newFixedThreadPool(4);
     executor.execute(ryan);
     executor.execute(monica);
+    executor.execute(new Accountant(account));
+    executor.execute(new Accountant(account));
     executor.shutdown();
     executor.awaitTermination(1, TimeUnit.MINUTES);
   }
@@ -38,6 +40,19 @@ class RyanAndMonicaStatementJob implements Runnable {
   }
 }
 
+class Accountant implements Runnable {
+  private final BankAccountStatement account;
+
+  Accountant(BankAccountStatement account) {
+    this.account = account;
+  }
+
+  @Override
+  public void run() {
+      System.out.println(account.getStatement());
+  }
+}
+
 class BankAccountStatement {
   private final List<Withdrawal> statement = new ArrayList<>();
 
@@ -53,10 +68,6 @@ class BankAccountStatement {
   public void makeWithdrawal(int amount, String name) {
     if (getBalance() >= amount) {
       System.out.println(name + " is about to withdraw");
-      try {
-        System.out.println(name + " is going to sleep");
-        Thread.sleep(500);
-      } catch (InterruptedException ex) {ex.printStackTrace();}
       System.out.println(name + " woke up.");
       withdraw(name, amount);
       System.out.println(name + " completes the withdrawal");
@@ -71,6 +82,9 @@ class BankAccountStatement {
     statement.add(withdrawal);
   }
 
+  public List<Withdrawal> getStatement() {
+    return statement;
+  }
 }
 
 class Withdrawal {
@@ -94,6 +108,15 @@ class Withdrawal {
 
   public int getCurrentBalance() {
     return currentBalance;
+  }
+
+  @Override
+  public String toString() {
+    return "Withdrawal{" +
+            "name='" + name + '\'' +
+            ", amount=" + amount +
+            ", currentBalance=" + currentBalance +
+            '}';
   }
 }
 
