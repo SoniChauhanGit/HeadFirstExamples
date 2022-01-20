@@ -25,7 +25,7 @@ class RyanAndMonicaBankChecksJob implements Runnable {
   }
 
   public void run() {
-    for (int i = 0; i < 5; i++) {
+    while (account.getBalance() > 0) {
       goShopping(10);
     }
   }
