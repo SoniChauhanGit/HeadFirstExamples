@@ -2,11 +2,10 @@ package ch15.ryanmonica;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 public class RyanAndMonicaTest {
   public static void main(String[] args) throws InterruptedException {
-    BankAccount account = new BankAccount();
+    final BankAccount account = new BankAccount();
     RyanAndMonicaJob ryan = new RyanAndMonicaJob("Ryan", account);
     RyanAndMonicaJob monica = new RyanAndMonicaJob("Monica", account);
     ExecutorService executor = Executors.newFixedThreadPool(2);
@@ -27,14 +26,14 @@ class RyanAndMonicaJob implements Runnable {
 
   public void run() {
     for (int i = 0; i < 5; i++) {
-      goShopping();
+      goShopping(10);
     }
   }
 
-  private void goShopping() {
-    if (account.getBalance() >= 10) {
+  private void goShopping(int amount) {
+    if (account.getBalance() >= amount) {
       System.out.println(name + " is about to spend");
-      account.spend(10);
+      account.spend(amount);
       System.out.println(name + " finishes spending");
     } else {
       System.out.println("Sorry, not enough for " + name);
@@ -44,6 +43,7 @@ class RyanAndMonicaJob implements Runnable {
 
 class BankAccount {
   private int balance = 50;
+
   public int getBalance() {
     return balance;
   }
