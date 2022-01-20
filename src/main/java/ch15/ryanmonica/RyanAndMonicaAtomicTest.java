@@ -7,59 +7,53 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class RyanAndMonicaAtomicTest {
   public static void main(String[] args) throws InterruptedException {
-    long start = System.currentTimeMillis();
-    BankAccountWithAtomic account = new BankAccountWithAtomic();
-    RyanAndMonicaAtomicJob ryan = new RyanAndMonicaAtomicJob("Ryan", account);
-    RyanAndMonicaAtomicJob monica = new RyanAndMonicaAtomicJob("Monica", account);
-    ExecutorService executor = Executors.newFixedThreadPool(2);
-    executor.execute(ryan);
-    executor.execute(monica);
-    executor.shutdown();
-    executor.awaitTermination(1, TimeUnit.MINUTES);
-    long end = System.currentTimeMillis();
-    System.out.println(end - start);
+    for (int i = 0; i < 100; i++) {
+      BankAccountWithAtomic account = new BankAccountWithAtomic();
+      RyanAndMonicaAtomicJob ryan = new RyanAndMonicaAtomicJob("Ryan", account, 50);
+      RyanAndMonicaAtomicJob monica = new RyanAndMonicaAtomicJob("Monica", account, 100);
+      ExecutorService executor = Executors.newFixedThreadPool(2);
+      executor.execute(ryan);
+      executor.execute(monica);
+      executor.shutdown();
+      executor.awaitTermination(1, TimeUnit.MINUTES);
+      System.out.println("---");
+    }
   }
 }
 
 class RyanAndMonicaAtomicJob implements Runnable {
   private final String name;
   private final BankAccountWithAtomic account;
+  private final int amountToSpend;
 
-  RyanAndMonicaAtomicJob(String name, BankAccountWithAtomic account) {
+  RyanAndMonicaAtomicJob(String name, BankAccountWithAtomic account, int amountToSpend) {
     this.name = name;
     this.account = account;
+    this.amountToSpend = amountToSpend;
   }
 
   public void run() {
-    for (int i = 0; i < 15; i++) {
-      account.makeWithdrawal(10, name);
-      if (account.getBalance() < 0) {
-        System.out.println("Overdrawn!");
-      }
-    }
+    goShopping(amountToSpend);
+  }
+
+  private void goShopping(int amount) {
+    System.out.println(name + " is about to spend");
+    account.spend(name, amount);
+    System.out.println(name + " finishes spending");
   }
 }
 
 class BankAccountWithAtomic {
   private final AtomicInteger balance = new AtomicInteger(100);
-
   public int getBalance() {
     return balance.get();
   }
 
-  public void makeWithdrawal(int amount, String name) {
+  public void spend(String name, int amount) {
     int initialBalance = balance.get();
     if (initialBalance >= amount) {
-      System.out.println(name + " is about to withdraw");
-      try {
-        System.out.println(name + " is going to sleep");
-        Thread.sleep(500);
-      } catch (InterruptedException ex) {ex.printStackTrace();}
-      System.out.println(name + " woke up.");
       boolean success = balance.compareAndSet(initialBalance, initialBalance - amount);
-      if (success) {
-        System.out.println(name + " completes the withdrawal.");
-      } else {
+      if (!success) {
         System.out.println("Sorry " + name + ", try again");
       }
     } else {
@@ -67,5 +61,3 @@ class BankAccountWithAtomic {
     }
   }
 }
-
-
