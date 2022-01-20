@@ -6,8 +6,8 @@ import java.util.concurrent.Executors;
 public class RyanAndMonicaBankChecksTest {
   public static void main(String[] args) throws InterruptedException {
     BankAccountChecks account = new BankAccountChecks();
-    RyanAndMonicaBankChecksJob ryan = new RyanAndMonicaBankChecksJob("Ryan", account);
-    RyanAndMonicaBankChecksJob monica = new RyanAndMonicaBankChecksJob("Monica", account);
+    RyanAndMonicaBankChecksJob ryan = new RyanAndMonicaBankChecksJob("Ryan", account, 50);
+    RyanAndMonicaBankChecksJob monica = new RyanAndMonicaBankChecksJob("Monica", account, 100);
     ExecutorService executor = Executors.newFixedThreadPool(2);
     executor.execute(ryan);
     executor.execute(monica);
@@ -18,16 +18,16 @@ public class RyanAndMonicaBankChecksTest {
 class RyanAndMonicaBankChecksJob implements Runnable {
   private final String name;
   private final BankAccountChecks account;
+  private final int amountToSpend;
 
-  RyanAndMonicaBankChecksJob(String name, BankAccountChecks account) {
+  RyanAndMonicaBankChecksJob(String name, BankAccountChecks account, int amountToSpend) {
     this.name = name;
     this.account = account;
+    this.amountToSpend = amountToSpend;
   }
 
   public void run() {
-    while (account.getBalance() > 0) {
-      goShopping(10);
-    }
+    goShopping(amountToSpend);
   }
 
   private void goShopping(int amount) {
@@ -38,7 +38,7 @@ class RyanAndMonicaBankChecksJob implements Runnable {
 }
 
 class BankAccountChecks {
-  private int balance = 50;
+  private int balance = 100;
 
   public int getBalance() {
     return balance;
