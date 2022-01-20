@@ -6,7 +6,6 @@ import java.util.concurrent.TimeUnit;
 
 public class RyanAndMonicaTest {
   public static void main(String[] args) throws InterruptedException {
-    long start = System.currentTimeMillis();
     BankAccount account = new BankAccount();
     RyanAndMonicaJob ryan = new RyanAndMonicaJob("Ryan", account);
     RyanAndMonicaJob monica = new RyanAndMonicaJob("Monica", account);
@@ -14,9 +13,6 @@ public class RyanAndMonicaTest {
     executor.execute(ryan);
     executor.execute(monica);
     executor.shutdown();
-    executor.awaitTermination(1, TimeUnit.MINUTES);
-    long end = System.currentTimeMillis();
-    System.out.println(end - start);
   }
 }
 
