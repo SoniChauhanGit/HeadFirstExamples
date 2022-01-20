@@ -31,12 +31,12 @@ class RyanAndMonicaJob implements Runnable {
   }
 
   private void goShopping(int amount) {
-    if (account.getBalance() >= amount) {
-      System.out.println(name + " is about to spend");
-      account.spend(amount);
-      System.out.println(name + " finishes spending");
-    } else {
-      System.out.println("Sorry, not enough for " + name);
+      if (account.getBalance() >= amount) {
+        System.out.println(name + " is about to spend");
+        account.spend(amount);
+        System.out.println(name + " finishes spending");
+      } else {
+        System.out.println("Sorry, not enough for " + name);
     }
   }
 }
