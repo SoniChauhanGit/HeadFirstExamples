@@ -9,8 +9,8 @@ import java.util.concurrent.TimeUnit;
 public class RyanAndMonicaStatementTest {
   public static void main(String[] args) throws InterruptedException {
     BankAccountStatement account = new BankAccountStatement();
-    RyanAndMonicaStatementJob ryan = new RyanAndMonicaStatementJob("Ryan", account);
-    RyanAndMonicaStatementJob monica = new RyanAndMonicaStatementJob("Monica", account);
+    RyanAndMonicaStatementJob ryan = new RyanAndMonicaStatementJob("Ryan", account, 50);
+    RyanAndMonicaStatementJob monica = new RyanAndMonicaStatementJob("Monica", account, 100);
     ExecutorService executor = Executors.newFixedThreadPool(4);
     executor.execute(ryan);
     executor.execute(monica);
@@ -24,18 +24,25 @@ public class RyanAndMonicaStatementTest {
 class RyanAndMonicaStatementJob implements Runnable {
   private final String name;
   private final BankAccountStatement account;
+  private final int amountToSpend;
 
-  RyanAndMonicaStatementJob(String name, BankAccountStatement account) {
+  RyanAndMonicaStatementJob(String name, BankAccountStatement account, int amountToSpend) {
     this.name = name;
     this.account = account;
+    this.amountToSpend = amountToSpend;
   }
 
   public void run() {
-    for (int i = 0; i < 10; i++) {
-      account.makeWithdrawal(10, name);
-      if (account.getBalance() < 0) {
-        System.out.println("Overdrawn!");
-      }
+    goShopping(amountToSpend);
+  }
+
+  private void goShopping(int amount) {
+    if (account.getBalance() >= amount) {
+      System.out.println(name + " is about to spend");
+      account.spend(amount, name);
+      System.out.println(name + " finishes spending");
+    } else {
+      System.out.println("Sorry, not enough for " + name);
     }
   }
 }
@@ -56,10 +63,10 @@ class Accountant implements Runnable {
 }
 
 class BankAccountStatement {
-  private final List<Withdrawal> statement = new CopyOnWriteArrayList<>();
+  private final List<Transaction> statement = new CopyOnWriteArrayList<>();
 
   public BankAccountStatement() {
-    statement.add(new Withdrawal("Initial Balance", 0, 100));
+    statement.add(new Transaction("Initial Balance", 0, 100));
   }
 
   public int getBalance() {
@@ -67,33 +74,30 @@ class BankAccountStatement {
     return statement.get(lastEntry).getCurrentBalance();
   }
 
-  public void makeWithdrawal(int amount, String name) {
-    if (getBalance() >= amount) {
-      System.out.println(name + " is about to withdraw");
-      withdraw(name, amount);
-      System.out.println(name + " completes the withdrawal");
-    } else {
-      System.out.println("Sorry, not enough for " + name);
+  public void spend(int amount, String name) {
+    spend(name, amount);
+    if (getBalance() < 0) {
+      System.out.println("Overdrawn!");
     }
   }
 
-  private void withdraw(String name, int amount) {
+  private void spend(String name, int amount) {
     int newBalance = getBalance() - amount;
-    Withdrawal withdrawal = new Withdrawal(name, amount, newBalance);
-    statement.add(withdrawal);
+    Transaction transaction = new Transaction(name, amount, newBalance);
+    statement.add(transaction);
   }
 
-  public List<Withdrawal> getStatement() {
+  public List<Transaction> getStatement() {
     return statement;
   }
 }
 
-class Withdrawal {
+class Transaction {
   private final String name;
   private final int amount;
   private final int currentBalance;
 
-  Withdrawal(String name, int amount, int currentBalance) {
+  Transaction(String name, int amount, int currentBalance) {
     this.name = name;
     this.amount = amount;
     this.currentBalance = currentBalance;
