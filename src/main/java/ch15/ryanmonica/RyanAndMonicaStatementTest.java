@@ -9,11 +9,11 @@ import java.util.concurrent.TimeUnit;
 public class RyanAndMonicaStatementTest {
   public static void main(String[] args) throws InterruptedException {
     BankAccountStatement account = new BankAccountStatement();
-    RyanAndMonicaStatementJob ryan = new RyanAndMonicaStatementJob("Ryan", account, 50);
-    RyanAndMonicaStatementJob monica = new RyanAndMonicaStatementJob("Monica", account, 100);
+    RyanAndMonicaStatementJob ryan = new RyanAndMonicaStatementJob("Ryan", account, 5);
+//    RyanAndMonicaStatementJob monica = new RyanAndMonicaStatementJob("Monica", account, 100);
     ExecutorService executor = Executors.newFixedThreadPool(4);
     executor.execute(ryan);
-    executor.execute(monica);
+//    executor.execute(monica);
     executor.execute(new Accountant(account));
     executor.execute(new Accountant(account));
     executor.shutdown();
@@ -33,7 +33,9 @@ class RyanAndMonicaStatementJob implements Runnable {
   }
 
   public void run() {
-    goShopping(amountToSpend);
+    for (int i = 0; i < 20; i++) {
+      goShopping(amountToSpend);
+    }
   }
 
   private void goShopping(int amount) {
@@ -57,8 +59,12 @@ class Accountant implements Runnable {
   @Override
   public void run() {
     for (int i = 0; i < 10; i++) {
-      System.out.println(account.getStatement());
+      List<Transaction> statement = account.getStatement();
+      for (Transaction transaction : statement) {
+        System.out.println(transaction);
+      }
     }
+    System.out.println("end");
   }
 }
 
