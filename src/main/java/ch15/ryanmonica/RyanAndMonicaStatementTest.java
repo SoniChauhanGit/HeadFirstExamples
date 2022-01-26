@@ -4,18 +4,18 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 public class RyanAndMonicaStatementTest {
   public static void main(String[] args) throws InterruptedException {
     BankAccountStatement account = new BankAccountStatement();
-    ExecutorService executor = Executors.newCachedThreadPool();
-    executor.execute(new RyanAndMonicaStatementJob("Ryan", account, 20));
-    executor.execute(new StatementReaderAccountant("Monica", account));
-    executor.execute(new StatementReaderAccountant("Accountant", account));
-    executor.execute(new StatementReaderAccountant("Bank Manager", account));
+    ExecutorService executor = Executors.newFixedThreadPool(4);
+    for (int i = 0; i < 5; i++) {
+      executor.execute(new RyanAndMonicaStatementJob("Ryan", account, 20));
+      executor.execute(new StatementReader("Monica", account));
+      executor.execute(new StatementReader("Accountant", account));
+      executor.execute(new StatementReader("Bank Manager", account));
+    }
     executor.shutdown();
-    executor.awaitTermination(1, TimeUnit.MINUTES);
   }
 }
 
@@ -31,15 +31,8 @@ class RyanAndMonicaStatementJob implements Runnable {
   }
 
   public void run() {
-    for (int i = 0; i < 5; i++) {
-      goShopping(amountToSpend);
-    }
-  }
-
-  private void goShopping(int amount) {
-    if (account.getBalance() >= amount) {
-      System.out.println(name + " is about to spend");
-      account.spend(amount, name);
+    if (account.getBalance() >= amountToSpend) {
+      account.spend(amountToSpend, name);
       System.out.println(name + " finishes spending");
     } else {
       System.out.println("Sorry, not enough for " + name);
@@ -47,19 +40,18 @@ class RyanAndMonicaStatementJob implements Runnable {
   }
 }
 
-class StatementReaderAccountant implements Runnable {
+class StatementReader implements Runnable {
   private final String name;
   private final BankAccountStatement account;
 
-  StatementReaderAccountant(String name, BankAccountStatement account) {
+  StatementReader(String name, BankAccountStatement account) {
     this.name = name;
     this.account = account;
   }
 
   @Override
   public void run() {
-    List<Transaction> statement = account.getStatement();
-    for (Transaction transaction : statement) {
+    for (Transaction transaction : account.getStatement()) {
       System.out.println(name + " read " + transaction);
     }
   }
@@ -78,13 +70,6 @@ class BankAccountStatement {
   }
 
   public void spend(int amount, String name) {
-    spend(name, amount);
-    if (getBalance() < 0) {
-      System.out.println("Overdrawn!");
-    }
-  }
-
-  private void spend(String name, int amount) {
     int newBalance = getBalance() - amount;
     Transaction transaction = new Transaction(name, amount, newBalance);
     statement.add(transaction);
@@ -120,7 +105,7 @@ class Transaction {
 
   @Override
   public String toString() {
-    return "Withdrawal{" +
+    return "Transaction{" +
             "name='" + name + '\'' +
             ", amount=" + amount +
             ", currentBalance=" + currentBalance +
