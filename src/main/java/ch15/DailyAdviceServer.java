@@ -16,7 +16,7 @@ public class DailyAdviceServer {
 
   public void go() {
     try (ServerSocketChannel serverChannel = ServerSocketChannel.open()) {
-      serverChannel.bind(new InetSocketAddress(4242));
+      serverChannel.bind(new InetSocketAddress(5000));
 
       while (serverChannel.isOpen()) {
         SocketChannel clientChannel = serverChannel.accept();
