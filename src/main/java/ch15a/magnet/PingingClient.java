@@ -3,11 +3,11 @@ package ch15a.magnet;
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.nio.channels.*;
-import java.time.LocalDateTime;
 import java.time.format.FormatStyle;
 import java.util.concurrent.TimeUnit;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.time.LocalDateTime.now;
 import static java.time.format.DateTimeFormatter.ofLocalizedTime;
 
 public class PingingClient {
@@ -22,7 +22,7 @@ public class PingingClient {
         String message = "ping " + i;
         writer.println(message);
         writer.flush();
-        String currentTime = LocalDateTime.now().format(ofLocalizedTime(FormatStyle.MEDIUM));
+        String currentTime = now().format(ofLocalizedTime(FormatStyle.MEDIUM));
         System.out.println(currentTime + " Sent " + message);
         TimeUnit.SECONDS.sleep(1);
       }
