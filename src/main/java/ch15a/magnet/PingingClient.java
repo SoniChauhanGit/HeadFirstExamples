@@ -13,9 +13,9 @@ import static java.time.format.DateTimeFormatter.ofLocalizedTime;
 public class PingingClient {
 
   public static void main(String[] args) {
-    InetSocketAddress serverAddress = new InetSocketAddress("127.0.0.1", 5000);
-    try (SocketChannel socketChannel = SocketChannel.open(serverAddress)) {
-      PrintWriter writer = new PrintWriter(Channels.newWriter(socketChannel, UTF_8));
+    InetSocketAddress server = new InetSocketAddress("127.0.0.1", 5000);
+    try (SocketChannel channel = SocketChannel.open(server)) {
+      PrintWriter writer = new PrintWriter(Channels.newWriter(channel, UTF_8));
       System.out.println("Networking established");
 
       for (int i = 0; i < 10; i++) {
@@ -26,8 +26,8 @@ public class PingingClient {
         System.out.println(currentTime + " Sent " + message);
         TimeUnit.SECONDS.sleep(1);
       }
-    } catch (IOException | InterruptedException ex) {
-      ex.printStackTrace();
+    } catch (IOException | InterruptedException e) {
+      e.printStackTrace();
     }
   }
 }
