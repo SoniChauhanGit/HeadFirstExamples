@@ -10,42 +10,18 @@ public class LotsOfReaders {
     ChatHistory chatHistory = new ChatHistory();
     ExecutorService executor = Executors.newFixedThreadPool(4);
     for (int i = 0; i < 5; i++) {
-      executor.execute(new Chatty(chatHistory));
-      executor.execute(new ChatReader("Reader 1", chatHistory));
-      executor.execute(new ChatReader("Reader 2", chatHistory));
+      final int iteration = i;
+      executor.execute(() -> chatHistory.add("Hi there! " + iteration));
+      executor.execute(() -> printChatHistory("Reader 1", chatHistory));
+      executor.execute(() -> printChatHistory("Reader 2", chatHistory));
     }
     executor.shutdown();
   }
-}
 
-class ChatReader implements Runnable {
-  private String name;
-  private ChatHistory chatHistory;
-
-  public ChatReader(String name, ChatHistory chatHistory) {
-    this.name = name;
-    this.chatHistory = chatHistory;
-  }
-
-  @Override
-  public void run() {
+  private static void printChatHistory(String name, ChatHistory chatHistory) {
     for (Chat chat : chatHistory.getHistory()) {
       System.out.println(name + " read: " + chat);
     }
-  }
-}
-
-
-class Chatty implements Runnable {
-  private ChatHistory chatHistory;
-
-  public Chatty(ChatHistory chatHistory) {
-    this.chatHistory = chatHistory;
-  }
-
-  @Override
-  public void run() {
-    chatHistory.add("Hi there!");
   }
 }
 
@@ -62,7 +38,7 @@ class ChatHistory {
 }
 
 class Chat {
-  private String message;
+  private final String message;
 
   public Chat(String message) {
     this.message = message;
