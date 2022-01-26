@@ -13,10 +13,6 @@ import static java.time.format.DateTimeFormatter.ofLocalizedTime;
 public class PingingClient {
 
   public static void main(String[] args) {
-    new PingingClient().go();
-  }
-
-  public void go() {
     InetSocketAddress serverAddress = new InetSocketAddress("127.0.0.1", 5000);
     try (SocketChannel socketChannel = SocketChannel.open(serverAddress)) {
       PrintWriter writer = new PrintWriter(Channels.newWriter(socketChannel, UTF_8));
