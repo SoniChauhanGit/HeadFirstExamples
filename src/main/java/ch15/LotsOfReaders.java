@@ -11,25 +11,26 @@ public class LotsOfReaders {
     ExecutorService executor = Executors.newFixedThreadPool(4);
     for (int i = 0; i < 5; i++) {
       executor.execute(new Chatty(chatHistory));
-      executor.execute(new ChatReader(chatHistory));
-      executor.execute(new ChatReader(chatHistory));
+      executor.execute(new ChatReader("Reader 1", chatHistory));
+      executor.execute(new ChatReader("Reader 2", chatHistory));
     }
     executor.shutdown();
   }
-
 }
 
 class ChatReader implements Runnable {
+  private String name;
   private ChatHistory chatHistory;
 
-  public ChatReader(ChatHistory chatHistory) {
+  public ChatReader(String name, ChatHistory chatHistory) {
+    this.name = name;
     this.chatHistory = chatHistory;
   }
 
   @Override
   public void run() {
     for (Chat chat : chatHistory.getHistory()) {
-      System.out.println(chat);
+      System.out.println(name + " read: " + chat);
     }
   }
 }
