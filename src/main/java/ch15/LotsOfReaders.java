@@ -11,32 +11,20 @@ import static java.time.format.DateTimeFormatter.ofLocalizedTime;
 
 public class LotsOfReaders {
   public static void main(String[] args) {
-    ChatHistory chatHistory = new ChatHistory();
+    List<Chat> chatHistory = new ArrayList<>();
     ExecutorService executor = Executors.newFixedThreadPool(3);
     for (int i = 0; i < 5; i++) {
-      executor.execute(() -> chatHistory.add("Hi there!"));
+      executor.execute(() -> chatHistory.add(new Chat("Hi there!")));
       executor.execute(() -> printChatHistory("Reader 1", chatHistory));
       executor.execute(() -> printChatHistory("Reader 2", chatHistory));
     }
     executor.shutdown();
   }
 
-  private static void printChatHistory(String name, ChatHistory chatHistory) {
-    for (Chat chat : chatHistory.getHistory()) {
+  private static void printChatHistory(String name, List<Chat> chatHistory) {
+    for (Chat chat : chatHistory) {
       System.out.println(name + " read: " + chat);
     }
-  }
-}
-
-class ChatHistory {
-  private final List<Chat> history = new ArrayList<>();
-
-  public List<Chat> getHistory() {
-    return history;
-  }
-
-  public void add(String message) {
-    history.add(new Chat(message));
   }
 }
 
@@ -49,7 +37,6 @@ class Chat {
     timestamp = LocalDateTime.now();
   }
 
-  @Override
   public String toString() {
     String time = timestamp.format(ofLocalizedTime(FormatStyle.MEDIUM));
     return time + " " + message;
