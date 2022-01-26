@@ -10,7 +10,7 @@ public class RyanAndMonicaStatementTest {
   public static void main(String[] args) throws InterruptedException {
     BankAccountStatement account = new BankAccountStatement();
     ExecutorService executor = Executors.newCachedThreadPool();
-    executor.execute(new RyanAndMonicaStatementJob("Ryan", account, 5));
+    executor.execute(new RyanAndMonicaStatementJob("Ryan", account, 20));
     executor.execute(new StatementReaderAccountant("Monica", account));
     executor.execute(new StatementReaderAccountant("Accountant", account));
     executor.execute(new StatementReaderAccountant("Bank Manager", account));
@@ -31,7 +31,7 @@ class RyanAndMonicaStatementJob implements Runnable {
   }
 
   public void run() {
-    for (int i = 0; i < 20; i++) {
+    for (int i = 0; i < 5; i++) {
       goShopping(amountToSpend);
     }
   }
@@ -58,11 +58,9 @@ class StatementReaderAccountant implements Runnable {
 
   @Override
   public void run() {
-    for (int i = 0; i < 10; i++) {
-      List<Transaction> statement = account.getStatement();
-      for (Transaction transaction : statement) {
-        System.out.println(name + " read " + transaction);
-      }
+    List<Transaction> statement = account.getStatement();
+    for (Transaction transaction : statement) {
+      System.out.println(name + " read " + transaction);
     }
   }
 }
