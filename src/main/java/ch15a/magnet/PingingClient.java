@@ -4,11 +4,11 @@ import java.io.*;
 import java.net.InetSocketAddress;
 import java.nio.channels.*;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.concurrent.TimeUnit;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.time.format.DateTimeFormatter.ofLocalizedTime;
 
 public class PingingClient {
 
@@ -26,8 +26,8 @@ public class PingingClient {
         String message = "ping " + i;
         writer.println(message);
         writer.flush();
-
-        System.out.println(LocalDateTime.now().format(DateTimeFormatter.ofLocalizedTime(FormatStyle.MEDIUM)) + " Sent " + message);
+        String currentTime = LocalDateTime.now().format(ofLocalizedTime(FormatStyle.MEDIUM));
+        System.out.println(currentTime + " Sent " + message);
         TimeUnit.SECONDS.sleep(1);
       }
     } catch (IOException | InterruptedException ex) {
