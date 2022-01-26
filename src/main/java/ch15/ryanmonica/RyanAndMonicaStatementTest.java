@@ -9,13 +9,11 @@ import java.util.concurrent.TimeUnit;
 public class RyanAndMonicaStatementTest {
   public static void main(String[] args) throws InterruptedException {
     BankAccountStatement account = new BankAccountStatement();
-    RyanAndMonicaStatementJob ryan = new RyanAndMonicaStatementJob("Ryan", account, 5);
-//    RyanAndMonicaStatementJob monica = new RyanAndMonicaStatementJob("Monica", account, 100);
-    ExecutorService executor = Executors.newFixedThreadPool(4);
-    executor.execute(ryan);
-//    executor.execute(monica);
-    executor.execute(new Accountant(account));
-    executor.execute(new Accountant(account));
+    ExecutorService executor = Executors.newCachedThreadPool();
+    executor.execute(new RyanAndMonicaStatementJob("Ryan", account, 5));
+    executor.execute(new StatementReaderAccountant("Monica", account));
+    executor.execute(new StatementReaderAccountant("Accountant", account));
+    executor.execute(new StatementReaderAccountant("Bank Manager", account));
     executor.shutdown();
     executor.awaitTermination(1, TimeUnit.MINUTES);
   }
@@ -49,10 +47,12 @@ class RyanAndMonicaStatementJob implements Runnable {
   }
 }
 
-class Accountant implements Runnable {
+class StatementReaderAccountant implements Runnable {
+  private final String name;
   private final BankAccountStatement account;
 
-  Accountant(BankAccountStatement account) {
+  StatementReaderAccountant(String name, BankAccountStatement account) {
+    this.name = name;
     this.account = account;
   }
 
@@ -61,10 +61,9 @@ class Accountant implements Runnable {
     for (int i = 0; i < 10; i++) {
       List<Transaction> statement = account.getStatement();
       for (Transaction transaction : statement) {
-        System.out.println(transaction);
+        System.out.println(name + " read " + transaction);
       }
     }
-    System.out.println("end");
   }
 }
 
