@@ -12,7 +12,7 @@ public class DailyAdviceServer {
           "One word: inappropriate",
           "Just for today, be honest. Tell your boss what you *really* think",
           "You might want to rethink that haircut."};
-  private final Random randomGenerator = new Random();
+  private final Random random = new Random();
 
   public void go() {
     try (ServerSocketChannel serverChannel = ServerSocketChannel.open()) {
@@ -33,7 +33,8 @@ public class DailyAdviceServer {
   }
 
   private String getAdvice() {
-    return adviceList[randomGenerator.nextInt(adviceList.length)];
+    int nextAdvice = random.nextInt(adviceList.length);
+    return adviceList[nextAdvice];
   }
 
   public static void main(String[] args) {
