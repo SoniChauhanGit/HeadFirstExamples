@@ -1,4 +1,4 @@
-package ch15.exercise1;
+package ch15b.exercise1;
 
 import java.util.ArrayList;
 import java.util.List;

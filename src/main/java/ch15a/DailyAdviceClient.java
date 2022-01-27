@@ -1,4 +1,4 @@
-package ch15;
+package ch15a;
 
 import java.io.BufferedReader;
 import java.io.IOException;

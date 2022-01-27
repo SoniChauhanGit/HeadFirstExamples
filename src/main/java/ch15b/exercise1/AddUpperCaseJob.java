@@ -1,14 +1,12 @@
-package ch15.exercise1;
+package ch15b.exercise1;
 
-class AddLowerCaseJob implements Runnable {
+class AddUpperCaseJob implements Runnable {
   private final Data data;
-  AddLowerCaseJob(Data data) {
+  AddUpperCaseJob(Data data) {
     this.data = data;
   }
-
   public void run() {
-    char letter = 'a';
-
+    char letter = 'A';
     for (int i = 0; i < 26; i++) {
       data.addLetter(letter++);
       try {
@@ -16,7 +14,6 @@ class AddLowerCaseJob implements Runnable {
       } catch (InterruptedException ignored) {
       }
     }
-    // this can throw a ConcurrentModificationException
     System.out.println(Thread.currentThread().getName() + data.getLetters());
     System.out.println(Thread.currentThread().getName() + " getLetters().size() = " + data.getLetters().size());
   }

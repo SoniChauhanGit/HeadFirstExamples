@@ -1,4 +1,4 @@
-package ch15;
+package ch15b;
 
 import javax.swing.*;
 import java.awt.BorderLayout;

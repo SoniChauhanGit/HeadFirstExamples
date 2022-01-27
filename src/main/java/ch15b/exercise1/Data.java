@@ -1,6 +1,5 @@
-package ch15.exercise1;
+package ch15b.exercise1;
 
-import java.util.Collection;
 import java.util.List;
 
 public interface Data {
