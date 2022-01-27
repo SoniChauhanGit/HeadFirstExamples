@@ -8,7 +8,7 @@ import java.util.concurrent.*;
 import static java.time.format.DateTimeFormatter.ofLocalizedTime;
 
 public class ConcurrentReaders {
-  public static void main(String[] args) throws InterruptedException {
+  public static void main(String[] args) {
     List<Chat> chatHistory = new ArrayList<>();
     ExecutorService executor = Executors.newFixedThreadPool(3);
     for (int i = 0; i < 5; i++) {
@@ -17,9 +17,7 @@ public class ConcurrentReaders {
       executor.execute(() -> System.out.println(chatHistory));
     }
     executor.shutdown();
-    executor.awaitTermination(1, TimeUnit.MINUTES);
   }
-
 }
 
 final class Chat {
