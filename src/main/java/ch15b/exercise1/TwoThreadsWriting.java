@@ -1,9 +1,7 @@
 package ch15b.exercise1;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.*;
+import java.util.concurrent.*;
 
 public class TwoThreadsWriting {
   public static void main(String[] args) {
@@ -22,17 +20,15 @@ public class TwoThreadsWriting {
       } catch (InterruptedException ignored) {}
     }
     System.out.println(Thread.currentThread().getName() + data.getLetters());
-    System.out.println(Thread.currentThread().getName() + " getLetters().size() = " + data.getLetters().size());
+    System.out.println(Thread.currentThread().getName()
+                               + " size = " + data.getLetters().size());
   }
-
 }
 
-class Data {
+final class Data {
   private final List<String> letters = new ArrayList<>();
 
-  public List<String> getLetters() {
-    return letters;
-  }
+  public List<String> getLetters() {return letters;}
 
   public void addLetter(char letter) {
     letters.add(String.valueOf(letter));
