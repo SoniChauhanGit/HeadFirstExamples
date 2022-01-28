@@ -1,8 +1,8 @@
 package ch15b.exercise1;
 
 class AddUpperCaseJob implements Runnable {
-  private final Data data;
-  AddUpperCaseJob(Data data) {
+  private final IData data;
+  AddUpperCaseJob(IData data) {
     this.data = data;
   }
   public void run() {

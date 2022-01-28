@@ -12,7 +12,7 @@ public class ThreadSafeCollection {
     ExecutorService threadPool = Executors.newFixedThreadPool(2);
     long start = System.currentTimeMillis();
     for (int i = 0; i < 10; i++) {
-      Data data = new DataSafe();
+      IData data = new DataSafe();
       threadPool.execute(new AddUpperCaseJob(data));
       threadPool.execute(new AddLowerCaseJob(data));
     }
@@ -23,7 +23,7 @@ public class ThreadSafeCollection {
   }
 }
 
-class DataSafe implements Data {
+class DataSafe implements IData {
   private final List<String> letters = new CopyOnWriteArrayList<>();
 
   public List<String> getLetters() {

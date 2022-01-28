@@ -1,0 +1,37 @@
+package ch15b.exercise1;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+public class TwoThreadsWriting {
+  public static void main(String[] args) {
+    ExecutorService threadPool = Executors.newFixedThreadPool(2);
+    Data data = new Data();
+    threadPool.execute(() -> addLetterToData('a', data));
+    threadPool.execute(() -> addLetterToData('A', data));
+    threadPool.shutdown();
+  }
+
+  private static void addLetterToData(char letter, Data data) {
+    for (int i = 0; i < 26; i++) {
+      data.addLetter(letter++);
+    }
+    System.out.println(Thread.currentThread().getName() + data.getLetters());
+    System.out.println(Thread.currentThread().getName() + " getLetters().size() = " + data.getLetters().size());
+  }
+
+}
+
+class Data {
+  private final List<String> letters = new ArrayList<>();
+
+  public List<String> getLetters() {
+    return letters;
+  }
+
+  public void addLetter(char letter) {
+    letters.add(String.valueOf(letter));
+  }
+}

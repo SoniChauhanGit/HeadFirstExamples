@@ -12,7 +12,7 @@ public class SynchronizedCollection {
     ExecutorService threadPool = Executors.newFixedThreadPool(2);
     long start = System.currentTimeMillis();
     for (int i = 0; i < 10; i++) {
-      Data data = new DataSynchronized();
+      IData data = new DataSynchronized();
       threadPool.execute(new AddLowerCaseJob(data));
       threadPool.execute(new AddUpperCaseJob(data));
     }
@@ -23,7 +23,7 @@ public class SynchronizedCollection {
   }
 }
 
-class DataSynchronized implements Data {
+class DataSynchronized implements IData {
   private final List<String> letters = new ArrayList<>();
 
   public List<String> getLetters() {
