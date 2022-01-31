@@ -3,7 +3,6 @@ package ch10b;
 import java.util.*;
 
 public class SortMountains {
-
   public static void main(String[] args) {
     new SortMountains().go();
   }
@@ -15,24 +14,12 @@ public class SortMountains {
     mountains.add(new Mountain("Maroon", 14156));
     mountains.add(new Mountain("Castle", 14265));
     System.out.println("as entered:\n" + mountains);
-    NameCompare nc = new NameCompare();
-    mountains.sort(nc);
+
+    mountains.sort((mount1, mount2) -> mount1.name.compareTo(mount2.name));
     System.out.println("by name:\n" + mountains);
-    HeightCompare hc = new HeightCompare();
-    mountains.sort(hc);
+
+    mountains.sort((mount1, mount2) -> mount2.height - mount1.height);
     System.out.println("by height:\n" + mountains);
-  }
-}
-
-class NameCompare implements Comparator<Mountain> {
-  public int compare(Mountain one, Mountain two) {
-    return one.name.compareTo(two.name);
-  }
-}
-
-class HeightCompare implements Comparator<Mountain> {
-  public int compare(Mountain one, Mountain two) {
-    return (two.height - one.height);
   }
 }
 
