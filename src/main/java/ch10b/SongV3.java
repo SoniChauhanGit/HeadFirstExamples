@@ -1,4 +1,6 @@
-class SongV3 implements Comparable<SongV3> {
+package ch10b;
+
+public class SongV3 implements Comparable<SongV3> {
   String title;
   String artist;
   String bpm;

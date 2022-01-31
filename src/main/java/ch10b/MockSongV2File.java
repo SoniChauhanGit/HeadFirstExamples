@@ -1,7 +1,12 @@
+package ch10b;
+
+import ch10b.SongV2;
+import ch10b.SongV3;
+
 import java.util.ArrayList;
 import java.util.List;
 
-class MockSongV2File {
+public class MockSongV2File {
 
   public List<SongV2> getSongsV2() {
     ArrayList<SongV2> mySongs = new ArrayList<SongV2>();

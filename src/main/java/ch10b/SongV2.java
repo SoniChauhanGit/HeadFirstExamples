@@ -1,3 +1,5 @@
+package ch10b;
+
 class SongV2 {
   String title;
   String artist;

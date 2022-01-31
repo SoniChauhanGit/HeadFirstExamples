@@ -1,3 +1,7 @@
+package ch10b;
+
+import ch10b.SongV3;
+
 import java.util.List;
 
 class MockSongFile {
