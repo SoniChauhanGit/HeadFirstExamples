@@ -57,9 +57,9 @@ public class BeatBoxFinal {
   public void startUp(String name) {
     userName = name;
     try {
-      Socket sock = new Socket("127.0.0.1", 4242);
-      out = new ObjectOutputStream(sock.getOutputStream());
-      in = new ObjectInputStream(sock.getInputStream());
+      Socket socket = new Socket("127.0.0.1", 4242);
+      out = new ObjectOutputStream(socket.getOutputStream());
+      in = new ObjectInputStream(socket.getInputStream());
       ExecutorService executor = Executors.newSingleThreadExecutor();
       executor.submit(new RemoteReader());
     } catch (IOException ex) {
@@ -210,15 +210,13 @@ public class BeatBoxFinal {
   }
 
   public class RemoteReader implements Runnable {
-    boolean[] checkboxState = null;
-    Object obj = null;
-
     public void run() {
       try {
+        Object obj;
         while ((obj = in.readObject()) != null) {
           System.out.println("got an object from server");
           String nameToShow = (String) obj;
-          checkboxState = (boolean[]) in.readObject();
+          boolean[] checkboxState = (boolean[]) in.readObject();
           otherSeqsMap.put(nameToShow, checkboxState);
           incomingMessages.add(nameToShow);
           messages.setListData(incomingMessages);
@@ -252,7 +250,7 @@ public class BeatBoxFinal {
     sequencer.setTempoFactor((float) (tempoFactor * tempoMultiplier));
   }
 
-  private static class BeatInstrument implements Comparable<BeatInstrument> {
+  private static final class BeatInstrument implements Comparable<BeatInstrument> {
     private final String instrumentName;
     private final int midiValue;
 
@@ -269,7 +267,6 @@ public class BeatBoxFinal {
       return midiValue;
     }
 
-    @Override
     public int compareTo(BeatInstrument other) {
       return instrumentName.compareTo(other.instrumentName);
     }
