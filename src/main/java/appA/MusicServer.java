@@ -17,33 +17,6 @@ public class MusicServer {
     new MusicServer().go();
   }
 
-  public class ClientHandler implements Runnable {
-    private ObjectInputStream in;
-
-    public ClientHandler(Socket socket) {
-      try {
-        in = new ObjectInputStream(socket.getInputStream());
-      } catch (Exception ex) {
-        ex.printStackTrace();
-      }
-    }
-
-    public void run() {
-      Object userName;
-      Object beatSequence;
-      try {
-        while ((userName = in.readObject()) != null) {
-          beatSequence = in.readObject();
-
-          System.out.println("read two objects");
-          tellEveryone(userName, beatSequence);
-        }
-      } catch (Exception ex) {
-        ex.printStackTrace();
-      }
-    }
-  }
-
   public void go() {
     try {
       ServerSocket serverSock = new ServerSocket(4242);
@@ -68,6 +41,33 @@ public class MusicServer {
       try {
         clientOutputStream.writeObject(one);
         clientOutputStream.writeObject(two);
+      } catch (Exception ex) {
+        ex.printStackTrace();
+      }
+    }
+  }
+
+  public class ClientHandler implements Runnable {
+    private ObjectInputStream in;
+
+    public ClientHandler(Socket socket) {
+      try {
+        in = new ObjectInputStream(socket.getInputStream());
+      } catch (Exception ex) {
+        ex.printStackTrace();
+      }
+    }
+
+    public void run() {
+      Object userName;
+      Object beatSequence;
+      try {
+        while ((userName = in.readObject()) != null) {
+          beatSequence = in.readObject();
+
+          System.out.println("read two objects");
+          tellEveryone(userName, beatSequence);
+        }
       } catch (Exception ex) {
         ex.printStackTrace();
       }
