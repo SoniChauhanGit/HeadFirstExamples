@@ -8,7 +8,7 @@ public class SortMountains {
   }
 
   public void go() {
-    List<Mountain> mountains = new LinkedList<>();
+    List<Mountain> mountains = new ArrayList<>();
     mountains.add(new Mountain("Longs", 14255));
     mountains.add(new Mountain("Elbert", 14433));
     mountains.add(new Mountain("Maroon", 14156));
