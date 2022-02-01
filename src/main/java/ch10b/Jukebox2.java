@@ -10,8 +10,8 @@ public class Jukebox2 {
   }
 
   public void go() {
-    Songs s = new Songs();
-    List<String> songList = s.getSongs();
+    MockSongs s = new MockSongs();
+    List<String> songList = s.getSongStrings();
     System.out.println(songList);
     Collections.sort(songList);
     System.out.println("\n" + songList);
