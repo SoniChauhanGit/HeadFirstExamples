@@ -7,7 +7,7 @@ public class SongV4 implements Comparable<SongV4> {
 
   public boolean equals(Object aSong) {
     SongV4 other = (SongV4) aSong;
-    return getTitle().equals(other.getTitle());
+    return title.equals(other.getTitle());
   }
 
   public int hashCode() {
