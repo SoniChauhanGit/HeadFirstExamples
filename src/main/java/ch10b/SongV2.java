@@ -1,14 +1,14 @@
 package ch10b;
 
 class SongV2 {
-  String title;
-  String artist;
-  String bpm;
+  private String title;
+  private String artist;
+  private String bpm;
 
-  SongV2(String t, String a, String b) {
-    title = t;
-    artist = a;
-    bpm = b;
+  SongV2(String title, String artist, String bpm) {
+    this.title = title;
+    this.artist = artist;
+    this.bpm = bpm;
   }
 
   public String getTitle() {
