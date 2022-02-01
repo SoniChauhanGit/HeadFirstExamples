@@ -1,23 +1,19 @@
 package ch10b;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
-public class Jukebox5 {
-  List<SongV3> songList = new ArrayList<>();
-  MockSongV3File mockFile = new MockSongV3File();
-
+public class Jukebox4 {
   public static void main(String[] args) {
-    new Jukebox5().go();
+    new Jukebox4().go();
   }
 
   public void go() {
-    songList = mockFile.getSongsV3();
+    List<SongV3> songList = MockSongs.getSongsV3();
     System.out.println(songList);
+
     Collections.sort(songList);
     System.out.println(songList);
+
     ArtistCompare artistCompare = new ArtistCompare();
     songList.sort(artistCompare);
     System.out.println(songList);
