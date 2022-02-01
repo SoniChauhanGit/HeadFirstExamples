@@ -20,9 +20,12 @@ public class TestTree {
    }
 }
 
-class Book {
-   String title;
-   public Book(String t) {
-     title = t;
-   }
+class Book implements Comparable<Book> {
+  private String title;
+  public Book(String t) {
+    title = t;
+  }
+  public int compareTo(Book other) {
+    return title.compareTo(other.title);
+  }
 }
