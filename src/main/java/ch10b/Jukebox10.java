@@ -1,12 +1,10 @@
 package ch10b;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
-public class Jukebox9 {
+public class Jukebox10 {
   public static void main(String[] args) {
-    new Jukebox9().go();
+    new Jukebox10().go();
   }
 
   public void go() {
@@ -16,7 +14,7 @@ public class Jukebox9 {
     songList.sort((one, two) -> one.getTitle().compareTo(two.getTitle()));
     System.out.println(songList);
 
-    Set<SongV4> songSet = new HashSet<>(songList);
+    Set<SongV4> songSet = new TreeSet<>(songList);
     System.out.println(songSet);
   }
 }

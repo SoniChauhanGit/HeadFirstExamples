@@ -1,6 +1,6 @@
 package ch10b;
 
-public class SongV4 implements Comparable<SongV4> {
+class SongV4 implements Comparable<SongV4> {
   private String title;
   private String artist;
   private String bpm;
@@ -18,10 +18,10 @@ public class SongV4 implements Comparable<SongV4> {
     return title.compareTo(s.getTitle());
   }
 
-  SongV4(String t, String a, String b) {
-    title = t;
-    artist = a;
-    bpm = b;
+  SongV4(String title, String artist, String bpm) {
+    this.title = title;
+    this.artist = artist;
+    this.bpm = bpm;
   }
 
   public String getTitle() {
@@ -32,7 +32,7 @@ public class SongV4 implements Comparable<SongV4> {
     return artist;
   }
 
-  public String getBPM() {
+  public String getBpm() {
     return bpm;
   }
 
