@@ -21,12 +21,18 @@ public class TestTree {
 }
 
 class Book implements Comparable<Book> {
-  private String title;
+  String title;
   public Book(String t) {
     title = t;
   }
 
   public int compareTo(Book other) {
     return title.compareTo(other.title);
+  }
+
+  public String toString() {
+    return "Book{" +
+            "title='" + title + '\'' +
+            '}';
   }
 }
