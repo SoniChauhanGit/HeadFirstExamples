@@ -1,9 +1,18 @@
 package ch10b;
 
 public class SongV4 implements Comparable<SongV4> {
-  String title;
-  String artist;
-  String bpm;
+  private String title;
+  private String artist;
+  private String bpm;
+
+  public boolean equals(Object aSong) {
+    SongV4 other = (SongV4) aSong;
+    return getTitle().equals(other.getTitle());
+  }
+
+  public int hashCode() {
+    return title.hashCode();
+  }
 
   public int compareTo(SongV4 s) {
     return title.compareTo(s.getTitle());
@@ -28,6 +37,6 @@ public class SongV4 implements Comparable<SongV4> {
   }
 
   public String toString() {
-    return title + ": " + artist;
+    return title;
   }
 }

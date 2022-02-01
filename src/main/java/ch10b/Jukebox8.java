@@ -1,13 +1,12 @@
 package ch10b;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-public class Jukebox7 {
+public class Jukebox8 {
   private final MockMoreSongs mockFile = new MockMoreSongs();
 
   public static void main(String[] args) {
-    new Jukebox7().go();
+    new Jukebox8().go();
   }
 
   public void go() {
@@ -15,7 +14,7 @@ public class Jukebox7 {
     System.out.println(songList);
     songList.sort((one, two) -> one.getTitle().compareTo(two.getTitle()));
     System.out.println(songList);
-    songList.sort((one, two) -> one.getArtist().compareTo(two.getArtist()));
-    System.out.println(songList);
+    Set<SongV3> songSet = new HashSet<>(songList);
+    System.out.println(songSet);
   }
 }
