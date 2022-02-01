@@ -1,7 +1,6 @@
 package ch10b;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Jukebox7 {
   private final MockMoreSongs mockFile = new MockMoreSongs();

@@ -5,14 +5,12 @@ import java.util.List;
 
 public class LambdaForEach {
 
-  MockSongV2File mockFile = new MockSongV2File();
-
   public static void main(String[] args) {
     new LambdaForEach().go();
   }
 
   public void go() {
-    List<SongV3> mySongs = mockFile.getSongsV3();
+    List<SongV3> mySongs = MockSongs.getSongsV3();
 
     mySongs.forEach(mySong -> System.out.println(mySong));
 

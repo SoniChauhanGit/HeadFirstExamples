@@ -7,7 +7,7 @@ import java.util.List;
 public class Sorting {
   public static void main(String[] args) {
 
-    List<SongV3> songList = new MockSongV2File().getSongsV3();
+    List<SongV3> songList = MockSongs.getSongsV3();
     songList.sort((song1, song2) -> song1.getTitle().compareTo(song2.getTitle()));
     System.out.println(songList);
     songList.sort((song1, song2) -> song2.getTitle().compareTo(song1.getTitle()));
