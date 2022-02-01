@@ -1,7 +1,12 @@
 package ch10b;
 
-import java.util.Comparator;
-import java.util.TreeSet;
+import java.util.*;
+
+class BookCompare implements Comparator<Book> {
+  public int compare(Book one, Book two) {
+    return one.title.compareTo(two.title);
+  }
+}
 
 public class TestTreeComparator {
   public static void main(String[] args) {
@@ -18,11 +23,5 @@ public class TestTreeComparator {
     tree.add(b2);
     tree.add(b3);
     System.out.println(tree);
-  }
-}
-
-class BookCompare implements Comparator<Book> {
-  public int compare(Book one, Book two) {
-    return one.title.compareTo(two.title);
   }
 }
