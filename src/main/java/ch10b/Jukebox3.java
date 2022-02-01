@@ -1,20 +1,17 @@
 package ch10b;
 
-import java.util.List;
+import java.util.*;
 
 public class Jukebox3 {
-
-  List<SongV2> mySongs;
-
   public static void main(String[] args) {
     new Jukebox3().go();
   }
 
   public void go() {
-    mySongs = MockSongs.getSongsV2();
-    System.out.println(mySongs);
-    // This line intentionally fails compilation
-//        Collections.sort(mySongs);
-    System.out.println(mySongs);
+    List<SongV3> songList = MockSongs.getSongsV3();
+    System.out.println(songList);
+
+    Collections.sort(songList);
+    System.out.println(songList);
   }
 }

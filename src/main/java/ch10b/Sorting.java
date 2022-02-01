@@ -1,5 +1,4 @@
-import ch10b.MockSongV2File;
-import ch10b.SongV3;
+package ch10b;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -17,7 +16,7 @@ public class Sorting {
     System.out.println(songList);
     songList.sort((song1, song2) -> song1.getArtist().compareTo(song2.getArtist()));
     System.out.println(songList);
-    songList.sort((song1, song2) -> song1.getBPM().compareTo(song2.getBPM()));
+    songList.sort((song1, song2) -> song1.getBpm().compareTo(song2.getBpm()));
     System.out.println(songList);
   }
 

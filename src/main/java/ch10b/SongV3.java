@@ -1,18 +1,18 @@
 package ch10b;
 
-public class SongV3 implements Comparable<SongV3> {
-  String title;
-  String artist;
-  String bpm;
+class SongV3 implements Comparable<SongV3> {
+  private String title;
+  private String artist;
+  private String bpm;
 
   public int compareTo(SongV3 s) {
     return title.compareTo(s.getTitle());
   }
 
-  SongV3(String t, String a, String b) {
-    title = t;
-    artist = a;
-    bpm = b;
+  SongV3(String title, String artist, String bpm) {
+    this.title = title;
+    this.artist = artist;
+    this.bpm = bpm;
   }
 
   public String getTitle() {
@@ -23,7 +23,7 @@ public class SongV3 implements Comparable<SongV3> {
     return artist;
   }
 
-  public String getBPM() {
+  public String getBpm() {
     return bpm;
   }
 
