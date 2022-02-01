@@ -18,7 +18,7 @@ public class TestTreeComparator {
     Book b2 = new Book("Remix your Body");
     Book b3 = new Book("Finding Emo");
     BookCompare bookCompare = new BookCompare();
-    TreeSet<Book> tree = new TreeSet<>(bookCompare);
+    Set<Book> tree = new TreeSet<>(bookCompare);
     tree.add(b1);
     tree.add(b2);
     tree.add(b3);

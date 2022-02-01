@@ -12,7 +12,7 @@ public class TestTree {
     Book b2 = new Book("Remix your Body");
     Book b3 = new Book("Finding Emo");
 
-    TreeSet<Book> tree = new TreeSet<>();
+    Set<Book> tree = new TreeSet<>();
     tree.add(b1);
     tree.add(b2);
     tree.add(b3);
