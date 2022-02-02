@@ -3,6 +3,9 @@ package ch10b;
 import java.util.*;
 
 public class CollectionsFactoryMethods {
+  public static void main(String[] args) {
+    createAListOfSongs();
+  }
   public static List<String> createAListOldSchool() {
     List<String> songs = new ArrayList<>();
     songs.add("somersault");
