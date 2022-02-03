@@ -3,9 +3,9 @@ package ch10b;
 class SongV2 {
   private String title;
   private String artist;
-  private String bpm;
+  private int bpm;
 
-  SongV2(String title, String artist, String bpm) {
+  SongV2(String title, String artist, int bpm) {
     this.title = title;
     this.artist = artist;
     this.bpm = bpm;
@@ -19,7 +19,7 @@ class SongV2 {
     return artist;
   }
 
-  public String getBpm() {
+  public int getBpm() {
     return bpm;
   }
 

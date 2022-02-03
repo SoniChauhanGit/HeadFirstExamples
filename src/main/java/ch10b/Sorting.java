@@ -16,7 +16,7 @@ public class Sorting {
     System.out.println(songList);
     songList.sort((song1, song2) -> song1.getArtist().compareTo(song2.getArtist()));
     System.out.println(songList);
-    songList.sort((song1, song2) -> song1.getBpm().compareTo(song2.getBpm()));
+    songList.sort((song1, song2) -> song1.getBpm() - song2.getBpm());
     System.out.println(songList);
   }
 
