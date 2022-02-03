@@ -19,9 +19,9 @@ public class CollectionsFactoryMethods {
   }
 
   public static void createAListOfSongs() {
-    List<SongV2> songs = List.of(new SongV2("somersault", "zero 7", 147),
-                                 new SongV2("cassidy", "grateful dead", 158),
-                                 new SongV2("$10", "hitchhiker", 140));
+    List<SongV4> songs = List.of(new SongV4("somersault", "zero 7", 147),
+                                 new SongV4("cassidy", "grateful dead", 158),
+                                 new SongV4("$10", "hitchhiker", 140));
   }
 
   public static void createASet() {
