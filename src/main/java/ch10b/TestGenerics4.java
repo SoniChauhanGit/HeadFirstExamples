@@ -1,7 +1,6 @@
 package ch10b;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class TestGenerics4 {
   public static void main(String[] args) {
@@ -9,15 +8,10 @@ public class TestGenerics4 {
   }
 
   public void go() {
-    List<Animal> animals = new ArrayList<>();
-    animals.add(new Dog());
-    animals.add(new Cat());
-    animals.add(new Dog());
+    List<Animal> animals = List.of(new Dog(), new Cat(), new Dog());
     takeAnimals(animals);
 
-    List<Dog> dogs = new ArrayList<>();
-    dogs.add(new Dog());
-    dogs.add(new Dog());
+    List<Dog> dogs = List.of(new Dog(), new Dog());
     takeAnimals(dogs);
   }
 

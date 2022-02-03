@@ -8,15 +8,10 @@ public class TestGenerics3 {
   }
 
   public void go() {
-    List<Animal> animals = new ArrayList<>();
-    animals.add(new Dog());
-    animals.add(new Cat());
-    animals.add(new Dog());
+    List<Animal> animals = List.of(new Dog(), new Cat(), new Dog());
     takeAnimals(animals);
 
-    List<Dog> dogs = new ArrayList<>();
-    dogs.add(new Dog());
-    dogs.add(new Dog());
+    List<Dog> dogs = List.of(new Dog(), new Dog());
 //    takeAnimals(dogs);
   }
 
