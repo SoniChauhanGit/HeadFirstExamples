@@ -12,10 +12,16 @@ public class TestGenerics3 {
     takeAnimals(animals);
 
     List<Dog> dogs = List.of(new Dog(), new Dog());
-//    takeAnimals(dogs);
+    takeAnimals(dogs);
   }
 
-  public void takeAnimals(List<Animal> animals) {
+  public void takeAnimals(List<? extends Animal> animals) {
+    for (Animal a : animals) {
+      a.eat();
+    }
+  }
+
+  public <T extends Animal> void takeAnimals2(List<T> animals) {
     for (Animal a : animals) {
       a.eat();
     }
