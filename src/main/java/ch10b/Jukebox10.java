@@ -17,4 +17,12 @@ public class Jukebox10 {
     Set<SongV4> songSet = new TreeSet<>(songList);
     System.out.println(songSet);
   }
+
+  public void go2() {
+    List<SongV4> songList = MockMoreSongs.getSongsV4();
+
+    Set<SongV4> songSet = new TreeSet<>((o1, o2) -> o1.getBpm() - o2.getBpm());
+    songSet.addAll(songList);
+    System.out.println(songSet);
+  }
 }
