@@ -16,9 +16,10 @@ public class PhraseOMatic {
     int threeLength = wordListThree.length;
 
     // generate three random numbers
-    int rand1 = (int) (Math.random() * oneLength);
-    int rand2 = (int) (Math.random() * twoLength);
-    int rand3 = (int) (Math.random() * threeLength);
+    java.util.Random randomGenerator = new java.util.Random();
+    int rand1 = randomGenerator.nextInt(oneLength);
+    int rand2 = randomGenerator.nextInt(twoLength);
+    int rand3 = randomGenerator.nextInt(threeLength);
 
     // now build a phrase
     String phrase = wordListOne[rand1] + " " + wordListTwo[rand2] + " " + wordListThree[rand3];
