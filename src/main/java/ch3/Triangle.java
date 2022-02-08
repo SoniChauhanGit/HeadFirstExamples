@@ -1,31 +1,33 @@
 package ch3;
 
 class Triangle {
-//  double area;
-//  int height;
-//  int length;
-//  public static void main(String [] args) {
-//    ____________
-//    _______________________
-//    while ( __________ ) {
-//      __________________________
-//      ________.height = (x + 1) * 2;
-//      ________.length = x + 4;
-//      __________________________
-//      System.out.print("triangle "+x+", area");
-//      System.out.println(" = " + _______.area);
-//      ________________
-//    }
-//    ______________
-//    x = 27;
-//    Triangle t5 = ta[2];
-//    ta[2].area = 343;
-//    System.out.print("y = " + y);
-//    System.out.println(", t5 area = "+ t5.area);
-//  }
-//  void setArea() {
-//    ____________ = (height * length) / 2;
-//  }
+  double area;
+  int height;
+  int length;
+
+  public static void main(String[] args) {
+    int x = 0;
+    Triangle[] ta = new Triangle[4];
+    while (x < 4) {
+      ta[x] = new Triangle();
+      ta[x].height = (x + 1) * 2;
+      ta[x].length = x + 4;
+      ta[x].setArea();
+      System.out.print("triangle " + x + ", area");
+      System.out.println(" = " + ta[x].area);
+      x = x + 1;
+    }
+    int y = x;
+    x = 27;
+    Triangle t5 = ta[2];
+    ta[2].area = 343;
+    System.out.print("y = " + y);
+    System.out.println(", t5 area = " + t5.area);
+  }
+
+  void setArea() {
+    area = (height * length) / 2;
+  }
 }
 
 
@@ -33,7 +35,8 @@ class Triangle {
 //  double area;
 //  int height;
 //  int length;
-//  public static void main(String [] args) {
+//
+//  public static void main(String[] args) {
 //    ____________
 //    _______________________
 //    while ( __________ ) {
@@ -41,7 +44,7 @@ class Triangle {
 //      ________.height = (x + 1) * 2;
 //      ________.length = x + 4;
 //      __________________________
-//      System.out.print("triangle "+x+", area");
+//      System.out.print("triangle " + x + ", area");
 //      System.out.println(" = " + _______.area);
 //      ________________
 //    }
@@ -50,7 +53,7 @@ class Triangle {
 //    Triangle t5 = ta[2];
 //    ta[2].area = 343;
 //    System.out.print("y = " + y);
-//    System.out.println(", t5 area = "+ t5.area);
+//    System.out.println(", t5 area = " + t5.area);
 //  }
 //  void setArea() {
 //    ____________ = (height * length) / 2;
