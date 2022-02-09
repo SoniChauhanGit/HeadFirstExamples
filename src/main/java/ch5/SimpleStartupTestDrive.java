@@ -37,6 +37,7 @@ class SimpleStartup {
     if (numOfHits == locationCells.length) {
       result = "kill";
     } // end if
+    System.out.println(result);
     return result;
   } // end method
 } // close class

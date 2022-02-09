@@ -12,7 +12,7 @@ public class Game {
     theStartup.setLocationCells(locations);
     boolean isAlive = true;
 
-    while (isAlive == true) {
+    while (isAlive) {
       int guess = helper.getUserInput("enter a number");
       String result = theStartup.checkYourself(guess);
       numOfGuesses++;
