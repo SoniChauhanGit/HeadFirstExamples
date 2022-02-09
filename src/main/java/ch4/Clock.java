@@ -19,4 +19,4 @@ class ClockTestDrive {
     String tod = c.getTime();
     System.out.println("time: " + tod);
   }
-}     
+}
