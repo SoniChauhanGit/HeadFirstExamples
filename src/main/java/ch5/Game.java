@@ -13,7 +13,7 @@ public class Game {
     boolean isAlive = true;
 
     while (isAlive == true) {
-      String guess = helper.getUserInput("enter a number");
+      int guess = helper.getUserInput("enter a number");
       String result = theStartup.checkYourself(guess);
       numOfGuesses++;
       if (result.equals("kill")) {
