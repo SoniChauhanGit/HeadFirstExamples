@@ -2,33 +2,34 @@ package ch4;
 
 public class Puzzle4 {
   public static void main(String[] args) {
-    Puzzle4b[] obs = new Puzzle4b[6];
-    int y = 1;
-    int x = 0;
-    int result = 0;
-    while (x < 6) {
-      obs[x] = new Puzzle4b();
-      obs[x].ivar = y;
-      y = y * 10;
-      x = x + 1;
+    Value[] values = new Value[6];
+    int number = 1;
+    int i = 0;
+    while (i < 6) {
+      values[i] = new Value();
+      values[i].intValue = number;
+      number = number * 10;
+      i = i + 1;
     }
-    x = 6;
-    while (x > 0) {
-      x = x - 1;
-      result = result + obs[x].doStuff(x);
+
+    int result = 0;
+    i = 6;
+    while (i > 0) {
+      i = i - 1;
+      result = result + values[i].doStuff(i);
     }
     System.out.println("result " + result);
   }
 }
 
-class Puzzle4b {
-  int ivar;
+class Value {
+  int intValue;
 
   public int doStuff(int factor) {
-    if (ivar > 100) {
-      return ivar * factor;
+    if (intValue > 100) {
+      return intValue * factor;
     } else {
-      return ivar * (5 - factor);
+      return intValue * (5 - factor);
     }
   }
 }
