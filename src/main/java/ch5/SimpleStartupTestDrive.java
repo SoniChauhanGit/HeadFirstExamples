@@ -32,12 +32,11 @@ class SimpleStartup {
         result = "hit";
         numOfHits++;
         break;
-      }
-    } // close for
-
+      } // end if
+    } // end for
     if (numOfHits == locationCells.length) {
       result = "kill";
-    }
+    } // end if
     return result;
-  } // close method
+  } // end method
 } // close class
