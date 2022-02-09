@@ -7,13 +7,14 @@ public class SimpleStartupTestDrive {
     dot.setLocationCells(locations);
     String userGuess = "2";
     String result = dot.checkYourself(userGuess);
+    System.out.println(result);
   }
 }
 
 
 class SimpleStartup {
-  int[] locationCells;
-  int numOfHits = 0;
+  private int[] locationCells;
+  private int numOfHits = 0;
 
   public void setLocationCells(int[] locs) {
     locationCells = locs;
@@ -34,7 +35,6 @@ class SimpleStartup {
         locationCells.length) {
       result = "kill";
     }
-    System.out.println(result);
     return result;
   } // close method
 } // close class
