@@ -1,6 +1,6 @@
 package ch5;
 
-public class Game {
+public class SimpleStartupGame {
   public static void main(String[] args) {
     int numOfGuesses = 0;
     GameHelper helper = new GameHelper();
