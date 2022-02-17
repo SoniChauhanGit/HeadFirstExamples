@@ -1,0 +1,83 @@
+package ch6;
+
+import java.util.ArrayList;
+
+public class StartupBust {
+
+  private GameHelper helper = new GameHelper();
+  private ArrayList<Startup> StartupsList = new ArrayList<Startup>();
+  private int numOfGuesses = 0;
+
+  private void setUpGame() {
+    // first make some Startups and give them locations
+    Startup one = new Startup();
+    one.setName("poniez");
+    Startup two = new Startup();
+    two.setName("hacqi");
+    Startup three = new Startup();
+    three.setName("cabista");
+    StartupsList.add(one);
+    StartupsList.add(two);
+    StartupsList.add(three);
+
+    System.out.println("Your goal is to sink three Startups.");
+    System.out.println("poniez, hacqi, cabista");
+    System.out.println("Try to sink them all in the fewest number of guesses");
+
+    for (Startup StartupToSet : StartupsList) {
+      ArrayList<String> newLocation = helper.placeStartup(3);
+      StartupToSet.setLocationCells(newLocation);
+    } // close for loop
+  } // close setUpGame method
+
+  private void startPlaying() {
+    while (!StartupsList.isEmpty()) {
+      String userGuess = helper.getUserInput("Enter a guess");
+      checkUserGuess(userGuess);
+    } // close while
+    finishGame();
+  } // close startPlaying method
+
+
+  private void checkUserGuess(String userGuess) {
+    numOfGuesses++;
+    String result = "miss"; // assume a miss until told otherwise
+
+    for (int i = 0; i < StartupsList.size(); i++) {
+
+      Startup StartupToTest = (Startup) StartupsList.get(i);
+      result = StartupToTest.checkYourself(userGuess);
+
+      if (result.equals("hit")) {
+
+        break;
+      }
+      if (result.equals("kill")) {
+
+        StartupsList.remove(i); // he's gone
+        break;
+      }
+
+    } // close for
+
+    System.out.println(result);
+  }
+
+
+  private void finishGame() {
+    System.out.println("All Startups are dead! Your stock is now worthless");
+    if (numOfGuesses <= 9) {
+      System.out.println("It only took you " + numOfGuesses + " guesses.  You get the Enron award!");
+    } else {
+      System.out.println("Took you long enough. " + numOfGuesses + " guesses.");
+      System.out.println("Too bad you didn't get out before your options sank.");
+    }
+  }
+
+
+  public static void main(String[] args) {
+    StartupBust game = new StartupBust();
+    game.setUpGame();
+    game.startPlaying();
+  }
+}
