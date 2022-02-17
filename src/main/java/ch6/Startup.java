@@ -1,26 +1,27 @@
 package ch6;
 
-class Startup {
-  private int[] locationCells;
-  private int numOfHits = 0;
+import java.util.ArrayList;
 
-  public void setLocationCells(int[] locs) {
+public class Startup {
+  private ArrayList<String> locationCells;
+  // private int numOfHits = 0;
+  // don't need to track this now
+
+  public void setLocationCells(ArrayList<String> locs) {
     locationCells = locs;
   }
 
-  public String checkYourself(int guess) {
+  public String checkYourself(String userInput) {
     String result = "miss";
-    for (int cell : locationCells) {
-      if (guess == cell) {
+    int index = locationCells.indexOf(userInput);
+    if (index >= 0) {
+      locationCells.remove(index);
+      if (locationCells.isEmpty()) {
+        result = "kill";
+      } else {
         result = "hit";
-        numOfHits++;
-        break;
       } // end if
-    } // end for
-    if (numOfHits == locationCells.length) {
-      result = "kill";
-    } // end if
-    System.out.println(result);
+    } // end outer if
     return result;
   } // end method
 } // close class
