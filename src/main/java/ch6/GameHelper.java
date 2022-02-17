@@ -22,7 +22,7 @@ public class GameHelper {
 
   public ArrayList<String> placeStartup(int startupSize) {
     ArrayList<String> alphaCells = new ArrayList<String>();
-    // holds ‘f6' type coords
+    // holds index to grid (0 - 48)
     int[] coords = new int[startupSize];                  // current candidate coords
     int attempts = 0;                                  // current attempts counter
     boolean success = false;                           // flag = found a good location ?
@@ -55,19 +55,26 @@ public class GameHelper {
       }
     }                                                   // end while
 
-    int i = 0;                                          // turn location into alpha coords
-    int row = 0;
-    int column = 0;
-    String temp = null;                                // temporary String for concat
-    while (i < startupSize) {
-      grid[coords[i]] = 1;                              // mark master grid pts. as ‘used'
-      row = (int) (coords[i] / GRID_LENGTH);             // get row value
-      column = coords[i] % GRID_LENGTH;                  // get numeric column value
-      temp = String.valueOf(ALPHABET.charAt(column));   // convert to alpha
+    for (int index : coords) {                 // turn location into 'a0'-style coords
+      grid[index] = 1;                         // mark master grid pts. as ‘used'
+      int row = index / GRID_LENGTH;           // get row value
+      int column = index % GRID_LENGTH;        // get numeric column value
 
-      alphaCells.add(temp.concat(Integer.toString(row)));
-      i++;
+      String letter = ALPHABET.substring(column, column + 1); // convert column index to letter
+      alphaCells.add(letter + row);
     }
     return alphaCells;
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder str = new StringBuilder();
+    for (int i = 0; i < grid.length; i++) {
+      if (i % 7 == 0) {
+        str.append("\n");
+      }
+      str.append(grid[i]).append(", ");
+    }
+    return str.toString();
   }
 }
