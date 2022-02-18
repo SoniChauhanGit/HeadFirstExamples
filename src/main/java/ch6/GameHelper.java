@@ -32,23 +32,22 @@ public class GameHelper {
     boolean success = false;                            // flag = found a good location ?
 
     startupCount++;                                     // nth Startup to place
-    Alignment alignment = getAlignment();
+    Alignment alignment = getAlignment();               // alternates between vertical and horizontal
 
     while (!success & attempts++ < MAX_ATTEMPTS) {      // main search loop  (32)
       int location = random.nextInt(GRID_SIZE);         // get random starting point
-      boolean validLocation = isValidLocation(location, startupSize, alignment);
+      boolean validLocation = isValidLocation(location, startupSize, alignment);  // check the startup would fit on the grid
 
-      if (validLocation) {
-        for (int i = 0; i < startupCoords.length; i++) {
+      if (validLocation) {                                // if it fits....
+        for (int i = 0; i < startupCoords.length; i++) {  // create an array of proposed co-ordinates for the startup
           startupCoords[i] = location;
-          location += alignment.getIncrement();
+          location += alignment.getIncrement();           // calculate the next location
         }
         System.out.println("trying: " + Arrays.toString(startupCoords));
 
-        success = allPositionsAvailable(startupCoords);
-      }
-    }                                                   // end while
-    System.out.println(this);
+        success = coordsAvailable(startupCoords);
+      }                                                   // end loop
+    }                                                     // end while
 
     savePositionToGrid(startupCoords);
     ArrayList<String> alphaCells = convertCoordsToAlphaFormat(startupCoords);
@@ -76,8 +75,8 @@ public class GameHelper {
   }
 
   void savePositionToGrid(int[] startupCoords) {
-    for (int index : startupCoords) {                 // turn location into 'a0'-style startupCoords
-      grid[index] = 1;                         // mark master grid position as ‘used'
+    for (int index : startupCoords) {                 
+      grid[index] = 1;                         // mark master grid position as 'used'
     }
   }
 
@@ -89,7 +88,7 @@ public class GameHelper {
     return letter + row;
   }
 
-  boolean allPositionsAvailable(int[] startupCoords) {
+  boolean coordsAvailable(int[] startupCoords) {
     for (int coord : startupCoords) {   // check all potential positions
       if (grid[coord] != 0) {           // this co-ordinate already has an entry in the grid
         return false;                   // NO success

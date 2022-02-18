@@ -75,7 +75,7 @@ class GameHelperTest {
 
     // when
     int[] startupCoords = new int[]{0, 1, 2};
-    boolean success = gameHelper.allPositionsAvailable(startupCoords);
+    boolean success = gameHelper.coordsAvailable(startupCoords);
 
     // then
     assertTrue(success);
@@ -88,7 +88,7 @@ class GameHelperTest {
     GameHelper gameHelper = new GameHelper();
 
     // when
-    boolean success = gameHelper.allPositionsAvailable(new int[]{0, 7, 14});
+    boolean success = gameHelper.coordsAvailable(new int[]{0, 7, 14});
 
     // then
     assertTrue(success);
@@ -102,7 +102,7 @@ class GameHelperTest {
     System.out.println(gameHelper);
 
     // when
-    boolean success = gameHelper.allPositionsAvailable(new int[]{9, 10, 11}); // "C1" - horizontal
+    boolean success = gameHelper.coordsAvailable(new int[]{9, 10, 11}); // "C1" - horizontal
     System.out.println(gameHelper);
 
     // then
@@ -118,7 +118,7 @@ class GameHelperTest {
 
     // when
     int[] startupCoords = new int[]{1, 9, 16};
-    boolean success = gameHelper.allPositionsAvailable(startupCoords); // "A1" - vertical
+    boolean success = gameHelper.coordsAvailable(startupCoords); // "A1" - vertical
     System.out.println(gameHelper);
 
     // then
