@@ -2,6 +2,8 @@ package ch6;
 
 import org.junit.jupiter.api.Test;
 
+import static ch6.GameHelper.Alignment.HORIZONTAL;
+import static ch6.GameHelper.Alignment.VERTICAL;
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameHelperTest {
@@ -45,7 +47,7 @@ class GameHelperTest {
     GameHelper gameHelper = new GameHelper();
 
     // expect
-    assertFalse(gameHelper.horizontalStartupFits(26, 3));
+    assertFalse(gameHelper.horizontalStartupFits(26, 26 + (HORIZONTAL.getIncrement() * 3)));
   }
 
   @Test
@@ -54,7 +56,7 @@ class GameHelperTest {
     GameHelper gameHelper = new GameHelper();
 
     // expect
-    assertTrue(gameHelper.verticalStartupFits(26, 3));
+    assertTrue(gameHelper.verticalStartupFits(26 + (VERTICAL.getIncrement() * 3)));
   }
 
   @Test
@@ -63,7 +65,7 @@ class GameHelperTest {
     GameHelper gameHelper = new GameHelper();
 
     // expect
-    assertFalse(gameHelper.verticalStartupFits(47, 3));
+    assertFalse(gameHelper.verticalStartupFits(47 + (VERTICAL.getIncrement() * 3)));
   }
 
   @Test
@@ -73,7 +75,7 @@ class GameHelperTest {
 
     // when
     int[] startupCoords = new int[]{0, 1, 2};
-    boolean success = gameHelper.canPlaceStartup(startupCoords);
+    boolean success = gameHelper.allPositionsAvailable(startupCoords);
 
     // then
     assertTrue(success);
@@ -86,7 +88,7 @@ class GameHelperTest {
     GameHelper gameHelper = new GameHelper();
 
     // when
-    boolean success = gameHelper.canPlaceStartup(new int[]{0, 7, 14});
+    boolean success = gameHelper.allPositionsAvailable(new int[]{0, 7, 14});
 
     // then
     assertTrue(success);
@@ -96,13 +98,11 @@ class GameHelperTest {
   void shouldNotBeAbleToPlaceHorizontalIntoGridAtSameLocationAsExisting() {
     // given
     GameHelper gameHelper = new GameHelper();
-    boolean setupSuccess = gameHelper.canPlaceStartup(new int[]{8, 9, 10}); // "B1"
-    assertTrue(setupSuccess);
+    gameHelper.savePositionToGrid(new int[]{8, 9, 10}); // "B1"
     System.out.println(gameHelper);
 
     // when
-    int[] startupCoords = new int[3];
-    boolean success = gameHelper.canPlaceStartup(new int[]{9, 10, 11}); // "C1" - horizontal
+    boolean success = gameHelper.allPositionsAvailable(new int[]{9, 10, 11}); // "C1" - horizontal
     System.out.println(gameHelper);
 
     // then
@@ -113,13 +113,12 @@ class GameHelperTest {
   void shouldNotBeAbleToPlaceVerticalIntoGridAtSameLocationAsExisting() {
     // given
     GameHelper gameHelper = new GameHelper();
-    boolean setupSuccess = gameHelper.canPlaceStartup(new int[]{8, 9, 10}); // "B1"
-    assertTrue(setupSuccess);
+    gameHelper.savePositionToGrid(new int[]{8, 9, 10}); // "B1"
     System.out.println(gameHelper);
 
     // when
     int[] startupCoords = new int[]{1, 9, 16};
-    boolean success = gameHelper.canPlaceStartup(startupCoords); // "A1" - vertical
+    boolean success = gameHelper.allPositionsAvailable(startupCoords); // "A1" - vertical
     System.out.println(gameHelper);
 
     // then
