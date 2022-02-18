@@ -22,4 +22,50 @@ public class Snippets {
 
     myList.remove(egg1);
   }
+
+  void andExample(int price, String camera) {
+    if (price >= 300 && price < 400) {
+      camera = "X";
+    }
+  }
+
+  void orExample(String brand) {
+    if (brand.equals("A") || brand.equals("B")) {
+      // do stuff for only brand A or brand B
+    }
+  }
+
+  void longBoolean(String zoomType, int zoomDegree) {
+    if ((zoomType.equals("optical") &&
+         (zoomDegree >= 3 && zoomDegree <= 8)) ||
+        (zoomType.equals("digital") &&
+         (zoomDegree >= 5 && zoomDegree <= 12))) {
+      // do appropriate zoom stuff
+    }
+  }
+
+  void notEqualInt(int model) {
+    if (model != 2000) {
+      //  do non-model 2000 stuff
+    }
+  }
+
+  void notEqualString(String brand) {
+    if (!brand.equals("X")) {
+      // do non-brand X stuff
+    }
+  }
+
+  void shortCircuit(SomeType refVar) {
+if (refVar != null &&
+    refVar.isValidType()) {
+  // do ‘got a valid type’ stuff
+}
+  }
+
+  private class SomeType {
+    public boolean isValidType() {
+      return false;
+    }
+  }
 }
