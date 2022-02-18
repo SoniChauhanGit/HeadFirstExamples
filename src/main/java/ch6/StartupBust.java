@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class StartupBust {
 
-  private GameHelper helper = new GameHelper();
-  private ArrayList<Startup> StartupsList = new ArrayList<Startup>();
+  private final GameHelper helper = new GameHelper();
+  private final ArrayList<Startup> startups = new ArrayList<Startup>();
   private int numOfGuesses = 0;
 
   private void setUpGame() {
@@ -16,22 +16,22 @@ public class StartupBust {
     two.setName("hacqi");
     Startup three = new Startup();
     three.setName("cabista");
-    StartupsList.add(one);
-    StartupsList.add(two);
-    StartupsList.add(three);
+    startups.add(one);
+    startups.add(two);
+    startups.add(three);
 
     System.out.println("Your goal is to sink three Startups.");
     System.out.println("poniez, hacqi, cabista");
     System.out.println("Try to sink them all in the fewest number of guesses");
 
-    for (Startup StartupToSet : StartupsList) {
+    for (Startup startup : startups) {
       ArrayList<String> newLocation = helper.placeStartup(3);
-      StartupToSet.setLocationCells(newLocation);
+      startup.setLocationCells(newLocation);
     } // close for loop
   } // close setUpGame method
 
   private void startPlaying() {
-    while (!StartupsList.isEmpty()) {
+    while (!startups.isEmpty()) {
       String userGuess = helper.getUserInput("Enter a guess");
       checkUserGuess(userGuess);
     } // close while
@@ -43,9 +43,9 @@ public class StartupBust {
     numOfGuesses++;
     String result = "miss"; // assume a miss until told otherwise
 
-    for (int i = 0; i < StartupsList.size(); i++) {
+    for (int i = 0; i < startups.size(); i++) {
 
-      Startup StartupToTest = (Startup) StartupsList.get(i);
+      Startup StartupToTest = (Startup) startups.get(i);
       result = StartupToTest.checkYourself(userGuess);
 
       if (result.equals("hit")) {
@@ -54,7 +54,7 @@ public class StartupBust {
       }
       if (result.equals("kill")) {
 
-        StartupsList.remove(i); // he's gone
+        startups.remove(i); // he's gone
         break;
       }
 
