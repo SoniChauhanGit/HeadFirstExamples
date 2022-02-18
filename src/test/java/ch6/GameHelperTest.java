@@ -47,7 +47,7 @@ class GameHelperTest {
     GameHelper gameHelper = new GameHelper();
 
     // expect
-    assertFalse(gameHelper.horizontalStartupFits(26, 26 + (HORIZONTAL.getIncrement() * 3)));
+    assertFalse(gameHelper.startupFits(new int[]{26, 27, 28}, HORIZONTAL));
   }
 
   @Test
@@ -56,7 +56,7 @@ class GameHelperTest {
     GameHelper gameHelper = new GameHelper();
 
     // expect
-    assertTrue(gameHelper.verticalStartupFits(26 + (VERTICAL.getIncrement() * 3)));
+    assertTrue(gameHelper.startupFits(new int[]{26, 33, 40}, VERTICAL));
   }
 
   @Test
@@ -65,7 +65,7 @@ class GameHelperTest {
     GameHelper gameHelper = new GameHelper();
 
     // expect
-    assertFalse(gameHelper.verticalStartupFits(47 + (VERTICAL.getIncrement() * 3)));
+    assertFalse(gameHelper.startupFits(new int[]{47, 54, 61}, VERTICAL));
   }
 
   @Test

@@ -36,16 +36,15 @@ public class GameHelper {
 
     while (!success & attempts++ < MAX_ATTEMPTS) {      // main search loop  (32)
       int location = random.nextInt(GRID_SIZE);         // get random starting point
-      boolean validLocation = isValidLocation(location, startupSize, alignment);  // check the startup would fit on the grid
 
-      if (validLocation) {                                // if it fits....
-        for (int i = 0; i < startupCoords.length; i++) {  // create an array of proposed co-ordinates for the startup
-          startupCoords[i] = location;
-          location += alignment.getIncrement();           // calculate the next location
-        }
-        System.out.println("trying: " + Arrays.toString(startupCoords));
+      for (int i = 0; i < startupCoords.length; i++) {  // create an array of proposed co-ordinates for the startup
+        startupCoords[i] = location;
+        location += alignment.getIncrement();           // calculate the next location
+      }
+      System.out.println("Trying: " + Arrays.toString(startupCoords));
 
-        success = coordsAvailable(startupCoords);
+      if (startupFits(startupCoords, alignment)) {        // check the startup would fit on the grid
+        success = coordsAvailable(startupCoords);         // if it fits, check those locations aren't taken
       }                                                   // end loop
     }                                                     // end while
 
@@ -56,20 +55,19 @@ public class GameHelper {
     return alphaCells;
   }
 
-  private boolean isValidLocation(int location, int startupSize, Alignment alignment) {
-    int finalLocation = location + (alignment.getIncrement() * startupSize);
+  boolean startupFits(int[] startupCoords, Alignment alignment) {
+    int finalLocation = startupCoords[startupCoords.length - 1];
     if (alignment == HORIZONTAL) {
-      return horizontalStartupFits(location, finalLocation);
+      return calculateRowFromIndex(startupCoords[0]) == calculateRowFromIndex(finalLocation); // check end is on same row as start
     } else {
-      return verticalStartupFits(finalLocation);
+      return finalLocation < GRID_SIZE; // check end position doesn't go off the bottom of the grid
     }
   }
 
   private ArrayList<String> convertCoordsToAlphaFormat(int[] startupCoords) {
     ArrayList<String> alphaCells = new ArrayList<String>();
-    for (int index : startupCoords) {                 // turn location into 'a0'-style startupCoords
-      String alphaCoords = getAlphaCoordsFromIndex(index);
-      alphaCells.add(alphaCoords);
+    for (int index : startupCoords) {                 // for each grid coordinate
+      alphaCells.add(getAlphaCoordsFromIndex(index)); // turn it into an "a0" style and add to a list
     }
     return alphaCells;
   }
@@ -91,18 +89,11 @@ public class GameHelper {
   boolean coordsAvailable(int[] startupCoords) {
     for (int coord : startupCoords) {   // check all potential positions
       if (grid[coord] != 0) {           // this co-ordinate already has an entry in the grid
+        System.out.println("position: " + coord + " already taken.");
         return false;                   // NO success
       }
     }
     return true;                        // if the method got this far, there were no clashes, yay!
-  }
-
-  boolean horizontalStartupFits(int location, int finalLocation) {
-    return calculateRowFromIndex(location) == calculateRowFromIndex(finalLocation); // check end is on same row as start
-  }
-
-  boolean verticalStartupFits(int finalLocation) {
-    return finalLocation < GRID_SIZE; // check end position doesn't go off the bottom of the grid
   }
 
   private Alignment getAlignment() {
