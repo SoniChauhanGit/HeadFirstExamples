@@ -26,7 +26,6 @@ public class GameHelper {
   }
 
   public ArrayList<String> placeStartup(int startupSize) {
-    ArrayList<String> alphaCells = new ArrayList<String>();
     // holds index to grid (0 - 48)
     int[] startupCoords = new int[startupSize];        // current candidate co-ordinates
     int attempts = 0;                                  // current attempts counter
@@ -41,7 +40,6 @@ public class GameHelper {
         success = horizontalStartupFits(location, startupSize);
       } else{
         success = verticalStartupFits(location, startupSize);
-
       }
 
       if (success) {
@@ -50,8 +48,8 @@ public class GameHelper {
     }                                                   // end while
     System.out.println(this);
 
+    ArrayList<String> alphaCells = new ArrayList<String>();
     for (int index : startupCoords) {                 // turn location into 'a0'-style startupCoords
-      grid[index] = 1;                         // mark master grid position as ‘used'
       String alphaCoords = getAlphaCoordsFromIndex(index);
       alphaCells.add(alphaCoords);
     }
@@ -65,11 +63,10 @@ public class GameHelper {
     int column = index % GRID_LENGTH;        // get numeric column value
 
     String letter = ALPHABET.substring(column, column + 1); // convert column index to letter
-    String alphaCoords = letter + row;
-    return alphaCoords;
+    return letter + row;
   }
 
-  private boolean bruteForcePlace(int startupSize, int[] startupCoords, int increment, int location) {
+  boolean bruteForcePlace(int startupSize, int[] startupCoords, int increment, int location) {
     System.out.println("startupSize = " + startupSize + ", startupCoords = " + Arrays.toString(startupCoords) + ", increment = " + increment + ", location = " + location);
     int k = 0;
     for (int j = location; k < startupSize; j += increment) {
@@ -84,25 +81,22 @@ public class GameHelper {
         return false;
       }
     }
+    // this is awful, more than one iteration
+    for (int index : startupCoords) {
+      grid[index] = 1;                         // mark master grid position as ‘used'
+    }
+
     return true;
   }
 
   boolean horizontalStartupFits(int location, int startupSize) {
     int finalLocation = location + (HORIZONTAL.getIncrement() * startupSize);
-    if (calculateRowFromIndex(location) != calculateRowFromIndex(finalLocation)) { // end position is on a different row to start position
-      System.out.println("location = " + location + ", startupSize = " + startupSize);
-      return false;
-    }
-    return true;
+    return calculateRowFromIndex(location) == calculateRowFromIndex(finalLocation); // check end is on same row as start
   }
 
   boolean verticalStartupFits(int location, int startupSize) {
     int finalLocation = location + (VERTICAL.getIncrement() * startupSize);
-    if (finalLocation > GRID_SIZE) {                              // end position is off the bottom
-      System.out.println("location = " + location + ", startupSize = " + startupSize);
-      return false;
-    }
-    return true;
+    return finalLocation < GRID_SIZE; // check end position doesn't go off the bottom of the grid
   }
 
   private Alignment calculateIncrement() {
