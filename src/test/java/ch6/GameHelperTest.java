@@ -2,8 +2,6 @@ package ch6;
 
 import org.junit.jupiter.api.Test;
 
-import static ch6.GameHelper.Alignment.HORIZONTAL;
-import static ch6.GameHelper.Alignment.VERTICAL;
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameHelperTest {
@@ -47,7 +45,7 @@ class GameHelperTest {
     GameHelper gameHelper = new GameHelper();
 
     // expect
-    assertFalse(gameHelper.startupFits(new int[]{26, 27, 28}, HORIZONTAL));
+    assertFalse(gameHelper.startupFits(new int[]{26, 27, 28}, GameHelper.HORIZONTAL_INCREMENT));
   }
 
   @Test
@@ -56,7 +54,7 @@ class GameHelperTest {
     GameHelper gameHelper = new GameHelper();
 
     // expect
-    assertTrue(gameHelper.startupFits(new int[]{26, 33, 40}, VERTICAL));
+    assertTrue(gameHelper.startupFits(new int[]{26, 33, 40}, GameHelper.VERTICAL_INCREMENT));
   }
 
   @Test
@@ -65,7 +63,7 @@ class GameHelperTest {
     GameHelper gameHelper = new GameHelper();
 
     // expect
-    assertFalse(gameHelper.startupFits(new int[]{47, 54, 61}, VERTICAL));
+    assertFalse(gameHelper.startupFits(new int[]{47, 54, 61}, GameHelper.VERTICAL_INCREMENT));
   }
 
   @Test
