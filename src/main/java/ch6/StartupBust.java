@@ -38,26 +38,20 @@ public class StartupBust {
     finishGame();
   } // close startPlaying method
 
-
   private void checkUserGuess(String userGuess) {
     numOfGuesses++;
     String result = "miss"; // assume a miss until told otherwise
 
-    for (int i = 0; i < startups.size(); i++) {
-
-      Startup StartupToTest = (Startup) startups.get(i);
-      result = StartupToTest.checkYourself(userGuess);
+    for (Startup startupToTest : startups) {
+      result = startupToTest.checkYourself(userGuess);
 
       if (result.equals("hit")) {
-
         break;
       }
       if (result.equals("kill")) {
-
-        startups.remove(i); // he's gone
+        startups.remove(startupToTest); // he's gone
         break;
       }
-
     } // close for
 
     System.out.println(result);
@@ -73,7 +67,6 @@ public class StartupBust {
       System.out.println("Too bad you didn't get out before your options sank.");
     }
   }
-
 
   public static void main(String[] args) {
     StartupBust game = new StartupBust();
