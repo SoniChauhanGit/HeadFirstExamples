@@ -1,8 +1,12 @@
 package ch6;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
+
+import static ch6.GameHelper.Alignment.HORIZONTAL;
+import static ch6.GameHelper.Alignment.VERTICAL;
 
 public class GameHelper {
   private static final String ALPHABET = "abcdefg";
@@ -29,54 +33,88 @@ public class GameHelper {
     boolean success = false;                           // flag = found a good location ?
 
     startupCount++;                                        // nth Startup to place
-    int increment = calculateIncrement();
+    Alignment alignment = calculateIncrement();
 
     while (!success & attempts++ < MAX_ATTEMPTS) {             // main search loop  (32)
       int location = random.nextInt(GRID_SIZE);     // get random starting point
-      success = true;                                 // assume success
-      int i = 0;
-      while (success && i < startupSize) {                // look for adjacent unused spots
-        if (grid[location] == 0) {                    // if not already used
-          success = startupFits(location, startupSize, increment);
-          if (success) {
-            startupCoords[i++] = location;                    // save location
-            location += increment;                          // try ‘next' adjacent
-          }
-        } else {                                      // found already used location
-          success = false;                          // failure
-        }
+      if (alignment == HORIZONTAL) {
+        success = horizontalStartupFits(location, startupSize);
+      } else{
+        success = verticalStartupFits(location, startupSize);
+
+      }
+
+      if (success) {
+        success = bruteForcePlace(startupSize, startupCoords, alignment.getIncrement(), location);
       }
     }                                                   // end while
     System.out.println(this);
 
     for (int index : startupCoords) {                 // turn location into 'a0'-style startupCoords
       grid[index] = 1;                         // mark master grid position as ‘used'
-      int row = index / GRID_LENGTH;           // get row value
-      int column = index % GRID_LENGTH;        // get numeric column value
-
-      String letter = ALPHABET.substring(column, column + 1); // convert column index to letter
-      alphaCells.add(letter + row);
+      String alphaCoords = getAlphaCoordsFromIndex(index);
+      alphaCells.add(alphaCoords);
     }
     System.out.println(alphaCells);
     System.out.println(this);
     return alphaCells;
   }
 
-  private boolean startupFits(int location, int startupSize, int increment) {
-    int finalLocation = location + (increment * startupSize);
-    if (finalLocation > GRID_SIZE || finalLocation % GRID_LENGTH == 0) {
-      System.out.println("location = " + location + ", startupSize = " + startupSize + ", increment = " + increment);
+  String getAlphaCoordsFromIndex(int index) {
+    int row = calculateRowFromIndex(index);           // get row value
+    int column = index % GRID_LENGTH;        // get numeric column value
+
+    String letter = ALPHABET.substring(column, column + 1); // convert column index to letter
+    String alphaCoords = letter + row;
+    return alphaCoords;
+  }
+
+  private boolean bruteForcePlace(int startupSize, int[] startupCoords, int increment, int location) {
+    System.out.println("startupSize = " + startupSize + ", startupCoords = " + Arrays.toString(startupCoords) + ", increment = " + increment + ", location = " + location);
+    int k = 0;
+    for (int j = location; k < startupSize; j += increment) {
+      System.out.println("check it's available. k=" + k + ", startupSize:" + startupSize);
+      // check all potential positions
+      if (grid[j] == 0) {
+        System.out.println("yes");
+        startupCoords[k++] = j;                    // save location
+        System.out.println("startupCoords = " + Arrays.toString(startupCoords));
+      } else {
+        System.out.println("no");
+        return false;
+      }
+    }
+    return true;
+  }
+
+  boolean horizontalStartupFits(int location, int startupSize) {
+    int finalLocation = location + (HORIZONTAL.getIncrement() * startupSize);
+    if (calculateRowFromIndex(location) != calculateRowFromIndex(finalLocation)) { // end position is on a different row to start position
+      System.out.println("location = " + location + ", startupSize = " + startupSize);
       return false;
     }
     return true;
   }
 
-  private int calculateIncrement() {
-    if (startupCount % 2 == 0) {                // if EVEN Startup
-      return 1;                                 // place horizontally
-    } else {                                    // else ODD
-      return GRID_LENGTH;                       // set vertical increment
+  boolean verticalStartupFits(int location, int startupSize) {
+    int finalLocation = location + (VERTICAL.getIncrement() * startupSize);
+    if (finalLocation > GRID_SIZE) {                              // end position is off the bottom
+      System.out.println("location = " + location + ", startupSize = " + startupSize);
+      return false;
     }
+    return true;
+  }
+
+  private Alignment calculateIncrement() {
+    if (startupCount % 2 == 0) {                  // if EVEN Startup
+      return HORIZONTAL;           // place horizontally
+    } else {                                      // else ODD
+      return VERTICAL;             // set vertical increment
+    }
+  }
+
+  private int calculateRowFromIndex(int index) {
+    return index / GRID_LENGTH;
   }
 
   @Override
@@ -90,4 +128,19 @@ public class GameHelper {
     }
     return str.toString();
   }
+
+  enum Alignment {
+    HORIZONTAL(1), VERTICAL(GRID_LENGTH);
+
+    private final int increment;
+
+    Alignment(int increment) {
+      this.increment = increment;
+    }
+
+    public int getIncrement() {
+      return increment;
+    }
+  }
 }
+
