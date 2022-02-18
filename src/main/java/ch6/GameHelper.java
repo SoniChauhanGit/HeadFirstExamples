@@ -41,15 +41,19 @@ public class GameHelper {
       } else{
         success = verticalStartupFits(location, startupSize);
       }
+      for (int i = 0; i < startupCoords.length; i++) {
+        startupCoords[i] = location =+ alignment.getIncrement();
+      }
 
       if (success) {
-        success = bruteForcePlace(startupSize, startupCoords, alignment.getIncrement(), location);
+        success = canPlaceStartup(startupCoords);
       }
     }                                                   // end while
     System.out.println(this);
 
     ArrayList<String> alphaCells = new ArrayList<String>();
     for (int index : startupCoords) {                 // turn location into 'a0'-style startupCoords
+      grid[index] = 1;                         // mark master grid position as ‘used'
       String alphaCoords = getAlphaCoordsFromIndex(index);
       alphaCells.add(alphaCoords);
     }
@@ -66,26 +70,17 @@ public class GameHelper {
     return letter + row;
   }
 
-  boolean bruteForcePlace(int startupSize, int[] startupCoords, int increment, int location) {
-    System.out.println("startupSize = " + startupSize + ", startupCoords = " + Arrays.toString(startupCoords) + ", increment = " + increment + ", location = " + location);
-    int k = 0;
-    for (int j = location; k < startupSize; j += increment) {
-      System.out.println("check it's available. k=" + k + ", startupSize:" + startupSize);
+  boolean canPlaceStartup(int[] startupCoords) {
+    for (int coord : startupCoords) {
       // check all potential positions
-      if (grid[j] == 0) {
+      if (grid[coord] == 0) {
         System.out.println("yes");
-        startupCoords[k++] = j;                    // save location
         System.out.println("startupCoords = " + Arrays.toString(startupCoords));
       } else {
         System.out.println("no");
         return false;
       }
     }
-    // this is awful, more than one iteration
-    for (int index : startupCoords) {
-      grid[index] = 1;                         // mark master grid position as ‘used'
-    }
-
     return true;
   }
 

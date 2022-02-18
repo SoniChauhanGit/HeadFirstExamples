@@ -72,8 +72,8 @@ class GameHelperTest {
     GameHelper gameHelper = new GameHelper();
 
     // when
-    int[] startupCoords = new int[3];
-    boolean success = gameHelper.bruteForcePlace(3, startupCoords, 1, 0);
+    int[] startupCoords = new int[]{0, 1, 2};
+    boolean success = gameHelper.canPlaceStartup(startupCoords);
 
     // then
     assertTrue(success);
@@ -86,25 +86,23 @@ class GameHelperTest {
     GameHelper gameHelper = new GameHelper();
 
     // when
-    int[] startupCoords = new int[3];
-    boolean success = gameHelper.bruteForcePlace(3, startupCoords, 7, 0);
+    boolean success = gameHelper.canPlaceStartup(new int[]{0, 7, 14});
 
     // then
     assertTrue(success);
-    assertArrayEquals(new int[]{0, 7, 14}, startupCoords);
   }
 
   @Test
   void shouldNotBeAbleToPlaceHorizontalIntoGridAtSameLocationAsExisting() {
     // given
     GameHelper gameHelper = new GameHelper();
-    boolean setupSuccess = gameHelper.bruteForcePlace(3, new int[3], 1, 8); // "B1"
+    boolean setupSuccess = gameHelper.canPlaceStartup(new int[]{8, 9, 10}); // "B1"
     assertTrue(setupSuccess);
     System.out.println(gameHelper);
 
     // when
     int[] startupCoords = new int[3];
-    boolean success = gameHelper.bruteForcePlace(3, startupCoords, 1, 9); // "C1" - horizontal
+    boolean success = gameHelper.canPlaceStartup(new int[]{9, 10, 11}); // "C1" - horizontal
     System.out.println(gameHelper);
 
     // then
@@ -115,13 +113,13 @@ class GameHelperTest {
   void shouldNotBeAbleToPlaceVerticalIntoGridAtSameLocationAsExisting() {
     // given
     GameHelper gameHelper = new GameHelper();
-    boolean setupSuccess = gameHelper.bruteForcePlace(3, new int[3], 1, 8); // "B1"
+    boolean setupSuccess = gameHelper.canPlaceStartup(new int[]{8, 9, 10}); // "B1"
     assertTrue(setupSuccess);
     System.out.println(gameHelper);
 
     // when
-    int[] startupCoords = new int[3];
-    boolean success = gameHelper.bruteForcePlace(3, startupCoords, 7, 1); // "A1" - vertical
+    int[] startupCoords = new int[]{1, 9, 16};
+    boolean success = gameHelper.canPlaceStartup(startupCoords); // "A1" - vertical
     System.out.println(gameHelper);
 
     // then
