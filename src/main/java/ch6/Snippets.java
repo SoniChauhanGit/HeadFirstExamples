@@ -57,10 +57,22 @@ public class Snippets {
   }
 
   void shortCircuit(SomeType refVar) {
-if (refVar != null &&
-    refVar.isValidType()) {
-  // do ‘got a valid type’ stuff
-}
+    if (refVar != null &&
+        refVar.isValidType()) {
+      // do ‘got a valid type’ stuff
+    }
+  }
+
+  void arrayListComparedToArray(String[] myList) {
+    String b = new String("Frog");
+
+    boolean isIn = false;
+    for (String item : myList) {
+      if (b.equals(item)) {
+        isIn = true;
+        break;
+      }
+    }
   }
 
   private class SomeType {
