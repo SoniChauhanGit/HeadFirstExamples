@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class StartupBust {
 
-  private final GameHelper helper = new GameHelper();
-  private final ArrayList<Startup> startups = new ArrayList<Startup>();
+  private GameHelper helper = new GameHelper();
+  private ArrayList<Startup> startups = new ArrayList<Startup>();
   private int numOfGuesses = 0;
 
   private void setUpGame() {
@@ -55,22 +55,23 @@ public class StartupBust {
     } // close for
 
     System.out.println(result);
-  }
+  } // close method
 
 
   private void finishGame() {
     System.out.println("All Startups are dead! Your stock is now worthless");
-    if (numOfGuesses <= 9) {
-      System.out.println("It only took you " + numOfGuesses + " guesses.  You get the Enron award!");
+    if (numOfGuesses <= 18) {
+      System.out.println("It only took you " + numOfGuesses + " guesses.");
+      System.out.println("You got out before your options sank.");
     } else {
       System.out.println("Took you long enough. " + numOfGuesses + " guesses.");
-      System.out.println("Too bad you didn't get out before your options sank.");
+      System.out.println("Fish are dancing with your options");
     }
-  }
+  } // close method
 
   public static void main(String[] args) {
     StartupBust game = new StartupBust();
     game.setUpGame();
     game.startPlaying();
-  }
+  } // close method
 }
