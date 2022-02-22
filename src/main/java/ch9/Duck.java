@@ -11,3 +11,12 @@ public class Duck {
     System.out.println("size is " + size);
   }
 }
+
+// terrible way to provide a default value:
+//public Duck(int newSize) {
+//  if (newSize == 0) {
+//    size = 27;
+//  } else {
+//    size = newSize;
+//  }
+//}
