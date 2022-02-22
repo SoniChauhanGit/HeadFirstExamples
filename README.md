@@ -1,8 +1,8 @@
 ## Example files for the title:  
 	  
-# Head First Java 3rd Edition, by Bert Bates
+# Head First Java 3rd Edition, by Bert Bates, Kathy Sierra, and Trisha Gee
 	  
-[![Head First Java 3rd Edition, by Bert Bates](http://akamaicovers.oreilly.com/images/9781491910726/cat.gif)](https://www.safaribooksonline.com/library/view/title/9781492091646//)
+[![Head First Java 3rd Edition, by Bert Bates, Kathy Sierra, and Trisha Gee](http://akamaicovers.oreilly.com/images/9781491910726/cat.gif)](https://www.safaribooksonline.com/library/view/title/9781492091646//)
 	  
 The following applies to example files from material published by O’Reilly Media, Inc. Content from other publishers may include different rules of usage. Please refer to any additional usage rights explained in the actual example files or refer to the publisher’s website.
 	  
