@@ -1,6 +1,7 @@
 package ch15;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
@@ -14,6 +15,7 @@ import java.util.concurrent.Executors;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 // Needs a SimpleChatServer running (is not a real unit test class, more like an integration test)
+@Disabled
 class SimpleChatServerTest {
   @Test
   void testSend() throws IOException {

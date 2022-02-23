@@ -1,6 +1,9 @@
 package ch15;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -19,7 +22,7 @@ import java.util.concurrent.Executors;
 class ConceptsTest {
 
   @Test
-    // This test doesn't pass or fail. I was using it to see if I could generate exceptions
+  @Disabled("This test doesn't pass or fail. I was using it to see if I could generate exceptions")
   void testConnect() throws IOException {
     SocketAddress remote1 = new InetSocketAddress("127.0.0.1", 4242);
 
@@ -35,7 +38,7 @@ class ConceptsTest {
 
   @Test
   void testChannelPortNumbers() throws IOException {
-    SocketAddress serverAddress = new InetSocketAddress("127.0.0.1", 3601);
+    SocketAddress serverAddress = new InetSocketAddress("127.0.0.1", 3602);
     ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
     serverSocketChannel.bind(serverAddress);
 
@@ -66,7 +69,7 @@ class ConceptsTest {
   void testInputStreamsWithNonBlockingChannel() throws IOException, InterruptedException {
     ExecutorService executorService = Executors.newFixedThreadPool(2);
     CountDownLatch latch = new CountDownLatch(1);
-    int serverPort = 3600;
+    int serverPort = 3601;
     ServerSocketChannel server = ServerSocketChannel.open();
     server.bind(new InetSocketAddress("localhost", serverPort));
     executorService.submit(() -> {
