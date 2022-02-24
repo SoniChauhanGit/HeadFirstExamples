@@ -3,6 +3,17 @@ package ch10;
 import java.util.ArrayList;
 
 public class Snippets {
+  void mathMethods() {
+    long x = Math.round(42.2);
+    int y = Math.min(56, 12);
+    int z = Math.abs(-343);
+  }
+
+  public static int min(int a, int b) {
+    //returns the smallest of a and b
+    return Math.min(a, b);
+  }
+
   void rounding() {
     int x = Math.round(-24.8f);  // returns -25
     int y = Math.round(24.45f);  // returns 24
@@ -33,6 +44,14 @@ public class Snippets {
     Float flt = f;
     double d = 5;
     Double dbl = d;
+  }
+
+  public void autoboxing() {
+    int x = 32;
+    ArrayList<Integer> list = new ArrayList<Integer>();
+    list.add(x);
+
+    int num = list.get(0);
   }
 
   static void parse() {
@@ -69,7 +88,27 @@ public class Snippets {
     String.format("I have %.2f, bugs to fix.", 476578.09876);
   }
 
+  static void formatWithCommas() {
+    String.format("I have %,.2f, bugs to fix.", 476578.09876);
+  }
+
+  static void formatDecimal() {
+    System.out.println(String.format("%d", 42));
+  }
+
+  static void formatFloat() {
+    System.out.println(String.format("%.3f", 42.000000));
+  }
+
+  static void formatHex() {
+    System.out.println(String.format("%x", 42));
+  }
+
+  static void formatChar() {
+    System.out.println(String.format("%c", 42));
+  }
+
   public static void main(String[] args) {
-    format();
+    formatChar();
   }
 }
