@@ -39,8 +39,15 @@ public class MathMethods {
     System.out.println("y = " + y);
   }
 
+  static void sqRt() {
+    double x = Math.sqrt(9);    //return 3
+    System.out.println("x = " + x);
+    double y = Math.sqrt(42.0); // returns 6.48074069840786
+    System.out.println("y = " + y);
+  }
+
 
   public static void main(String[] args) {
-    max();
+    sqRt();
   }
 }
