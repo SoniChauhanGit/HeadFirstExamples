@@ -2,10 +2,10 @@ package ch10;
 
 public class Duck {
   private int size;
+  private static int duckCount = 0;
 
-  public static void main(String[] args) {
-    // doesn't compile
-//    System.out.println("Size is " + getSize());
+  public Duck() {
+    duckCount++;
   }
 
   public void setSize(int s) {
@@ -15,6 +15,4 @@ public class Duck {
   public int getSize() {
     return size;
   }
-
 }
-  
