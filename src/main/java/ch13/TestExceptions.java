@@ -23,7 +23,6 @@ public class TestExceptions {
     }
     System.out.println("end risky");
   }
-
 }
 
 class ScaryException extends Exception {
