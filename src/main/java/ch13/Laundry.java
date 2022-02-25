@@ -1,7 +1,7 @@
 package ch13;
 
 public class Laundry {
-  public void doLaundry() throws PantsException, LingerieException {
+  public void doLaundry() throws ClothingException {
     // code that could throw either exception
   }
 }

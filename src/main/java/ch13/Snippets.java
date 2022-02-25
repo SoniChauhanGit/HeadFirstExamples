@@ -1,6 +1,10 @@
 package ch13;
 
 public class Snippets {
+  private boolean abandonAllHope;
+  private Snippets anObject;
+  private Laundry laundry;
+
   void testTryCatch() {
     try {
       Risky x = new Risky();
@@ -12,6 +16,31 @@ public class Snippets {
     }
     System.out.println("We made it!");
   }
+
+  public void takeRisk() throws BadException {
+    if (abandonAllHope) {
+      throw new BadException();
+    }
+  }
+
+  public void crossFingers() {
+    try {
+      anObject.takeRisk();
+    } catch (BadException e) {
+      System.out.println("Aaargh!");
+      e.printStackTrace();
+    }
+  }
+
+  void catchExceptions() {
+//    try {
+//      laundry.doLaundry();
+//
+//    } catch (ShirtException shex) {
+//      // recovery code
+//    }
+  }
+
 }
 
 class Risky {

@@ -1,4 +1,4 @@
 package ch13;
 
-public class PantsException extends Exception {
+public class PantsException extends ClothingException {
 }
