@@ -58,7 +58,7 @@ public class BeatBox {
     buttonBox.add(save);
 
     JButton restore = new JButton("restore");
-    restore.addActionListener(new MySendListener());
+    restore.addActionListener(new MyReadInListener());
     buttonBox.add(restore);
 
     Box nameBox = new Box(BoxLayout.Y_AXIS);
@@ -168,7 +168,6 @@ public class BeatBox {
   }
 
   public void makeTracks(int[] list) {
-
     for (int i = 0; i < 16; i++) {
       int key = list[i];
 
@@ -195,19 +194,16 @@ public class BeatBox {
   public class MySendListener implements ActionListener {
 
     public void actionPerformed(ActionEvent a) {
-
       boolean[] checkboxState = new boolean[256];
-
       for (int i = 0; i < 256; i++) {
-
-        JCheckBox check = (JCheckBox) checkboxList.get(i);
+        JCheckBox check = checkboxList.get(i);
         if (check.isSelected()) {
           checkboxState[i] = true;
         }
       }
 
       try {
-        FileOutputStream fileStream = new FileOutputStream(new File("Checkbox.ser"));
+        FileOutputStream fileStream = new FileOutputStream("Checkbox.ser");
         ObjectOutputStream os = new ObjectOutputStream(fileStream);
         os.writeObject(checkboxState);
       } catch (Exception ex) {
@@ -222,7 +218,7 @@ public class BeatBox {
     public void actionPerformed(ActionEvent a) {
       boolean[] checkboxState = null;
       try {
-        FileInputStream fileIn = new FileInputStream(new File("Checkbox.ser"));
+        FileInputStream fileIn = new FileInputStream("Checkbox.ser");
         ObjectInputStream is = new ObjectInputStream(fileIn);
         checkboxState = (boolean[]) is.readObject();
 
@@ -230,9 +226,8 @@ public class BeatBox {
         ex.printStackTrace();
       }
 
-
       for (int i = 0; i < 256; i++) {
-        JCheckBox check = (JCheckBox) checkboxList.get(i);
+        JCheckBox check = checkboxList.get(i);
         if (checkboxState[i]) {
           check.setSelected(true);
         } else {
