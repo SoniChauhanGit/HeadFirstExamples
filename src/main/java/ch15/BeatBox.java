@@ -11,12 +11,10 @@ import java.util.ArrayList;
 
 
 public class BeatBox {
-  JPanel mainPanel;
-  ArrayList<JCheckBox> checkboxList;
-  Sequencer sequencer;
-  Sequence sequence;
-  Track track;
-  JFrame theFrame;
+  private ArrayList<JCheckBox> checkboxList;
+  private Sequencer sequencer;
+  private Sequence sequence;
+  private Track track;
 
   String[] instrumentNames = {"Bass Drum", "Closed Hi-Hat",
           "Open Hi-Hat", "Acoustic Snare", "Crash Cymbal", "Hand Clap",
@@ -31,13 +29,13 @@ public class BeatBox {
   }
 
   public void buildGUI() {
-    theFrame = new JFrame("Cyber BeatBox");
+    JFrame theFrame = new JFrame("Cyber BeatBox");
     theFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     BorderLayout layout = new BorderLayout();
     JPanel background = new JPanel(layout);
     background.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-    checkboxList = new ArrayList<JCheckBox>();
+    checkboxList = new ArrayList<>();
     Box buttonBox = new Box(BoxLayout.Y_AXIS);
 
     JButton start = new JButton("Start");
@@ -57,8 +55,10 @@ public class BeatBox {
     buttonBox.add(downTempo);
 
     Box nameBox = new Box(BoxLayout.Y_AXIS);
-    for (int i = 0; i < 16; i++) {
-      nameBox.add(new Label(instrumentNames[i]));
+    for (String instrumentName : instrumentNames) {
+      JLabel instrumentLabel = new JLabel(instrumentName);
+      instrumentLabel.setBorder(BorderFactory.createEmptyBorder(4, 1, 4, 1));
+      nameBox.add(instrumentLabel);
     }
 
     background.add(BorderLayout.EAST, buttonBox);
@@ -69,7 +69,8 @@ public class BeatBox {
     GridLayout grid = new GridLayout(16, 16);
     grid.setVgap(1);
     grid.setHgap(2);
-    mainPanel = new JPanel(grid);
+
+    JPanel mainPanel = new JPanel(grid);
     background.add(BorderLayout.CENTER, mainPanel);
 
     for (int i = 0; i < 256; i++) {
