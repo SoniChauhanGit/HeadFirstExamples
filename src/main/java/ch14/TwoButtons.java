@@ -23,7 +23,7 @@ public class TwoButtons {
     colorButton.addActionListener(event -> frame.repaint());
 
     label = new JLabel("I’m a label");
-    RandomColorPanel drawPanel = new RandomColorPanel();
+    MyDrawPanel drawPanel = new MyDrawPanel();
 
     frame.getContentPane().add(BorderLayout.SOUTH, colorButton);
     frame.getContentPane().add(BorderLayout.CENTER, drawPanel);

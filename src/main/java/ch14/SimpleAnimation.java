@@ -1,12 +1,12 @@
 package ch14;
 
 import javax.swing.*;
-import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.*;
+import java.util.concurrent.TimeUnit;
 
 public class SimpleAnimation {
-  private int x = 70;
-  private int y = 70;
+  private int xPos = 70;
+  private int yPos = 70;
 
   public static void main(String[] args) {
     SimpleAnimation gui = new SimpleAnimation();
@@ -24,13 +24,13 @@ public class SimpleAnimation {
     frame.setVisible(true);
 
     for (int i = 0; i < 130; i++) {
-      x++;
-      y++;
+      xPos++;
+      yPos++;
 
       drawPanel.repaint();
 
       try {
-        Thread.sleep(50);
+        TimeUnit.MILLISECONDS.sleep(50);
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -40,7 +40,7 @@ public class SimpleAnimation {
   class MyDrawPanel extends JPanel {
     public void paintComponent(Graphics g) {
       g.setColor(Color.green);
-      g.fillOval(x, y, 40, 40);
+      g.fillOval(xPos, yPos, 40, 40);
     }
   } 
 } 
