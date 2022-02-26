@@ -82,10 +82,10 @@ public class MiniMusicPlayer3 {
         int height = random.nextInt(120) + 10;
         int width = random.nextInt(120) + 10;
 
-        int xPost = random.nextInt(40) + 10;
+        int xPos = random.nextInt(40) + 10;
         int yPos = random.nextInt(40) + 10;
 
-        g.fillRect(xPost, yPos, width, height);
+        g.fillRect(xPos, yPos, width, height);
         msg = false;
       }
     }
