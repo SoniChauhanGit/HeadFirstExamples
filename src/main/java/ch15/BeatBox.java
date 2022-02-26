@@ -2,12 +2,11 @@ package ch15;
 
 import javax.sound.midi.*;
 import javax.swing.*;
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
-import java.awt.Label;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.*;
+import java.awt.event.*;
 import java.util.ArrayList;
+
+import static javax.sound.midi.ShortMessage.*;
 
 
 public class BeatBox {
@@ -119,7 +118,7 @@ public class BeatBox {
         }
       }
       makeTracks(trackList);
-      track.add(makeEvent(176, 1, 127, 0, 16));
+      track.add(makeEvent(CONTROL_CHANGE, 1, 127, 0, 16));
     }
 
     track.add(makeEvent(192, 9, 1, 0, 15));
@@ -166,8 +165,8 @@ public class BeatBox {
       int key = list[i];
 
       if (key != 0) {
-        track.add(makeEvent(144, 9, key, 100, i));
-        track.add(makeEvent(128, 9, key, 100, i + 1));
+        track.add(makeEvent(NOTE_ON, 9, key, 100, i));
+        track.add(makeEvent(NOTE_OFF, 9, key, 100, i + 1));
       }
     }
   }

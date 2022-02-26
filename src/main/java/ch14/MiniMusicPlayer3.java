@@ -5,6 +5,8 @@ import javax.swing.*;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import static javax.sound.midi.ShortMessage.*;
+
 public class MiniMusicPlayer3 {
   private static JFrame f = new JFrame("My First Music Video");
   private static MyDrawPanel ml;
@@ -35,9 +37,9 @@ public class MiniMusicPlayer3 {
       for (int i = 0; i < 60; i += 4) {
 
         r = (int) ((Math.random() * 50) + 1);
-        track.add(makeEvent(144, 1, r, 100, i));
-        track.add(makeEvent(176, 1, 127, 0, i));
-        track.add(makeEvent(128, 1, r, 100, i + 2));
+        track.add(makeEvent(NOTE_ON, 1, r, 100, i));
+        track.add(makeEvent(CONTROL_CHANGE, 1, 127, 0, i));
+        track.add(makeEvent(NOTE_OFF, 1, r, 100, i + 2));
       }
 
       sequencer.setSequence(seq);
@@ -52,9 +54,9 @@ public class MiniMusicPlayer3 {
   public MidiEvent makeEvent(int comd, int chan, int one, int two, int tick) {
     MidiEvent event = null;
     try {
-      ShortMessage a = new ShortMessage();
-      a.setMessage(comd, chan, one, two);
-      event = new MidiEvent(a, tick);
+      ShortMessage msg = new ShortMessage();
+      msg.setMessage(comd, chan, one, two);
+      event = new MidiEvent(msg, tick);
 
     } catch (Exception e) {
       e.printStackTrace();
