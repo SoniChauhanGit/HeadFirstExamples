@@ -8,15 +8,17 @@ public class SwingExamples {
     JFrame frame = new JFrame();
     JButton button = new JButton("click me");
 
-    Box box = new Box(BoxLayout.Y_AXIS);
-    box.add(button);
-    box.add(new JCheckBox("choose me"));
-
-    frame.getContentPane().add(BorderLayout.EAST, box);
+    JCheckBox checkBox = new JCheckBox("choose me");
+    JMenuBar menuBar = new JMenuBar();
+    menuBar.add(new JMenu("File"));
+    menuBar.add(new JMenu("Panic"));
+    menuBar.add(new JMenu("Deviate"));
+    frame.add(BorderLayout.NORTH, menuBar);
 
     Box textBox = new Box(BoxLayout.X_AXIS);
-    textBox.add(new JTextField("this is a text field"));
-    frame.getContentPane().add(BorderLayout.NORTH, textBox);
+    textBox.add(button);
+    textBox.add(checkBox);
+    frame.getContentPane().add(BorderLayout.CENTER, textBox);
 
     frame.setSize(300,300);
     frame.setVisible(true);
