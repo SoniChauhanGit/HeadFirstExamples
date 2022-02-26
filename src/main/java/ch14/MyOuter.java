@@ -1,20 +1,17 @@
 package ch14;
 
-class MyOuter  {
+class MyOuter {
+  private int x;
+  private MyInner inner = new MyInner();
 
-   private int x;
+  public void doStuff() {
+    inner.go();
+  }
 
-   MyInner inner = new MyInner();
-
-   public void doStuff() {
-      inner.go();
+  class MyInner {
+    void go() {
+      x = 42;
     }
+  } 
 
-   
-   class MyInner {
-      void go() {
-         x = 42;
-       }
-    } // close inner class
-
-} // close outer class
+}

@@ -6,8 +6,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 public class MiniMusicPlayer3 {
-  static JFrame f = new JFrame("My First Music Video");
-  static MyDrawPanel ml;
+  private static JFrame f = new JFrame("My First Music Video");
+  private static MyDrawPanel ml;
 
   public static void main(String[] args) {
     MiniMusicPlayer3 mini = new MiniMusicPlayer3();
@@ -57,13 +57,14 @@ public class MiniMusicPlayer3 {
       event = new MidiEvent(a, tick);
 
     } catch (Exception e) {
+      e.printStackTrace();
     }
     return event;
   }
 
 
   class MyDrawPanel extends JPanel implements ControllerEventListener {
-    boolean msg = false;
+    private boolean msg = false;
 
     public void controlChange(ShortMessage event) {
       msg = true;
@@ -78,13 +79,13 @@ public class MiniMusicPlayer3 {
 
         g.setColor(new Color(r, gr, b));
 
-        int ht = (int) ((Math.random() * 120) + 10);
+        int height = (int) ((Math.random() * 120) + 10);
         int width = (int) ((Math.random() * 120) + 10);
 
         int x = (int) ((Math.random() * 40) + 10);
         int y = (int) ((Math.random() * 40) + 10);
 
-        g.fillRect(x, y, ht, width);
+        g.fillRect(x, y, height, width);
         msg = false;
       }
     }
