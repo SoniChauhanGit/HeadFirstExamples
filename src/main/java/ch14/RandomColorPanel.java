@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Random;
 
-public class ShowCircle extends JPanel {
+public class RandomColorPanel extends JPanel {
   public void paintComponent(Graphics g) {
     g.fillRect(0, 0, this.getWidth(), this.getHeight());
 
@@ -20,7 +20,7 @@ public class ShowCircle extends JPanel {
 
   public static void main(String[] args) {
     JFrame frame = new JFrame();
-    frame.add(new ShowCircle());
+    frame.add(new RandomColorPanel());
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.setSize(300, 300);
     frame.setVisible(true);

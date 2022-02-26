@@ -1,10 +1,8 @@
 package ch14;
 
 import javax.swing.*;
-import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
+import java.awt.*;
+import java.awt.event.*;
 
 public class SimpleGui3 implements ActionListener {
   private JFrame frame;

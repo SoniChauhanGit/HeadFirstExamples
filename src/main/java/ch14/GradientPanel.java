@@ -3,7 +3,7 @@ package ch14;
 import javax.swing.*;
 import java.awt.*;
 
-public class ShowGradient extends JPanel {
+public class GradientPanel extends JPanel {
   public void paintComponent(Graphics g) {
     Graphics2D g2d = (Graphics2D) g;
 
@@ -15,7 +15,7 @@ public class ShowGradient extends JPanel {
 
   public static void main(String[] args) {
     JFrame frame = new JFrame();
-    frame.add(new ShowGradient());
+    frame.add(new GradientPanel());
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.setSize(300, 300);
     frame.setVisible(true);
