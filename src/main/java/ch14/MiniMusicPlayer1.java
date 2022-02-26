@@ -2,6 +2,8 @@ package ch14;
 
 import javax.sound.midi.*;
 
+import static javax.sound.midi.ShortMessage.*;
+
 public class MiniMusicPlayer1 {
   public static void main(String[] args) {
     try {
@@ -12,8 +14,8 @@ public class MiniMusicPlayer1 {
       Track track = seq.createTrack();
 
       for (int i = 5; i < 61; i += 4) {
-        track.add(makeEvent(144, 1, i, 100, i));
-        track.add(makeEvent(128, 1, i, 100, i + 2));
+        track.add(makeEvent(NOTE_ON, 1, i, 100, i));
+        track.add(makeEvent(NOTE_OFF, 1, i, 100, i + 2));
       }
 
       sequencer.setSequence(seq);
@@ -24,14 +26,13 @@ public class MiniMusicPlayer1 {
     }
   }
 
-
-  public static MidiEvent makeEvent(int comd, int chan, int one, int two, int tick) {
+  // for some commands one = note, and for others one = instrument
+  public static MidiEvent makeEvent(int cmd, int chnl, int one, int two, int tick) {
     MidiEvent event = null;
     try {
-      ShortMessage a = new ShortMessage();
-      a.setMessage(comd, chan, one, two);
-      event = new MidiEvent(a, tick);
-
+      ShortMessage msg = new ShortMessage();
+      msg.setMessage(cmd, chnl, one, two);
+      event = new MidiEvent(msg, tick);
     } catch (Exception e) {
       e.printStackTrace();
     }
