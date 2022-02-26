@@ -2,14 +2,14 @@ package ch14;
 
 import javax.sound.midi.*;
 import javax.swing.*;
-import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.*;
+import java.util.Random;
 
 import static javax.sound.midi.ShortMessage.*;
 
 public class MiniMusicPlayer3 {
-  private static JFrame f = new JFrame("My First Music Video");
-  private static MyDrawPanel ml;
+  private MyDrawPanel panel;
+  private Random random = new Random();
 
   public static void main(String[] args) {
     MiniMusicPlayer3 mini = new MiniMusicPlayer3();
@@ -17,10 +17,11 @@ public class MiniMusicPlayer3 {
   }
 
   public void setUpGui() {
-    ml = new MyDrawPanel();
-    f.setContentPane(ml);
-    f.setBounds(30, 30, 300, 300);
-    f.setVisible(true);
+    JFrame frame = new JFrame("My First Music Video");
+    panel = new MyDrawPanel();
+    frame.setContentPane(panel);
+    frame.setBounds(30, 30, 300, 300);
+    frame.setVisible(true);
   }
 
   public void go() {
@@ -29,17 +30,16 @@ public class MiniMusicPlayer3 {
     try {
       Sequencer sequencer = MidiSystem.getSequencer();
       sequencer.open();
-      sequencer.addControllerEventListener(ml, new int[]{127});
+      sequencer.addControllerEventListener(panel, new int[]{127});
       Sequence seq = new Sequence(Sequence.PPQ, 4);
       Track track = seq.createTrack();
 
-      int r = 0;
+      int note;
       for (int i = 0; i < 60; i += 4) {
-
-        r = (int) ((Math.random() * 50) + 1);
-        track.add(makeEvent(NOTE_ON, 1, r, 100, i));
+        note = random.nextInt(50) + 1;
+        track.add(makeEvent(NOTE_ON, 1, note, 100, i));
         track.add(makeEvent(CONTROL_CHANGE, 1, 127, 0, i));
-        track.add(makeEvent(NOTE_OFF, 1, r, 100, i + 2));
+        track.add(makeEvent(NOTE_OFF, 1, note, 100, i + 2));
       }
 
       sequencer.setSequence(seq);
@@ -73,19 +73,19 @@ public class MiniMusicPlayer3 {
 
     public void paintComponent(Graphics g) {
       if (msg) {
-        int r = (int) (Math.random() * 250);
-        int gr = (int) (Math.random() * 250);
-        int b = (int) (Math.random() * 250);
+        int r = random.nextInt(250);
+        int gr = random.nextInt(250);
+        int b = random.nextInt(250);
 
         g.setColor(new Color(r, gr, b));
 
-        int height = (int) ((Math.random() * 120) + 10);
-        int width = (int) ((Math.random() * 120) + 10);
+        int height = random.nextInt(120) + 10;
+        int width = random.nextInt(120) + 10;
 
-        int x = (int) ((Math.random() * 40) + 10);
-        int y = (int) ((Math.random() * 40) + 10);
+        int xPost = random.nextInt(40) + 10;
+        int yPos = random.nextInt(40) + 10;
 
-        g.fillRect(x, y, height, width);
+        g.fillRect(xPost, yPos, width, height);
         msg = false;
       }
     }
