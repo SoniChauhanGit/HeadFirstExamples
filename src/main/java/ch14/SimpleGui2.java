@@ -1,9 +1,7 @@
 package ch14;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
+import java.awt.event.*;
 
 public class SimpleGui2 implements ActionListener {
   private JButton button;
