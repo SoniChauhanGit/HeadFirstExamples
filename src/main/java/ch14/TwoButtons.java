@@ -2,7 +2,6 @@ package ch14;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 
 public class TwoButtons {
   private JFrame frame;
@@ -18,33 +17,20 @@ public class TwoButtons {
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     JButton labelButton = new JButton("Change Label");
-    labelButton.addActionListener(new LabelListener());
+    labelButton.addActionListener(event -> label.setText("Ouch!"));
 
     JButton colorButton = new JButton("Change Circle");
-    colorButton.addActionListener(new ColorListener());
+    colorButton.addActionListener(event -> frame.repaint());
 
     label = new JLabel("I’m a label");
-    MyDrawPanel drawPanel = new MyDrawPanel();
+    RandomColorPanel drawPanel = new RandomColorPanel();
 
     frame.getContentPane().add(BorderLayout.SOUTH, colorButton);
     frame.getContentPane().add(BorderLayout.CENTER, drawPanel);
     frame.getContentPane().add(BorderLayout.EAST, labelButton);
     frame.getContentPane().add(BorderLayout.WEST, label);
 
-    frame.setSize(300, 300);
+    frame.setSize(500, 400);
     frame.setVisible(true);
   }
-
-  class LabelListener implements ActionListener {
-    public void actionPerformed(ActionEvent event) {
-      label.setText("Ouch!");
-    }
-  } 
-
-  class ColorListener implements ActionListener {
-    public void actionPerformed(ActionEvent event) {
-      frame.repaint();
-    }
-  }  
-
 }
