@@ -20,7 +20,7 @@ public class SwingExamples {
     textBox.add(checkBox);
     frame.getContentPane().add(BorderLayout.CENTER, textBox);
 
-    frame.setSize(300,300);
+    frame.setSize(300, 300);
     frame.setVisible(true);
   }
 }
