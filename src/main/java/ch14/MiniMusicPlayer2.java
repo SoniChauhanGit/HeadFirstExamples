@@ -4,7 +4,7 @@ import javax.sound.midi.*;
 
 import static javax.sound.midi.ShortMessage.*;
 
-public class MiniMusicPlayer2 implements ControllerEventListener {
+public class MiniMusicPlayer2 {
   public static void main(String[] args) {
     MiniMusicPlayer2 mini = new MiniMusicPlayer2();
     mini.go();
@@ -16,7 +16,7 @@ public class MiniMusicPlayer2 implements ControllerEventListener {
       sequencer.open();
 
       int[] eventsIWant = {127};
-      sequencer.addControllerEventListener(this, eventsIWant);
+      sequencer.addControllerEventListener(event -> System.out.println("la"), eventsIWant);
 
       Sequence seq = new Sequence(Sequence.PPQ, 4);
       Track track = seq.createTrack();
@@ -25,7 +25,7 @@ public class MiniMusicPlayer2 implements ControllerEventListener {
         track.add(makeEvent(NOTE_ON, 1, i, 100, i));
         track.add(makeEvent(CONTROL_CHANGE, 1, 127, 0, i));
         track.add(makeEvent(NOTE_OFF, 1, i, 100, i + 2));
-      } 
+      }
 
       sequencer.setSequence(seq);
       sequencer.setTempoInBPM(220);
@@ -35,15 +35,12 @@ public class MiniMusicPlayer2 implements ControllerEventListener {
     }
   }
 
-  public void controlChange(ShortMessage event) {
-    System.out.println("la");
-  }
-
-  public MidiEvent makeEvent(int comd, int chan, int one, int two, int tick) {
+  // for some commands one = note, and for others one = instrument
+  public static MidiEvent makeEvent(int cmd, int chnl, int one, int two, int tick) {
     MidiEvent event = null;
     try {
       ShortMessage msg = new ShortMessage();
-      msg.setMessage(comd, chan, one, two);
+      msg.setMessage(cmd, chnl, one, two);
       event = new MidiEvent(msg, tick);
     } catch (Exception e) {
       e.printStackTrace();

@@ -50,20 +50,18 @@ public class MiniMusicPlayer3 {
     }
   }
 
-
-  public MidiEvent makeEvent(int comd, int chan, int one, int two, int tick) {
+  // for some commands one = note, and for others one = instrument
+  public static MidiEvent makeEvent(int cmd, int chnl, int one, int two, int tick) {
     MidiEvent event = null;
     try {
       ShortMessage msg = new ShortMessage();
-      msg.setMessage(comd, chan, one, two);
+      msg.setMessage(cmd, chnl, one, two);
       event = new MidiEvent(msg, tick);
-
     } catch (Exception e) {
       e.printStackTrace();
     }
     return event;
   }
-
 
   class MyDrawPanel extends JPanel implements ControllerEventListener {
     private boolean msg = false;
