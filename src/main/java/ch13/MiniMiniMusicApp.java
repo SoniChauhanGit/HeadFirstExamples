@@ -2,8 +2,6 @@ package ch13;
 
 import javax.sound.midi.*;
 
-import static javax.sound.midi.ShortMessage.*;
-
 public class MiniMiniMusicApp {
 
   public static void main(String[] args) {
@@ -21,12 +19,12 @@ public class MiniMiniMusicApp {
       Track track = seq.createTrack();
 
       ShortMessage msg1 = new ShortMessage();
-      msg1.setMessage(NOTE_ON, 1, 44, 100);
+      msg1.setMessage(144, 1, 44, 100);
       MidiEvent noteOn = new MidiEvent(msg1, 1);
       track.add(noteOn);
 
       ShortMessage msg2 = new ShortMessage();
-      msg2.setMessage(NOTE_OFF, 1, 44, 100);
+      msg2.setMessage(128, 1, 44, 100);
       MidiEvent noteOff = new MidiEvent(msg2, 16);
       track.add(noteOff);
 
