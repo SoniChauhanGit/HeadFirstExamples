@@ -1,16 +1,17 @@
 package ch16;
 
 import java.io.*;
+import java.util.Arrays;
 
 public class GameCharacter implements Serializable {
-  int power;
-  String type;
-  String[] weapons;
+  private final int power;
+  private final String type;
+  private final String[] weapons;
 
-  public GameCharacter(int p, String t, String[] w) {
-    power = p;
-    type = t;
-    weapons = w;
+  public GameCharacter(int power, String type, String[] weapons) {
+    this.power = power;
+    this.type = type;
+    this.weapons = weapons;
   }
 
   public int getPower() {
@@ -22,13 +23,9 @@ public class GameCharacter implements Serializable {
   }
 
   public String getWeapons() {
-    String weaponList = "";
-
-    for (int i = 0; i < weapons.length; i++) {
-      weaponList += weapons[i] + " ";
-    }
-    return weaponList;
+    return Arrays.toString(weapons);
   }
+
 }
 
 

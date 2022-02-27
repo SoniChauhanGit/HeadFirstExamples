@@ -1,15 +1,19 @@
 package ch16;
 
 public class QuizCard {
-  public QuizCard(String text, String text1) {
+  private final String question;
+  private final String answer;
 
+  public QuizCard(String question, String answer) {
+    this.question = question;
+    this.answer = answer;
   }
 
   public String getQuestion() {
-    return 0;
+    return question;
   }
 
   public String getAnswer() {
-    return 0;
+    return answer;
   }
 }
