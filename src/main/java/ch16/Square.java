@@ -2,7 +2,7 @@ package ch16;
 
 import java.io.*;
 
-public class Box implements Serializable {
+public class Square implements Serializable {
 
 
    
@@ -19,7 +19,7 @@ public class Box implements Serializable {
 
 public static void main (String[] args) {
 
-      Box myBox = new Box();
+      Square myBox = new Square();
       myBox.setWidth(50);
       myBox.setHeight(20);
 
