@@ -4,10 +4,7 @@ import javax.sound.midi.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.util.ArrayList;
 
 import static javax.sound.midi.ShortMessage.*;
@@ -24,7 +21,6 @@ public class BeatBox {
           "Cowbell", "Vibraslap", "Low-mid Tom", "High Agogo",
           "Open Hi Conga"};
   int[] instruments = {35, 42, 46, 38, 49, 39, 50, 60, 70, 72, 64, 56, 58, 47, 67, 63};
-
 
   public static void main(String[] args) {
     new BeatBox().buildGUI();
