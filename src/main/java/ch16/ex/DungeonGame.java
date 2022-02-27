@@ -1,4 +1,4 @@
-package ch16;
+package ch16.ex;
 
 import java.io.*;
 
@@ -29,6 +29,7 @@ class DungeonTest {
       ObjectOutputStream oos = new ObjectOutputStream(fos);
       oos.writeObject(d);
       oos.close();
+
       FileInputStream fis = new FileInputStream("dg.ser");
       ObjectInputStream ois = new ObjectInputStream(fis);
       d = (DungeonGame) ois.readObject();
