@@ -16,8 +16,8 @@ class ReadAFile {
       }
       reader.close();
 
-    } catch (Exception ex) {
-      ex.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
     }
   }
 }
