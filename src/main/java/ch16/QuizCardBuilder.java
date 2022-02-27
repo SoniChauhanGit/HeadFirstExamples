@@ -6,14 +6,13 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class QuizCardBuilder {
+  private ArrayList<QuizCard> cardList = new ArrayList<>();
   private JTextArea question;
   private JTextArea answer;
-  private ArrayList<QuizCard> cardList = new ArrayList<>();
   private JFrame frame;
 
   public static void main(String[] args) {
-    QuizCardBuilder builder = new QuizCardBuilder();
-    builder.go();
+    new QuizCardBuilder().go();
   }
 
   public void go() {
@@ -41,10 +40,7 @@ public class QuizCardBuilder {
     JMenu fileMenu = new JMenu("File");
 
     JMenuItem newMenuItem = new JMenuItem("New");
-    newMenuItem.addActionListener(e -> {
-      cardList.clear();
-      clearCard();
-    });
+    newMenuItem.addActionListener(e -> clearAll());
 
     JMenuItem saveMenuItem = new JMenuItem("Save");
     saveMenuItem.addActionListener(e -> saveCard());
@@ -59,18 +55,18 @@ public class QuizCardBuilder {
     frame.setVisible(true);
   }
 
-  private JScrollPane createScroller(JTextArea question) {
-    JScrollPane qScroller = new JScrollPane(question);
+  private JScrollPane createScroller(JTextArea textArea) {
+    JScrollPane qScroller = new JScrollPane(textArea);
     qScroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
     qScroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
     return qScroller;
   }
 
-  private JTextArea createTextArea(Font bigFont) {
+  private JTextArea createTextArea(Font font) {
     JTextArea textArea = new JTextArea(6, 20);
     textArea.setLineWrap(true);
     textArea.setWrapStyleWord(true);
-    textArea.setFont(bigFont);
+    textArea.setFont(font);
     return textArea;
   }
 
@@ -89,6 +85,11 @@ public class QuizCardBuilder {
     saveFile(fileSave.getSelectedFile());
   }
 
+  private void clearAll() {
+    cardList.clear();
+    clearCard();
+  }
+
   private void clearCard() {
     question.setText("");
     answer.setText("");
@@ -98,16 +99,13 @@ public class QuizCardBuilder {
   private void saveFile(File file) {
     try {
       BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-
       for (QuizCard card : cardList) {
         writer.write(card.getQuestion() + "/");
         writer.write(card.getAnswer() + "\n");
       }
       writer.close();
-
-    } catch (IOException ex) {
-      System.out.println("Couldn't write the cardList out");
-      ex.printStackTrace();
+    } catch (IOException e) {
+      System.out.println("Couldn't write the cardList out: " + e.getMessage());
     }
   }
 }
