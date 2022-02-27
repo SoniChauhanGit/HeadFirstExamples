@@ -3,7 +3,6 @@ package ch15;
 import javax.sound.midi.*;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.util.ArrayList;
 
 import static javax.sound.midi.ShortMessage.*;
@@ -22,14 +21,13 @@ public class BeatBox {
           "Open Hi Conga"};
   int[] instruments = {35, 42, 46, 38, 49, 39, 50, 60, 70, 72, 64, 56, 58, 47, 67, 63};
 
-
   public static void main(String[] args) {
     new BeatBox().buildGUI();
   }
 
   public void buildGUI() {
-    JFrame theFrame = new JFrame("Cyber BeatBox");
-    theFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    JFrame frame = new JFrame("Cyber BeatBox");
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     BorderLayout layout = new BorderLayout();
     JPanel background = new JPanel(layout);
     background.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -38,19 +36,19 @@ public class BeatBox {
     Box buttonBox = new Box(BoxLayout.Y_AXIS);
 
     JButton start = new JButton("Start");
-    start.addActionListener(new MyStartListener());
+    start.addActionListener(e -> buildTrackAndStart());
     buttonBox.add(start);
 
     JButton stop = new JButton("Stop");
-    stop.addActionListener(new MyStopListener());
+    stop.addActionListener(e -> sequencer.stop());
     buttonBox.add(stop);
 
     JButton upTempo = new JButton("Tempo Up");
-    upTempo.addActionListener(new MyUpTempoListener());
+    upTempo.addActionListener(e -> changeTempo(1.03f));
     buttonBox.add(upTempo);
 
     JButton downTempo = new JButton("Tempo Down");
-    downTempo.addActionListener(new MyDownTempoListener());
+    downTempo.addActionListener(e -> changeTempo(0.97f));
     buttonBox.add(downTempo);
 
     Box nameBox = new Box(BoxLayout.Y_AXIS);
@@ -63,7 +61,7 @@ public class BeatBox {
     background.add(BorderLayout.EAST, buttonBox);
     background.add(BorderLayout.WEST, nameBox);
 
-    theFrame.getContentPane().add(background);
+    frame.getContentPane().add(background);
 
     GridLayout grid = new GridLayout(16, 16);
     grid.setVgap(1);
@@ -81,11 +79,10 @@ public class BeatBox {
 
     setUpMidi();
 
-    theFrame.setBounds(50, 50, 300, 300);
-    theFrame.pack();
-    theFrame.setVisible(true);
+    frame.setBounds(50, 50, 300, 300);
+    frame.pack();
+    frame.setVisible(true);
   }
-
 
   public void setUpMidi() {
     try {
@@ -98,7 +95,7 @@ public class BeatBox {
     } catch (Exception e) {
       e.printStackTrace();
     }
-  } // close method
+  }
 
   public void buildTrackAndStart() {
     int[] trackList;
@@ -123,7 +120,6 @@ public class BeatBox {
 
     track.add(makeEvent(192, 9, 1, 0, 15));
     try {
-
       sequencer.setSequence(sequence);
       sequencer.setLoopCount(sequencer.LOOP_CONTINUOUSLY);
       sequencer.start();
@@ -133,34 +129,7 @@ public class BeatBox {
     }
   }
 
-  public class MyStartListener implements ActionListener {
-    public void actionPerformed(ActionEvent a) {
-      buildTrackAndStart();
-    }
-  }
-
-  public class MyStopListener implements ActionListener {
-    public void actionPerformed(ActionEvent a) {
-      sequencer.stop();
-    }
-  }
-
-  public class MyUpTempoListener implements ActionListener {
-    public void actionPerformed(ActionEvent a) {
-      float tempoFactor = sequencer.getTempoFactor();
-      sequencer.setTempoFactor((float) (tempoFactor * 1.03));
-    }
-  }
-
-  public class MyDownTempoListener implements ActionListener {
-    public void actionPerformed(ActionEvent a) {
-      float tempoFactor = sequencer.getTempoFactor();
-      sequencer.setTempoFactor((float) (tempoFactor * .97));
-    }
-  }
-
-  public void makeTracks(int[] list) {
-
+  private void makeTracks(int[] list) {
     for (int i = 0; i < 16; i++) {
       int key = list[i];
 
@@ -171,13 +140,17 @@ public class BeatBox {
     }
   }
 
-  public MidiEvent makeEvent(int comd, int chan, int one, int two, int tick) {
+  private void changeTempo(float tempoMultiplier) {
+    float tempoFactor = sequencer.getTempoFactor();
+    sequencer.setTempoFactor(tempoFactor * tempoMultiplier);
+  }
+
+  public static MidiEvent makeEvent(int cmd, int chnl, int one, int two, int tick) {
     MidiEvent event = null;
     try {
-      ShortMessage a = new ShortMessage();
-      a.setMessage(comd, chan, one, two);
-      event = new MidiEvent(a, tick);
-
+      ShortMessage msg = new ShortMessage();
+      msg.setMessage(cmd, chnl, one, two);
+      event = new MidiEvent(msg, tick);
     } catch (Exception e) {
       e.printStackTrace();
     }
