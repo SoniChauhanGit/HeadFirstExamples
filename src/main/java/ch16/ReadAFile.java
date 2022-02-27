@@ -3,27 +3,24 @@ package ch16;
 import java.io.*;
 
 class ReadAFile {
-    public static void main (String[] args) {
+  public static void main(String[] args) {
 
-       try {
-          File myFile = new File("MyText.txt");
-          FileReader fileReader = new FileReader(myFile);
+    try {
+      File myFile = new File("MyText.txt");
+      FileReader fileReader = new FileReader(myFile);
 
-          BufferedReader reader = new BufferedReader(fileReader);
-
-
+      BufferedReader reader = new BufferedReader(fileReader);
 
 
+      String line = null;
 
-          String line = null;
-
-          while ((line = reader.readLine()) != null) {
-             System.out.println(line);
-          }
-          reader.close();  
-
-      } catch(Exception ex) {
-           ex.printStackTrace();
+      while ((line = reader.readLine()) != null) {
+        System.out.println(line);
       }
-   }
+      reader.close();
+
+    } catch (Exception ex) {
+      ex.printStackTrace();
+    }
+  }
 }

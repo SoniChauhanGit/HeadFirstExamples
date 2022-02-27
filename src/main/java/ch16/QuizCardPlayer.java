@@ -1,10 +1,10 @@
 package ch16;
 
-import java.util.*;
-import java.awt.event.*;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 import java.io.*;
+import java.util.ArrayList;
 
 public class QuizCardPlayer {
 
@@ -18,7 +18,7 @@ public class QuizCardPlayer {
   private boolean isShowAnswer;
 
 
-  public static void main (String[] args) {
+  public static void main(String[] args) {
     QuizCardPlayer reader = new QuizCardPlayer();
     reader.go();
   }
@@ -31,7 +31,7 @@ public class QuizCardPlayer {
     JPanel mainPanel = new JPanel();
     Font bigFont = new Font("sanserif", Font.BOLD, 24);
 
-    display = new JTextArea(10,20);
+    display = new JTextArea(10, 20);
     display.setFont(bigFont);
 
     display.setLineWrap(true);
@@ -53,14 +53,10 @@ public class QuizCardPlayer {
     menuBar.add(fileMenu);
     frame.setJMenuBar(menuBar);
     frame.getContentPane().add(BorderLayout.CENTER, mainPanel);
-    frame.setSize(640,500);
+    frame.setSize(640, 500);
     frame.setVisible(true);
 
   } // close go
-
-
-
-
 
 
   public class NextCardListener implements ActionListener {
@@ -104,7 +100,7 @@ public class QuizCardPlayer {
       }
       reader.close();
 
-    } catch(Exception ex) {
+    } catch (Exception ex) {
       System.out.println("couldn’t read the card file");
       ex.printStackTrace();
     }

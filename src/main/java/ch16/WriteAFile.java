@@ -3,17 +3,17 @@ package ch16;
 import java.io.*;
 
 class WriteAFile {
-    public static void main (String[] args) {
+  public static void main(String[] args) {
 
-       try {
-           FileWriter writer = new FileWriter("Foo.txt");
+    try {
+      FileWriter writer = new FileWriter("Foo.txt");
 
-           writer.write("hello foo!");
+      writer.write("hello foo!");
 
-           writer.close();
+      writer.close();
 
-       } catch(IOException ex) {
-            ex.printStackTrace();
-       }
-   } 
+    } catch (IOException ex) {
+      ex.printStackTrace();
+    }
+  }
 }
