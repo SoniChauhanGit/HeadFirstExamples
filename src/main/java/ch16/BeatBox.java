@@ -174,21 +174,18 @@ public class BeatBox {
         checkboxState[i] = true;
       }
     }
-
-    try {
-      FileOutputStream fileStream = new FileOutputStream("Checkbox.ser");
-      ObjectOutputStream os = new ObjectOutputStream(fileStream);
+    try (ObjectOutputStream os =
+                 new ObjectOutputStream(new FileOutputStream("Checkbox.ser"))) {
       os.writeObject(checkboxState);
-    } catch (Exception e) {
+    } catch (IOException e) {
       e.printStackTrace();
     }
   }
 
   private void readFile() {
     boolean[] checkboxState = null;
-    try {
-      FileInputStream fileIn = new FileInputStream("Checkbox.ser");
-      ObjectInputStream is = new ObjectInputStream(fileIn);
+    try (ObjectInputStream is =
+                 new ObjectInputStream(new FileInputStream("Checkbox.ser"))) {
       checkboxState = (boolean[]) is.readObject();
     } catch (Exception e) {
       e.printStackTrace();
