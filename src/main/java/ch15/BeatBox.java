@@ -7,7 +7,6 @@ import java.util.ArrayList;
 
 import static javax.sound.midi.ShortMessage.*;
 
-
 public class BeatBox {
   private ArrayList<JCheckBox> checkboxList;
   private Sequencer sequencer;
