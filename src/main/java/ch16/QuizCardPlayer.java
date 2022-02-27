@@ -79,6 +79,7 @@ public class QuizCardPlayer {
 
   private void loadFile(File file) {
     cardList = new ArrayList<>();
+    currentCardIndex = 0;
     try {
       BufferedReader reader = new BufferedReader(new FileReader(file));
       String line;
@@ -89,8 +90,7 @@ public class QuizCardPlayer {
     } catch (IOException e) {
       System.out.println("Couldn't write the cardList out: " + e.getMessage());
     }
-
-    // now time to start by showing the first card     
+    // now time to start by showing the first card
     showNextCard();
   }
 

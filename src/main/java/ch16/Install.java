@@ -1,8 +1,7 @@
 package ch16;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.*;
+import java.nio.file.*;
 
 public class Install {
   public static void main(String[] args) {
@@ -18,8 +17,8 @@ public class Install {
       Files.createDirectory(myPath3);
       Files.move(mySource, myPath3.resolve(mySource.getFileName()));
       Files.move(myMedia, myPath2.resolve(myMedia.getFileName()));
-    } catch (Exception e) {
-      System.out.println("got an nio exc");
+    } catch (IOException e) {
+      System.out.println("Got an NIO Exception" + e.getMessage());
     }
   }
 }
