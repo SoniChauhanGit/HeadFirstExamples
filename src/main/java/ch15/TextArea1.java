@@ -18,7 +18,7 @@ public class TextArea1 {
 
     JTextArea text = new JTextArea(10, 20);
     text.setLineWrap(true);
-    button.addActionListener(e -> text.append("button clicked "));
+    button.addActionListener(e -> text.append("button clicked \n"));
 
     JScrollPane scroller = new JScrollPane(text);
     scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
