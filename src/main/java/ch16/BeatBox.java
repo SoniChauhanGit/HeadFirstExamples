@@ -2,11 +2,12 @@ package ch16;
 
 import javax.sound.midi.*;
 import javax.swing.*;
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import static javax.sound.midi.ShortMessage.*;
@@ -30,29 +31,28 @@ public class BeatBox {
   }
 
   public void buildGUI() {
-    JFrame theFrame = new JFrame("Cyber BeatBox");
-    theFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    JFrame frame = new JFrame("Cyber BeatBox");
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     BorderLayout layout = new BorderLayout();
     JPanel background = new JPanel(layout);
     background.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-    checkboxList = new ArrayList<>();
     Box buttonBox = new Box(BoxLayout.Y_AXIS);
 
     JButton start = new JButton("Start");
-    start.addActionListener(new MyStartListener());
+    start.addActionListener(e -> buildTrackAndStart());
     buttonBox.add(start);
 
     JButton stop = new JButton("Stop");
-    stop.addActionListener(new MyStopListener());
+    stop.addActionListener(e -> sequencer.stop());
     buttonBox.add(stop);
 
     JButton upTempo = new JButton("Tempo Up");
-    upTempo.addActionListener(new MyUpTempoListener());
+    upTempo.addActionListener(e -> changeTempo(1.03f));
     buttonBox.add(upTempo);
 
     JButton downTempo = new JButton("Tempo Down");
-    downTempo.addActionListener(new MyDownTempoListener());
+    downTempo.addActionListener(e -> changeTempo(0.97f));
     buttonBox.add(downTempo);
 
     JButton save = new JButton("serializeIt");
@@ -73,7 +73,7 @@ public class BeatBox {
     background.add(BorderLayout.EAST, buttonBox);
     background.add(BorderLayout.WEST, nameBox);
 
-    theFrame.getContentPane().add(background);
+    frame.getContentPane().add(background);
 
     GridLayout grid = new GridLayout(16, 16);
     grid.setVgap(1);
@@ -82,6 +82,7 @@ public class BeatBox {
     JPanel mainPanel = new JPanel(grid);
     background.add(BorderLayout.CENTER, mainPanel);
 
+    checkboxList = new ArrayList<>();
     for (int i = 0; i < 256; i++) {
       JCheckBox c = new JCheckBox();
       c.setSelected(false);
@@ -91,13 +92,12 @@ public class BeatBox {
 
     setUpMidi();
 
-    theFrame.setBounds(50, 50, 300, 300);
-    theFrame.pack();
-    theFrame.setVisible(true);
+    frame.setBounds(50, 50, 300, 300);
+    frame.pack();
+    frame.setVisible(true);
   }
 
-
-  public void setUpMidi() {
+  private void setUpMidi() {
     try {
       sequencer = MidiSystem.getSequencer();
       sequencer.open();
@@ -108,9 +108,9 @@ public class BeatBox {
     } catch (Exception e) {
       e.printStackTrace();
     }
-  } // close method
+  }
 
-  public void buildTrackAndStart() {
+  private void buildTrackAndStart() {
     int[] trackList;
 
     sequence.deleteTrack(track);
@@ -131,45 +131,24 @@ public class BeatBox {
       track.add(makeEvent(CONTROL_CHANGE, 1, 127, 0, 16));
     }
 
-    track.add(makeEvent(192, 9, 1, 0, 15));
+    track.add(makeEvent(PROGRAM_CHANGE, 9, 1, 0, 15));
     try {
 
       sequencer.setSequence(sequence);
       sequencer.setLoopCount(sequencer.LOOP_CONTINUOUSLY);
-      sequencer.start();
       sequencer.setTempoInBPM(120);
+      sequencer.start();
     } catch (Exception e) {
       e.printStackTrace();
     }
   }
 
-  public class MyStartListener implements ActionListener {
-    public void actionPerformed(ActionEvent a) {
-      buildTrackAndStart();
-    }
+  private void changeTempo(float tempoMultiplier) {
+    float tempoFactor = sequencer.getTempoFactor();
+    sequencer.setTempoFactor(tempoFactor * tempoMultiplier);
   }
 
-  public class MyStopListener implements ActionListener {
-    public void actionPerformed(ActionEvent a) {
-      sequencer.stop();
-    }
-  }
-
-  public class MyUpTempoListener implements ActionListener {
-    public void actionPerformed(ActionEvent a) {
-      float tempoFactor = sequencer.getTempoFactor();
-      sequencer.setTempoFactor((float) (tempoFactor * 1.03));
-    }
-  }
-
-  public class MyDownTempoListener implements ActionListener {
-    public void actionPerformed(ActionEvent a) {
-      float tempoFactor = sequencer.getTempoFactor();
-      sequencer.setTempoFactor((float) (tempoFactor * .97));
-    }
-  }
-
-  public void makeTracks(int[] list) {
+  private void makeTracks(int[] list) {
     for (int i = 0; i < 16; i++) {
       int key = list[i];
 
@@ -180,13 +159,12 @@ public class BeatBox {
     }
   }
 
-  public MidiEvent makeEvent(int comd, int chan, int one, int two, int tick) {
+  public static MidiEvent makeEvent(int cmd, int chnl, int one, int two, int tick) {
     MidiEvent event = null;
     try {
-      ShortMessage a = new ShortMessage();
-      a.setMessage(comd, chan, one, two);
-      event = new MidiEvent(a, tick);
-
+      ShortMessage msg = new ShortMessage();
+      msg.setMessage(cmd, chnl, one, two);
+      event = new MidiEvent(msg, tick);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -211,9 +189,8 @@ public class BeatBox {
       } catch (Exception ex) {
         ex.printStackTrace();
       }
-
-    } // close method
-  } // close inner class
+    }
+  }
 
   public class MyReadInListener implements ActionListener {
 
@@ -240,8 +217,8 @@ public class BeatBox {
       sequencer.stop();
       buildTrackAndStart();
 
-    } // close method
-  } // close inner class
+    }
+  }
 
 
 }
