@@ -1,8 +1,6 @@
 package ch18.ryanmonica;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class RyanAndMonicaAtomicTest {
@@ -51,7 +49,7 @@ class BankAccountWithAtomic {
     if (initialBalance >= amount) {
       boolean success = balance.compareAndSet(initialBalance, initialBalance - amount);
       if (!success) {
-        System.out.println("Sorry " + name + ", you can't buy this");
+        System.out.println("Sorry " + name + ", you haven't spent the money.");
       }
     } else {
       System.out.println("Sorry, not enough for " + name);

@@ -1,11 +1,11 @@
 package ch18;
 
 import java.time.LocalDateTime;
-import java.time.format.FormatStyle;
 import java.util.*;
 import java.util.concurrent.*;
 
 import static java.time.format.DateTimeFormatter.ofLocalizedTime;
+import static java.time.format.FormatStyle.MEDIUM;
 
 public class ConcurrentReaders {
   public static void main(String[] args) {
@@ -30,7 +30,7 @@ final class Chat {
   }
 
   public String toString() {
-    String time = timestamp.format(ofLocalizedTime(FormatStyle.MEDIUM));
+    String time = timestamp.format(ofLocalizedTime(MEDIUM));
     return time + " " + message;
   }
 }
