@@ -1,8 +1,7 @@
 package ch17;
 
 import javax.swing.*;
-import java.awt.BorderLayout;
-import java.awt.event.*;
+import java.awt.*;
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.nio.channels.*;
@@ -19,7 +18,7 @@ public class SimpleChatClientA {
     outgoing = new JTextField(20);
 
     JButton sendButton = new JButton("Send");
-    sendButton.addActionListener(new SendButtonListener());
+    sendButton.addActionListener(e -> sendMessage());
 
     JPanel mainPanel = new JPanel();
     mainPanel.add(outgoing);
@@ -38,18 +37,16 @@ public class SimpleChatClientA {
       SocketChannel socketChannel = SocketChannel.open(serverAddress);
       writer = new PrintWriter(Channels.newWriter(socketChannel, UTF_8));
       System.out.println("Networking established. Client running at: " + socketChannel.getLocalAddress());
-    } catch (IOException ex) {
-      ex.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
     }
   }
 
-  public class SendButtonListener implements ActionListener {
-    public void actionPerformed(ActionEvent ev) {
-      writer.println(outgoing.getText());
-      writer.flush();
-      outgoing.setText("");
-      outgoing.requestFocus();
-    }
+  private void sendMessage() {
+    writer.println(outgoing.getText());
+    writer.flush();
+    outgoing.setText("");
+    outgoing.requestFocus();
   }
 
   public static void main(String[] args) {

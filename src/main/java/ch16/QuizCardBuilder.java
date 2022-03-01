@@ -56,10 +56,10 @@ public class QuizCardBuilder {
   }
 
   private JScrollPane createScroller(JTextArea textArea) {
-    JScrollPane qScroller = new JScrollPane(textArea);
-    qScroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-    qScroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-    return qScroller;
+    JScrollPane scroller = new JScrollPane(textArea);
+    scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+    scroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+    return scroller;
   }
 
   private JTextArea createTextArea(Font font) {

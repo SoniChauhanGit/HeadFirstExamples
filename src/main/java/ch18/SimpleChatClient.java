@@ -1,12 +1,13 @@
 package ch18;
 
 import javax.swing.*;
-import java.awt.BorderLayout;
+import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.nio.channels.*;
 import java.util.concurrent.*;
+
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class SimpleChatClient {
@@ -18,21 +19,15 @@ public class SimpleChatClient {
   public void go() {
     setUpNetworking();
 
-    incoming = new JTextArea(15, 30);
-    incoming.setLineWrap(true);
-    incoming.setWrapStyleWord(true);
-    incoming.setEditable(false);
-    JScrollPane qScroller = new JScrollPane(incoming);
-    qScroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-    qScroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+    JScrollPane scroller = createScrollableTextArea();
 
     outgoing = new JTextField(20);
 
     JButton sendButton = new JButton("Send");
-    sendButton.addActionListener(new SendButtonListener());
+    sendButton.addActionListener(e -> sendMessage());
 
     JPanel mainPanel = new JPanel();
-    mainPanel.add(qScroller);
+    mainPanel.add(scroller);
     mainPanel.add(outgoing);
     mainPanel.add(sendButton);
 
@@ -44,6 +39,17 @@ public class SimpleChatClient {
     frame.setSize(400, 350);
     frame.setVisible(true);
     frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+  }
+
+  private JScrollPane createScrollableTextArea() {
+    incoming = new JTextArea(15, 30);
+    incoming.setLineWrap(true);
+    incoming.setWrapStyleWord(true);
+    incoming.setEditable(false);
+    JScrollPane scroller = new JScrollPane(incoming);
+    scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+    scroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+    return scroller;
   }
 
   private void setUpNetworking() {
@@ -60,13 +66,11 @@ public class SimpleChatClient {
     }
   }
 
-  public class SendButtonListener implements ActionListener {
-    public void actionPerformed(ActionEvent ev) {
-      writer.println(outgoing.getText());
-      writer.flush();
-      outgoing.setText("");
-      outgoing.requestFocus();
-    }
+  private void sendMessage() {
+    writer.println(outgoing.getText());
+    writer.flush();
+    outgoing.setText("");
+    outgoing.requestFocus();
   }
 
   public class IncomingReader implements Runnable {
