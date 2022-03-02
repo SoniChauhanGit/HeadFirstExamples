@@ -7,6 +7,7 @@ import java.awt.*;
 import java.io.*;
 import java.net.Socket;
 import java.util.*;
+import java.util.concurrent.*;
 
 import static javax.sound.midi.ShortMessage.*;
 
@@ -43,11 +44,11 @@ public class BeatBoxFinal {
     userName = name;
     // open connection to the server
     try {
-      Socket sock = new Socket("127.0.0.1", 4242);
-      out = new ObjectOutputStream(sock.getOutputStream());
-      in = new ObjectInputStream(sock.getInputStream());
-      Thread remote = new Thread(new RemoteReader());
-      remote.start();
+      Socket socket = new Socket("127.0.0.1", 4242);
+      out = new ObjectOutputStream(socket.getOutputStream());
+      in = new ObjectInputStream(socket.getInputStream());
+      ExecutorService executor = Executors.newSingleThreadExecutor();
+      executor.submit(new RemoteReader());
     } catch (Exception ex) {
       System.out.println("Couldn’t connect-you’ll have to play alone.");
     }
