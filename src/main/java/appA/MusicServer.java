@@ -24,10 +24,10 @@ public class MusicServer {
 
         ClientHandler clientHandler = new ClientHandler(clientSocket);
         threadPool.execute(clientHandler);
-        System.out.println("got a connection");
+        System.out.println("Got a connection");
       }
-    } catch (Exception ex) {
-      ex.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
     }
   }
 
@@ -36,8 +36,8 @@ public class MusicServer {
       try {
         clientOutputStream.writeObject(one);
         clientOutputStream.writeObject(two);
-      } catch (Exception ex) {
-        ex.printStackTrace();
+      } catch (IOException e) {
+        e.printStackTrace();
       }
     }
   }
@@ -48,8 +48,8 @@ public class MusicServer {
     public ClientHandler(Socket socket) {
       try {
         in = new ObjectInputStream(socket.getInputStream());
-      } catch (Exception ex) {
-        ex.printStackTrace();
+      } catch (IOException e) {
+        e.printStackTrace();
       }
     }
 
@@ -63,8 +63,8 @@ public class MusicServer {
           System.out.println("read two objects");
           tellEveryone(userName, beatSequence);
         }
-      } catch (Exception ex) {
-        ex.printStackTrace();
+      } catch (IOException | ClassNotFoundException e) {
+        e.printStackTrace();
       }
     }
   }

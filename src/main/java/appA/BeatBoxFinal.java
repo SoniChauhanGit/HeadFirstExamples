@@ -88,7 +88,6 @@ public class BeatBoxFinal {
     userMessage.setLineWrap(true);
     userMessage.setWrapStyleWord(true);
     JScrollPane messageScroller = new JScrollPane(userMessage);
-
     buttonBox.add(messageScroller);
 
     incomingList = new JList<>();
