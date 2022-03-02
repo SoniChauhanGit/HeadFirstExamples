@@ -9,8 +9,7 @@ import java.io.*;
 import java.net.Socket;
 import java.util.*;
 
-import static javax.sound.midi.ShortMessage.CONTROL_CHANGE;
-import static javax.sound.midi.ShortMessage.PROGRAM_CHANGE;
+import static javax.sound.midi.ShortMessage.*;
 
 public class BeatBoxFinal {
   private JList<String> incomingList;
@@ -223,7 +222,7 @@ public class BeatBoxFinal {
           otherSeqsMap.put(nameToShow, checkboxState);
           listVector.add(nameToShow);
           incomingList.setListData(listVector);
-        } // close while
+        }
       } catch (Exception ex) {
         ex.printStackTrace();
       }
@@ -237,18 +236,15 @@ public class BeatBoxFinal {
     }
   }
 
-  public void makeTracks(ArrayList list) {
-    Iterator it = list.iterator();
-    for (int i = 0; i < 16; i++) {
-      Integer num = (Integer) it.next();
-      if (num != null) {
-        int numKey = num.intValue();
-        track.add(makeEvent(144, 9, numKey, 100, i));
-        track.add(makeEvent(128, 9, numKey, 100, i + 1));
+  public void makeTracks(ArrayList<Integer> list) {
+    for (int i = 0; i < list.size(); i++) {
+      Integer instrumentKey = list.get(i);
+      if (instrumentKey != null) {
+        track.add(makeEvent(NOTE_ON, 9, instrumentKey, 100, i));
+        track.add(makeEvent(NOTE_OFF, 9, instrumentKey, 100, i + 1));
       }
     }
   }
-
 
   public static MidiEvent makeEvent(int cmd, int chnl, int one, int two, int tick) {
     MidiEvent event = null;
