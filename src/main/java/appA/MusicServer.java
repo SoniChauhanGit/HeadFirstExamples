@@ -6,7 +6,7 @@ import java.util.*;
 import java.util.concurrent.*;
 
 public class MusicServer {
-  final List<ObjectOutputStream> clientOutputStreams = new ArrayList<>();
+  private final List<ObjectOutputStream> clientOutputStreams = new ArrayList<>();
 
   public static void main(String[] args) {
     new MusicServer().go();
@@ -31,11 +31,11 @@ public class MusicServer {
     }
   }
 
-  public void tellEveryone(Object one, Object two) {
+  public void tellEveryone(Object usernameAndMessage, Object beatSequence) {
     for (ObjectOutputStream clientOutputStream : clientOutputStreams) {
       try {
-        clientOutputStream.writeObject(one);
-        clientOutputStream.writeObject(two);
+        clientOutputStream.writeObject(usernameAndMessage);
+        clientOutputStream.writeObject(beatSequence);
       } catch (IOException e) {
         e.printStackTrace();
       }
@@ -54,14 +54,14 @@ public class MusicServer {
     }
 
     public void run() {
-      Object userName;
+      Object userNameAndMessage;
       Object beatSequence;
       try {
-        while ((userName = in.readObject()) != null) {
+        while ((userNameAndMessage = in.readObject()) != null) {
           beatSequence = in.readObject();
 
           System.out.println("read two objects");
-          tellEveryone(userName, beatSequence);
+          tellEveryone(userNameAndMessage, beatSequence);
         }
       } catch (IOException | ClassNotFoundException e) {
         e.printStackTrace();
