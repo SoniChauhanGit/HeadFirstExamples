@@ -7,8 +7,8 @@ public class JukeboxStreams {
   public static void main(String[] args) {
     List<Song> songs = new Songs().getSongs();
     List<Song> rockSongs = songs.stream()
-                           .filter(song -> song.getGenre().contains("Rock"))
-                           .collect(Collectors.toList());
+                                .filter(song -> song.getGenre().contains("Rock"))
+                                .collect(Collectors.toList());
     System.out.println(rockSongs);
   }
 }
@@ -27,7 +27,7 @@ class Songs {
             new Song("The Outsider", "A Perfect Circle", "Alternative Rock", 2004, 312),
             new Song("With a Little Help from My Friends", "The Beatles", "Rock", 1967, 168),
             new Song("Come Together", "The Beatles", "Blues rock", 1968, 173),
-            new Song("Come Together", "The Smokin' Mojo Filters", "Rock", 1995, 165),
+            new Song("Come Together", "Ike & Tina Turner", "Rock", 1970, 165),
             new Song("With a Little Help from My Friends", "Joe Cocker", "Rock", 1968, 46),
             new Song("Immigrant Song", "Karen O", "Industrial Rock", 2011, 12),
             new Song("Breathe", "The Prodigy", "Electronic", 1996, 337),

@@ -262,9 +262,9 @@ class JukeboxQueriesTest {
     String songTitle = "With a Little Help from My Friends";
     List<String> result = allSongs.stream()
                                   .filter(song -> song.getTitle().equals(songTitle))
-                                  .map(Song::getArtist)
+                                  .map(song -> song.getArtist())
                                   .filter(artist -> !artist.equals("The Beatles"))
-                                  .collect(toList());
+                                  .collect(Collectors.toList());
 
     System.out.println("result = " + result);
   }
