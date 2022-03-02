@@ -11,7 +11,7 @@ import java.util.*;
 import java.util.List;
 import java.util.concurrent.*;
 
-public class BeatBoxFinal {
+public class BeatBoxAlternative {
   private static final int NUMBER_OF_BEATS = 16;
   private final List<BeatInstrument> instruments;
 
@@ -31,10 +31,10 @@ public class BeatBoxFinal {
   private Track track;
 
   public static void main(String[] args) {
-    new BeatBoxFinal().startUp(args[0]);  // args[0] is your user ID/screen name
+    new BeatBoxAlternative().startUp(args[0]);  // args[0] is your user ID/screen name
   }
 
-  public BeatBoxFinal() {
+  public BeatBoxAlternative() {
     instruments = List.of(
             new BeatInstrument("Bass Drum", 35),
             new BeatInstrument("Closed Hi-Hat", 42),
