@@ -13,10 +13,8 @@ import static javax.sound.midi.ShortMessage.CONTROL_CHANGE;
 import static javax.sound.midi.ShortMessage.PROGRAM_CHANGE;
 
 public class BeatBoxFinal {
-  private JFrame theFrame;
-  private JPanel mainPanel;
   private JList<String> incomingList;
-  private JTextField userMessage;
+  private JTextArea userMessage;
   private ArrayList<JCheckBox> checkboxList;
   private int nextNum;
   private Vector<String> listVector = new Vector<>();
@@ -57,15 +55,13 @@ public class BeatBoxFinal {
   }
 
   public void buildGUI() {
-    theFrame = new JFrame("Cyber BeatBox");
+    JFrame frame = new JFrame("Cyber BeatBox");
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     BorderLayout layout = new BorderLayout();
     JPanel background = new JPanel(layout);
     background.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-    checkboxList = new ArrayList<>();
-
     Box buttonBox = new Box(BoxLayout.Y_AXIS);
-
     JButton start = new JButton("Start");
     start.addActionListener(e -> buildTrackAndStart());
     buttonBox.add(start);
@@ -86,9 +82,12 @@ public class BeatBoxFinal {
     sendIt.addActionListener(new MySendListener());
     buttonBox.add(sendIt);
 
-    userMessage = new JTextField();
+    userMessage = new JTextArea();
+    userMessage.setLineWrap(true);
+    userMessage.setWrapStyleWord(true);
+    JScrollPane messageScroller = new JScrollPane(userMessage);
 
-    buttonBox.add(userMessage);
+    buttonBox.add(messageScroller);
 
     incomingList = new JList<>();
     incomingList.addListSelectionListener(new MyListSelectionListener());
@@ -98,20 +97,24 @@ public class BeatBoxFinal {
     incomingList.setListData(listVector); // no data to start with
 
     Box nameBox = new Box(BoxLayout.Y_AXIS);
-    for (int i = 0; i < 16; i++) {
-      nameBox.add(new Label(instrumentNames[i]));
+    for (String instrumentName : instrumentNames) {
+      JLabel instrumentLabel = new JLabel(instrumentName);
+      instrumentLabel.setBorder(BorderFactory.createEmptyBorder(4, 1, 4, 1));
+      nameBox.add(instrumentLabel);
     }
 
     background.add(BorderLayout.EAST, buttonBox);
     background.add(BorderLayout.WEST, nameBox);
 
-    theFrame.getContentPane().add(background);
+    frame.getContentPane().add(background);
     GridLayout grid = new GridLayout(16, 16);
     grid.setVgap(1);
     grid.setHgap(2);
-    mainPanel = new JPanel(grid);
+
+    JPanel mainPanel = new JPanel(grid);
     background.add(BorderLayout.CENTER, mainPanel);
 
+    checkboxList = new ArrayList<>();
     for (int i = 0; i < 256; i++) {
       JCheckBox c = new JCheckBox();
       c.setSelected(false);
@@ -119,9 +122,9 @@ public class BeatBoxFinal {
       mainPanel.add(c);
     }
 
-    theFrame.setBounds(50, 50, 300, 300);
-    theFrame.pack();
-    theFrame.setVisible(true);
+    frame.setBounds(50, 50, 300, 300);
+    frame.pack();
+    frame.setVisible(true);
   }
 
   private void setUpMidi() {
