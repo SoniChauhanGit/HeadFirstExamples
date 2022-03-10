@@ -10,7 +10,7 @@ import static java.util.stream.Collectors.*;
 // TODO: introduce duplicates for number of times played
 // or: add a timesPlayed field.
 public class JukeboxData {
-  static class Songs {
+  public static class Songs {
 
     public List<Song> getSongs() {
       return List.of(
